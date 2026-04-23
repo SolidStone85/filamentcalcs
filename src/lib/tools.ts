@@ -50,6 +50,14 @@ export const TOOLS: Tool[] = [
       "Track your real-world failure rate and compare it to hobbyist benchmarks.",
     available: true,
   },
+  {
+    slug: "ams-purge-waste-calculator",
+    title: "AMS Purge Waste Calculator",
+    shortTitle: "AMS Purge Waste",
+    description:
+      "How much filament your Bambu AMS is actually wasting on color swaps. The calculator nobody else built.",
+    available: true,
+  },
 ];
 
 export const SITE = {
