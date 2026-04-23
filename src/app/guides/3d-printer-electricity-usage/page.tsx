@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { AdSlot } from "@/components/shared/AdSlot";
+import { Highlight3D } from "@/components/shared/Highlight3D";
 import { getGuide } from "@/lib/guides";
 import { SITE } from "@/lib/tools";
 
@@ -80,7 +81,7 @@ export default function GuidePage() {
           Guide · {guide.readMinutes} min read
         </p>
         <h1 className="text-3xl font-semibold tracking-tight lg:text-4xl">
-          {guide.title}
+          <Highlight3D>{guide.title}</Highlight3D>
         </h1>
         <p className="text-sm text-muted-foreground">Updated April 2026</p>
       </header>
@@ -97,7 +98,7 @@ export default function GuidePage() {
           the cheapest things in your house to run.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
+        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
           Typical wattage by printer class
         </h2>
         <p>
@@ -107,7 +108,7 @@ export default function GuidePage() {
           add a steady trickle.
         </p>
         <p>Average wattage during an active print:</p>
-        <ul className="list-disc pl-5 space-y-1">
+        <ul className="list-disc pl-5 space-y-1 marker:text-primary">
           <li><strong>Bambu X1C:</strong> 115W average, 250W peak during bed heatup</li>
           <li><strong>Bambu P1S:</strong> 95W average</li>
           <li><strong>Bambu A1 / Mini:</strong> 80 to 95W average (A1 Mini is lower)</li>
@@ -122,7 +123,7 @@ export default function GuidePage() {
           the first few minutes.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
+        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
           The math: hourly cost
         </h2>
         <p>
@@ -135,7 +136,7 @@ export default function GuidePage() {
         <p>
           Worked examples at the US average rate of $0.18 per kWh:
         </p>
-        <ul className="list-disc pl-5 space-y-1">
+        <ul className="list-disc pl-5 space-y-1 marker:text-primary">
           <li>Bambu X1C, 12-hour print: (115/1000) × 12 × 0.18 = <strong>$0.25</strong></li>
           <li>Ender 3, 12-hour print: (125/1000) × 12 × 0.18 = <strong>$0.27</strong></li>
           <li>Prusa MK4, 5-hour print: (95/1000) × 5 × 0.18 = <strong>$0.09</strong></li>
@@ -151,14 +152,14 @@ export default function GuidePage() {
           does this for any wattage, duration, and rate combination.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
+        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
           Regional rate variation matters more than printer choice
         </h2>
         <p>
           US electricity rates range roughly 3x between cheap and expensive
           states:
         </p>
-        <ul className="list-disc pl-5 space-y-1">
+        <ul className="list-disc pl-5 space-y-1 marker:text-primary">
           <li>Louisiana, North Dakota, Washington: around $0.12/kWh</li>
           <li>Most of the US: $0.14 to $0.20/kWh</li>
           <li>California, Massachusetts, New York: $0.25 to $0.30/kWh</li>
@@ -171,14 +172,14 @@ export default function GuidePage() {
           charge" line.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
+        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
           Annualized: what a real hobby costs
         </h2>
         <p>
           Typical hobbyist prints 20 to 40 hours per week. At 40 hours and
           100W average, that's 4 kWh per week, 208 kWh per year.
         </p>
-        <ul className="list-disc pl-5 space-y-1">
+        <ul className="list-disc pl-5 space-y-1 marker:text-primary">
           <li>At cheap US rates ($0.12/kWh): <strong>$25 per year</strong></li>
           <li>At US average ($0.18/kWh): <strong>$37 per year</strong></li>
           <li>At California rates ($0.30/kWh): <strong>$62 per year</strong></li>
@@ -190,19 +191,19 @@ export default function GuidePage() {
           an old fridge.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
+        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
           When electricity does matter
         </h2>
         <p>
           Three scenarios where the cost adds up enough to notice:
         </p>
-        <ul className="list-disc pl-5 space-y-1">
+        <ul className="list-disc pl-5 space-y-1 marker:text-primary">
           <li><strong>Commercial print farm.</strong> 10 printers running 20 hours a day, 365 days a year, on California rates is $4,500/year. Material still dominates, but electricity becomes a line item worth tracking.</li>
           <li><strong>Heated enclosure or chamber.</strong> Holding a 40°C chamber can easily double the total per-print energy.</li>
           <li><strong>You're comparing total cost vs. buying prints.</strong> Even then, electricity is usually under 5% of the all-in per-print cost. Filament dominates.</li>
         </ul>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
+        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
           Frequently asked
         </h2>
         <dl className="space-y-4">

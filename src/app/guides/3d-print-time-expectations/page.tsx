@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { AdSlot } from "@/components/shared/AdSlot";
+import { Highlight3D } from "@/components/shared/Highlight3D";
 import { getGuide } from "@/lib/guides";
 import { SITE } from "@/lib/tools";
 
@@ -80,7 +81,7 @@ export default function GuidePage() {
           Guide · {guide.readMinutes} min read
         </p>
         <h1 className="text-3xl font-semibold tracking-tight lg:text-4xl">
-          {guide.title}
+          <Highlight3D>{guide.title}</Highlight3D>
         </h1>
         <p className="text-sm text-muted-foreground">Updated April 2026</p>
       </header>
@@ -110,11 +111,11 @@ export default function GuidePage() {
           has presets for common printer classes.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
+        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
           Throughput by printer class
         </h2>
         <p>Realistic g/hr averages for default quality settings:</p>
-        <ul className="list-disc pl-5 space-y-1">
+        <ul className="list-disc pl-5 space-y-1 marker:text-primary">
           <li><strong>Fast CoreXY (Bambu X1C, P1S):</strong> 28 to 35 g/hr</li>
           <li><strong>Modern bedslinger (Bambu A1, Prusa MK4):</strong> 18 to 25 g/hr</li>
           <li><strong>Legacy budget printer (Ender 3 stock, older Creality):</strong> 8 to 12 g/hr</li>
@@ -128,11 +129,11 @@ export default function GuidePage() {
           one can achieve in most cases.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
+        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
           Real-world examples
         </h2>
         <p>Actual prints with weight-based time estimates:</p>
-        <ul className="list-disc pl-5 space-y-1">
+        <ul className="list-disc pl-5 space-y-1 marker:text-primary">
           <li>
             <strong>3DBenchy (20g):</strong> Bambu X1C 35 min. Prusa MK4 60
             min. Ender 3 120 min.
@@ -155,14 +156,14 @@ export default function GuidePage() {
           </li>
         </ul>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
+        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
           What makes prints slower than weight suggests
         </h2>
         <p>
           Throughput-based estimates assume a "normal" part shape and
           settings. Some things throw the estimate off:
         </p>
-        <ul className="list-disc pl-5 space-y-1">
+        <ul className="list-disc pl-5 space-y-1 marker:text-primary">
           <li>
             <strong>Lots of travel moves.</strong> Multi-part prints with
             gaps between parts spend time moving without extruding.
@@ -192,7 +193,7 @@ export default function GuidePage() {
           </li>
         </ul>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
+        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
           Why your slicer's estimate isn't always right
         </h2>
         <p>
@@ -200,7 +201,7 @@ export default function GuidePage() {
           move, applying your speed and acceleration settings. They're
           pretty good but imperfect because:
         </p>
-        <ul className="list-disc pl-5 space-y-1">
+        <ul className="list-disc pl-5 space-y-1 marker:text-primary">
           <li>
             Acceleration estimation is hard. Real printers ramp up more
             slowly than slicers predict.
@@ -220,7 +221,7 @@ export default function GuidePage() {
           is usually within 5 to 10% on Bambu printers.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
+        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
           Planning overnight prints
         </h2>
         <p>
@@ -231,7 +232,7 @@ export default function GuidePage() {
           for clog risk.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
+        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
           Frequently asked
         </h2>
         <dl className="space-y-4">

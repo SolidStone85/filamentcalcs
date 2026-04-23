@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { AdSlot } from "@/components/shared/AdSlot";
+import { Highlight3D } from "@/components/shared/Highlight3D";
 import { getGuide } from "@/lib/guides";
 import { SITE } from "@/lib/tools";
 
@@ -84,7 +85,7 @@ export default function GuidePage() {
           Guide · {guide.readMinutes} min read
         </p>
         <h1 className="text-3xl font-semibold tracking-tight lg:text-4xl">
-          {guide.title}
+          <Highlight3D>{guide.title}</Highlight3D>
         </h1>
         <p className="text-sm text-muted-foreground">Updated April 2026</p>
       </header>
@@ -112,7 +113,7 @@ export default function GuidePage() {
           has the specs side by side if you prefer a table.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
+        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
           PLA: the default, and the right default
         </h2>
         <p>
@@ -139,7 +140,7 @@ export default function GuidePage() {
           inconsistently.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
+        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
           PETG: PLA's tougher cousin
         </h2>
         <p>
@@ -165,7 +166,7 @@ export default function GuidePage() {
           PLA, worth it for functional parts.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
+        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
           ABS: legacy tough-guy, mostly outclassed now
         </h2>
         <p>
@@ -191,7 +192,7 @@ export default function GuidePage() {
           Most hobbyists skip it in favor of ASA or just use PETG.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
+        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
           TPU: the flexible one
         </h2>
         <p>
@@ -217,10 +218,10 @@ export default function GuidePage() {
           hardness that makes prints unpredictable.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
+        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
           Decision shortcut
         </h2>
-        <ul className="list-disc pl-5 space-y-1">
+        <ul className="list-disc pl-5 space-y-1 marker:text-primary">
           <li>Indoor display or prototype? <strong>PLA.</strong></li>
           <li>Outdoor or functional load-bearing? <strong>PETG.</strong></li>
           <li>Needs to bend or grip? <strong>TPU.</strong></li>
@@ -238,7 +239,7 @@ export default function GuidePage() {
           has the price defaults for each of these plus a custom option.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
+        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
           Frequently asked
         </h2>
         <dl className="space-y-4">

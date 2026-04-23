@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { AdSlot } from "@/components/shared/AdSlot";
+import { Highlight3D } from "@/components/shared/Highlight3D";
 import { getGuide } from "@/lib/guides";
 import { SITE } from "@/lib/tools";
 
@@ -80,7 +81,7 @@ export default function GuidePage() {
           Guide · {guide.readMinutes} min read
         </p>
         <h1 className="text-3xl font-semibold tracking-tight lg:text-4xl">
-          {guide.title}
+          <Highlight3D>{guide.title}</Highlight3D>
         </h1>
         <p className="text-sm text-muted-foreground">
           Updated April 2026
@@ -105,10 +106,10 @@ export default function GuidePage() {
           add up, so you can stop guessing.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
+        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
           The five costs that matter
         </h2>
-        <ol className="list-decimal pl-5 space-y-1">
+        <ol className="list-decimal pl-5 space-y-1 marker:text-primary font-medium">
           <li>Filament</li>
           <li>Electricity</li>
           <li>Failure waste (prints that don't complete)</li>
@@ -116,7 +117,7 @@ export default function GuidePage() {
           <li>Your time</li>
         </ol>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
+        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
           1. Filament (the biggest cost, easy to calculate)
         </h2>
         <p>
@@ -147,7 +148,7 @@ export default function GuidePage() {
           That's often more filament than the print itself.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
+        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
           2. Electricity (almost nothing, most people get this wrong)
         </h2>
         <p>
@@ -169,7 +170,7 @@ export default function GuidePage() {
           covers the full range of printer classes and regional rates.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
+        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
           3. Failure waste (small per print, real over time)
         </h2>
         <p>
@@ -193,7 +194,7 @@ export default function GuidePage() {
           tracks this and compares to benchmark bands.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
+        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
           4. Printer wear (the controversial one)
         </h2>
         <p>
@@ -212,7 +213,7 @@ export default function GuidePage() {
           already paid off.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
+        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
           5. Your time (the cost people really miss)
         </h2>
         <p>
@@ -227,11 +228,11 @@ export default function GuidePage() {
           prints for yourself, call it a hobby cost. Either way, it's real.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
+        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
           Worked example: a 100g phone case
         </h2>
         <p>Standard PLA, 8-hour print on a Bambu P1S:</p>
-        <ul className="list-disc pl-5 space-y-1">
+        <ul className="list-disc pl-5 space-y-1 marker:text-primary">
           <li>Filament: $2.10 (100g × $20/kg × 1.05 waste)</li>
           <li>Electricity: $0.14 (95W × 8h at $0.18/kWh)</li>
           <li>Failure waste amortized: $0.25 (7% typical failure rate)</li>
@@ -250,7 +251,7 @@ export default function GuidePage() {
           electricity). Everything else is sunk.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
+        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
           Frequently asked
         </h2>
         <dl className="space-y-4">
