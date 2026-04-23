@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 
 import { Footer } from "@/components/layout/Footer";
@@ -7,6 +8,9 @@ import { Header } from "@/components/layout/Header";
 import { ThemeProvider } from "@/components/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { SITE } from "@/lib/tools";
+
+// Google AdSense publisher ID. Public by design (shows in every page source).
+const ADSENSE_CLIENT = "ca-pub-8398037111555993";
 
 const inter = Inter({
   variable: "--font-sans",
@@ -66,6 +70,12 @@ export default function RootLayout({
             <Footer />
           </TooltipProvider>
         </ThemeProvider>
+        <Script
+          async
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`}
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );
