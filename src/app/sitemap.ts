@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 
+import { GUIDES } from "@/lib/guides";
 import { SITE, TOOLS } from "@/lib/tools";
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -19,6 +20,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: now,
       changeFrequency: "monthly" as const,
       priority: 0.8,
+    })),
+    ...GUIDES.map((guide) => ({
+      url: `${SITE.url}/guides/${guide.slug}`,
+      lastModified: new Date(guide.publishedAt),
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
     })),
   ];
 }
