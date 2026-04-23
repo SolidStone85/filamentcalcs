@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 
 import { AdSlot } from "@/components/shared/AdSlot";
+import { Highlight3D } from "@/components/shared/Highlight3D";
 import { SITE } from "@/lib/tools";
 
 import { Calculator } from "./Calculator";
@@ -80,7 +81,7 @@ export default function ElectricityCostPage() {
 
       <header className="mb-6 max-w-3xl">
         <h1 className="text-3xl font-semibold tracking-tight lg:text-4xl">
-          Electricity Cost Calculator
+          <Highlight3D>Electricity Cost Calculator</Highlight3D>
         </h1>
         <p className="mt-2 text-muted-foreground">
           Figure out what a 3D print actually costs to run. Enter your
@@ -96,7 +97,7 @@ export default function ElectricityCostPage() {
       </Suspense>
 
       <section className="mx-auto mt-12 max-w-3xl space-y-3">
-        <h2 className="text-xl font-semibold tracking-tight">
+        <h2 className="text-xl font-semibold tracking-tight text-primary">
           How this works
         </h2>
         <p className="text-sm leading-6 text-muted-foreground">
@@ -116,13 +117,13 @@ export default function ElectricityCostPage() {
       <AdSlot slot="inline" className="mx-auto my-10 max-w-3xl" />
 
       <section className="mx-auto max-w-3xl space-y-4">
-        <h2 className="text-xl font-semibold tracking-tight">
+        <h2 className="text-xl font-semibold tracking-tight text-primary">
           Frequently asked
         </h2>
         <dl className="space-y-4">
           {FAQ.map((item) => (
             <div key={item.q} className="space-y-1">
-              <dt className="font-medium">{item.q}</dt>
+              <dt className="font-medium text-primary">{item.q}</dt>
               <dd className="text-sm leading-6 text-muted-foreground">
                 {item.a}
               </dd>

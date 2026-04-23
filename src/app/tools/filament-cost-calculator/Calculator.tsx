@@ -142,7 +142,7 @@ export function Calculator() {
         </CardHeader>
         <CardContent className="space-y-5">
           <div className="space-y-1.5">
-            <Label htmlFor="material" className="text-sm font-medium">
+            <Label htmlFor="material" className="text-sm font-medium text-primary">
               Material
             </Label>
             <Select
@@ -204,7 +204,7 @@ export function Calculator() {
 
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label className="text-sm font-medium">Waste factor</Label>
+              <Label className="text-sm font-medium text-primary">Waste factor</Label>
               <span className="font-mono text-sm tabular-nums text-muted-foreground">
                 {Math.round(state.wasteFactor * 100)}%
               </span>
@@ -230,7 +230,7 @@ export function Calculator() {
           </div>
 
           <div className="space-y-1.5">
-            <Label className="text-sm font-medium">Currency</Label>
+            <Label className="text-sm font-medium text-primary">Currency</Label>
             <Select
               value={state.currency}
               onValueChange={(v) =>

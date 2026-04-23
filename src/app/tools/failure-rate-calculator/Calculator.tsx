@@ -169,7 +169,7 @@ export function Calculator() {
           />
 
           <div className="space-y-1.5">
-            <Label className="text-sm font-medium">Currency</Label>
+            <Label className="text-sm font-medium text-primary">Currency</Label>
             <Select
               value={state.currency}
               onValueChange={(v) => {

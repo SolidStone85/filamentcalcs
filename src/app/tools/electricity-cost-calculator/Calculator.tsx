@@ -154,7 +154,7 @@ export function Calculator() {
         </CardHeader>
         <CardContent className="space-y-5">
           <div className="space-y-1.5">
-            <Label htmlFor="printer" className="text-sm font-medium">
+            <Label htmlFor="printer" className="text-sm font-medium text-primary">
               Printer
             </Label>
             <Select
@@ -210,7 +210,7 @@ export function Calculator() {
           />
 
           <div className="space-y-1.5">
-            <Label htmlFor="rate" className="text-sm font-medium">
+            <Label htmlFor="rate" className="text-sm font-medium text-primary">
               Electricity rate
             </Label>
             <Select
@@ -257,7 +257,7 @@ export function Calculator() {
           )}
 
           <div className="space-y-1.5">
-            <Label className="text-sm font-medium">Currency</Label>
+            <Label className="text-sm font-medium text-primary">Currency</Label>
             <Select
               value={state.currency}
               onValueChange={(v) => {

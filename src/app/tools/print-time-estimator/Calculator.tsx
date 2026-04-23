@@ -108,7 +108,7 @@ export function Calculator() {
         </CardHeader>
         <CardContent className="space-y-5">
           <div className="space-y-1.5">
-            <Label htmlFor="printer" className="text-sm font-medium">
+            <Label htmlFor="printer" className="text-sm font-medium text-primary">
               Printer class
             </Label>
             <Select

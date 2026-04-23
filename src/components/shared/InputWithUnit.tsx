@@ -48,7 +48,7 @@ export function InputWithUnit({
 
   return (
     <div className={cn("space-y-1.5", className)}>
-      <Label htmlFor={id} className="text-sm font-medium">
+      <Label htmlFor={id} className="text-sm font-medium text-primary">
         {label}
       </Label>
       <div className="flex gap-2">
