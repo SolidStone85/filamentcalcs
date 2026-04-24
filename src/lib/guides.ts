@@ -69,6 +69,20 @@ export const GUIDES: Guide[] = [
     readMinutes: 6,
     relatedToolSlugs: ["print-time-estimator", "filament-cost-calculator"],
   },
+  {
+    slug: "multi-color-printing-ams-worth-it",
+    title: "Is multi-color 3D printing actually worth it? The real math on AMS purge waste",
+    shortTitle: "Multi-color AMS economics",
+    description:
+      "Bambu AMS can waste more filament on purge than the actual part weighs. When multi-color is worth it, when it isn't, and how to cut the waste.",
+    publishedAt: "2026-04-24",
+    readMinutes: 8,
+    relatedToolSlugs: [
+      "ams-purge-waste-calculator",
+      "filament-cost-calculator",
+      "material-comparison",
+    ],
+  },
 ];
 
 export function getGuide(slug: string): Guide | undefined {

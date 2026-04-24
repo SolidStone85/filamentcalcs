@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Suspense } from "react";
 
 import { AdSlot } from "@/components/shared/AdSlot";
@@ -114,6 +115,17 @@ export default function AmsPurgeWastePage() {
           but buries it in the preview panel. This tool surfaces the real
           cost of multi-color printing so you can decide whether it&apos;s
           worth it for a given part.
+        </p>
+        <p className="text-sm leading-6 text-muted-foreground">
+          For the full breakdown of when AMS is worth it, when it isn&apos;t,
+          and how to cut purge waste by 30 to 50% without buying extra
+          hardware, read the companion guide:{" "}
+          <Link
+            href="/guides/multi-color-printing-ams-worth-it"
+            className="text-primary underline underline-offset-4"
+          >
+            Is multi-color 3D printing actually worth it?
+          </Link>
         </p>
       </section>
 
