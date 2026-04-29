@@ -70,6 +70,20 @@ export const GUIDES: Guide[] = [
     relatedToolSlugs: ["print-time-estimator", "filament-cost-calculator"],
   },
   {
+    slug: "best-3d-printer-under-300",
+    title: "Best 3D printer under $300 in 2026: honest buyer's guide",
+    shortTitle: "Best printer under $300",
+    description:
+      "Bambu A1 mini, A1, Ender 3 V3 KE, Elegoo Neptune 4 Plus. Real specs, real tradeoffs, and which one matches your situation.",
+    publishedAt: "2026-04-29",
+    readMinutes: 9,
+    relatedToolSlugs: [
+      "filament-cost-calculator",
+      "print-time-estimator",
+      "electricity-cost-calculator",
+    ],
+  },
+  {
     slug: "multi-color-printing-ams-worth-it",
     title: "Is multi-color 3D printing actually worth it? The real math on AMS purge waste",
     shortTitle: "Multi-color AMS economics",
