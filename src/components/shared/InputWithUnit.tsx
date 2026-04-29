@@ -47,8 +47,8 @@ export function InputWithUnit({
   const hasUnitSelector = unitOptions && unitOptions.length > 1 && onUnitChange;
 
   return (
-    <div className={cn("space-y-1.5", className)}>
-      <Label htmlFor={id} className="text-sm font-medium text-primary">
+    <div className={cn("space-y-2", className)}>
+      <Label htmlFor={id} className="text-sm font-semibold text-foreground">
         {label}
       </Label>
       <div className="flex gap-2">
@@ -67,7 +67,7 @@ export function InputWithUnit({
             const num = Number(raw);
             if (!Number.isNaN(num)) onValueChange(num);
           }}
-          className="font-mono"
+          className="font-mono text-lg md:text-base"
         />
         {hasUnitSelector ? (
           <Select
@@ -76,7 +76,7 @@ export function InputWithUnit({
               if (v !== null) onUnitChange!(v);
             }}
           >
-            <SelectTrigger className="w-28">
+            <SelectTrigger className="h-10 w-28">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -88,12 +88,12 @@ export function InputWithUnit({
             </SelectContent>
           </Select>
         ) : unit ? (
-          <div className="flex h-9 min-w-16 items-center justify-center rounded-md border bg-muted px-3 text-sm text-muted-foreground">
+          <div className="flex h-10 min-w-16 items-center justify-center rounded-lg border bg-muted px-3 text-sm font-medium text-muted-foreground">
             {unit}
           </div>
         ) : null}
       </div>
-      {hint && <p className="text-xs text-muted-foreground">{hint}</p>}
+      {hint && <p className="text-sm text-muted-foreground">{hint}</p>}
     </div>
   );
 }

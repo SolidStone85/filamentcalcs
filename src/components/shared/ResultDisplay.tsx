@@ -64,9 +64,12 @@ export function ResultDisplay({
         )}
       </div>
       <div
+        key={value}
         className={cn(
-          "font-mono tabular-nums",
-          prominent ? "text-4xl font-semibold" : "text-2xl font-medium",
+          "font-mono tabular-nums animate-in fade-in zoom-in-95 duration-300",
+          prominent
+            ? "text-5xl font-bold text-primary"
+            : "text-3xl font-semibold",
         )}
       >
         {value}

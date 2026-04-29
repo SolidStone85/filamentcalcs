@@ -205,4 +205,59 @@
       inset 0 1px 0 oklch(from var(--foreground) l c h / 0.08),
       0 1px 3px oklch(0 0 0 / 0.3);
   }
+
+}
+
+/* ---- Interactive primitives (unlayered so :hover variants always emit) ---- */
+/* Tailwind v4 + Turbopack inconsistently emits hover variants for custom
+   classes inside @layer components. Keeping these unlayered guarantees the
+   styles reach the final CSS. */
+
+.fc-glow-strong {
+  transition: filter 150ms ease, box-shadow 200ms ease, transform 150ms ease,
+    background-color 150ms ease, border-color 150ms ease;
+}
+.fc-glow-strong:hover:not(:disabled) {
+  filter: brightness(1.15);
+  box-shadow: 0 0 28px -4px oklch(0.78 0.16 205 / 0.7),
+    0 6px 14px -2px oklch(0 0 0 / 0.3);
+  transform: translateY(-1px);
+}
+.fc-glow-strong:active:not(:disabled) {
+  transform: translateY(1px);
+  filter: brightness(1.05);
+}
+
+.fc-glow-soft {
+  transition: box-shadow 200ms ease, border-color 150ms ease,
+    background-color 150ms ease, transform 150ms ease;
+}
+.fc-glow-soft:hover:not(:disabled) {
+  box-shadow: 0 0 22px -6px oklch(0.78 0.16 205 / 0.55),
+    0 2px 8px -2px oklch(0 0 0 / 0.2);
+  border-color: oklch(0.78 0.16 205 / 0.65);
+  background-color: oklch(0.78 0.16 205 / 0.06);
+}
+
+.fc-ghost-hover {
+  transition: background-color 120ms ease, color 120ms ease;
+}
+.fc-ghost-hover:hover {
+  background-color: oklch(0.62 0.13 210 / 0.12);
+  color: var(--foreground);
+}
+.dark .fc-ghost-hover:hover {
+  background-color: oklch(0.78 0.16 205 / 0.18);
+  color: oklch(0.95 0.02 205);
+}
+
+.fc-card-lift {
+  transition: transform 200ms ease, box-shadow 200ms ease,
+    border-color 200ms ease;
+}
+.fc-card-lift:hover {
+  transform: translateY(-4px);
+  border-color: oklch(0.78 0.16 205 / 0.75);
+  box-shadow: 0 12px 32px -8px oklch(0.78 0.16 205 / 0.45),
+    0 4px 12px -4px oklch(0 0 0 / 0.25);
 }

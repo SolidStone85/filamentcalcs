@@ -60,9 +60,9 @@ export default function HomePage() {
           {TOOLS.map((tool) => {
             const content = (
               <Card
-                className={`glass-card h-full transition ${
+                className={`glass-card h-full ${
                   tool.available
-                    ? "hover:border-primary/60 hover:shadow-md"
+                    ? "fc-card-lift hover:border-primary/70"
                     : "opacity-60"
                 }`}
               >
