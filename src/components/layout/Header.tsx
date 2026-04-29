@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { Logo } from "@/components/layout/Logo";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
@@ -18,10 +19,13 @@ export function Header() {
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
         <Link
           href="/"
-          className="text-lg font-semibold tracking-tight"
+          className="flex items-center gap-2 text-lg font-semibold tracking-tight transition-opacity hover:opacity-80"
         >
-          {SITE.name}
-          <span className="text-muted-foreground">.com</span>
+          <Logo size={26} />
+          <span>
+            {SITE.name}
+            <span className="text-muted-foreground">.com</span>
+          </span>
         </Link>
 
         <nav className="flex items-center gap-1">

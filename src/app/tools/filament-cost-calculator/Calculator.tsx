@@ -288,6 +288,29 @@ export function Calculator() {
               />
             </div>
 
+            <div className="flex flex-wrap gap-2">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium">
+                <span className="text-muted-foreground">Prints per kg:</span>
+                <span className="font-mono tabular-nums text-foreground">
+                  {Math.max(1, Math.floor(1000 / gramsNum)).toLocaleString()}
+                </span>
+              </span>
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium">
+                <span className="text-muted-foreground">Cost for 10 prints:</span>
+                <span className="font-mono tabular-nums text-foreground">
+                  {formatCurrency(result.cost * 10, state.currency)}
+                </span>
+              </span>
+              {result.cost >= 1 && (
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium">
+                  <span className="text-muted-foreground">≈ coffees ($5):</span>
+                  <span className="font-mono tabular-nums text-foreground">
+                    {(result.cost / 5).toFixed(1)}
+                  </span>
+                </span>
+              )}
+            </div>
+
             <FormulaBreakdown
               formula="cost = (grams ÷ 1000) × price_per_kg × (1 + waste_factor)"
               steps={[
