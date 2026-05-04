@@ -129,6 +129,160 @@ export default function AmsPurgeWastePage() {
         </p>
       </section>
 
+      <section className="mx-auto mt-10 max-w-3xl space-y-3">
+        <h2 className="text-xl font-semibold tracking-tight text-primary">
+          The formula in detail
+        </h2>
+        <p className="rounded-md bg-muted p-3 font-mono text-xs">
+          purge_waste_g = swaps × purge_per_swap_g × flush_multiplier
+        </p>
+        <p className="rounded-md bg-muted p-3 font-mono text-xs">
+          total_material = part_weight + purge_waste
+        </p>
+        <p className="text-sm leading-6 text-muted-foreground">
+          Worked example. A two-color phone case: 92 g part weight, 38 color
+          swaps, 8 g per swap (Bambu default), flush multiplier 1.0.
+        </p>
+        <ul className="list-disc pl-5 text-sm leading-6 text-muted-foreground">
+          <li>Purge waste: 38 × 8 × 1.0 = 304 g</li>
+          <li>Total material: 92 + 304 = 396 g</li>
+          <li>At $22/kg PLA: 396 / 1000 × 22 = $8.71 instead of the $2.02 the part alone would cost</li>
+        </ul>
+        <p className="text-sm leading-6 text-muted-foreground">
+          The purge waste is more than 4x the part weight. This is the
+          part most cost calculators silently miss. Multi-color isn&apos;t
+          free; it&apos;s a serious material multiplier.
+        </p>
+      </section>
+
+      <section className="mx-auto mt-10 max-w-3xl space-y-3">
+        <h2 className="text-xl font-semibold tracking-tight text-primary">
+          Purge per swap by system
+        </h2>
+        <div className="overflow-x-auto rounded-md border">
+          <table className="w-full text-xs leading-6">
+            <thead>
+              <tr className="border-b bg-muted/50">
+                <th className="px-3 py-2 text-left font-medium">System</th>
+                <th className="px-3 py-2 text-left font-medium">Default purge per swap</th>
+                <th className="px-3 py-2 text-left font-medium">Tunable down to</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-b">
+                <td className="px-3 py-2">Bambu AMS (X1C, P1S)</td>
+                <td className="px-3 py-2">7-9 g</td>
+                <td className="px-3 py-2">3-4 g (compatible colors)</td>
+              </tr>
+              <tr className="border-b">
+                <td className="px-3 py-2">Bambu AMS Lite (A1)</td>
+                <td className="px-3 py-2">8-10 g</td>
+                <td className="px-3 py-2">4-5 g</td>
+              </tr>
+              <tr className="border-b">
+                <td className="px-3 py-2">Prusa MMU2/MMU3</td>
+                <td className="px-3 py-2">15-25 g</td>
+                <td className="px-3 py-2">10-15 g</td>
+              </tr>
+              <tr className="border-b">
+                <td className="px-3 py-2">Mosaic Palette 3 Pro</td>
+                <td className="px-3 py-2">~6 g equivalent</td>
+                <td className="px-3 py-2">3-4 g</td>
+              </tr>
+              <tr>
+                <td className="px-3 py-2">ERCF / 3MS (DIY Klipper)</td>
+                <td className="px-3 py-2">5-12 g</td>
+                <td className="px-3 py-2">2-4 g (well-tuned)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p className="text-sm leading-6 text-muted-foreground">
+          The Bambu AMS isn&apos;t the worst here. Prusa MMU historically
+          purges much more per swap. Bambu&apos;s lighter purge is one
+          reason their multi-color experience feels cheaper to use.
+        </p>
+      </section>
+
+      <section className="mx-auto mt-10 max-w-3xl space-y-3">
+        <h2 className="text-xl font-semibold tracking-tight text-primary">
+          When multi-color is worth the waste
+        </h2>
+        <ul className="list-disc pl-5 space-y-1 text-sm leading-6 text-muted-foreground">
+          <li>
+            <span className="font-medium text-foreground">Big parts, few swaps.</span>{" "}
+            A 500 g print with 8 swaps wastes 64 g on purge (13% overhead).
+            Acceptable.
+          </li>
+          <li>
+            <span className="font-medium text-foreground">
+              Color is the entire point of the part.
+            </span>{" "}
+            Articulated dragon, hueforge portrait, custom logo plaque. The
+            color IS the value.
+          </li>
+          <li>
+            <span className="font-medium text-foreground">
+              Parts you cannot easily paint.
+            </span>{" "}
+            Embedded interior color, mechanical articulation that paint
+            would clog, layer-shifted surface effects.
+          </li>
+        </ul>
+        <p className="text-sm leading-6 text-muted-foreground">
+          Not worth it: small parts (under 100 g), prints where you could
+          paint the color in afterward in 10 minutes, and parts where the
+          color is purely cosmetic and the buyer doesn&apos;t care.
+        </p>
+      </section>
+
+      <section className="mx-auto mt-10 max-w-3xl space-y-3">
+        <h2 className="text-xl font-semibold tracking-tight text-primary">
+          How to cut purge waste 30 to 50% (free, no extra hardware)
+        </h2>
+        <ol className="list-decimal pl-5 space-y-2 text-sm leading-6 text-muted-foreground">
+          <li>
+            <span className="font-medium text-foreground">
+              Lower the flush multiplier.
+            </span>{" "}
+            Bambu Studio default is 1.0. Tuned users go to 0.5 to 0.7.
+            Lower means more chance of color bleed in the first layers
+            after a swap, but the savings are real.
+          </li>
+          <li>
+            <span className="font-medium text-foreground">
+              Use the Flushing volumes matrix.
+            </span>{" "}
+            Bambu Studio &gt; Filament &gt; Flushing volumes lets you set
+            different purge amounts for each color pair. Light to light
+            colors flush less than light to dark.
+          </li>
+          <li>
+            <span className="font-medium text-foreground">
+              Purge into the model.
+            </span>{" "}
+            Enable "purge into infill" or "purge into object" in slicer
+            settings. The flushed material goes into hidden internal
+            structure instead of a separate purge tower. Reduces visible
+            waste even if total material is similar.
+          </li>
+          <li>
+            <span className="font-medium text-foreground">
+              Group same-color features.
+            </span>{" "}
+            Slice your model so all the white parts print in one batch,
+            then all blue, then all red. Cuts swap count drastically.
+          </li>
+          <li>
+            <span className="font-medium text-foreground">
+              Use the Bambu sponge.
+            </span>{" "}
+            The little sponge clip on the AMS reduces purge needed for
+            certain color transitions. Worth a small amount.
+          </li>
+        </ol>
+      </section>
+
       <AdSlot slot="inline" className="mx-auto my-10 max-w-3xl" />
 
       <section className="mx-auto max-w-3xl space-y-4">

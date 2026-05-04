@@ -6,7 +6,7 @@ import { SITE, TOOLS } from "@/lib/tools";
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
 
-  const staticRoutes = ["", "/about", "/guides", "/privacy", "/terms", "/contact"];
+  const staticRoutes = ["", "/about", "/methodology", "/glossary", "/tools", "/guides", "/privacy", "/terms", "/contact"];
 
   return [
     ...staticRoutes.map((path) => ({

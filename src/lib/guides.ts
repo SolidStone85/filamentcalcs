@@ -97,6 +97,34 @@ export const GUIDES: Guide[] = [
       "material-comparison",
     ],
   },
+  {
+    slug: "how-to-dry-filament",
+    title: "How to dry filament: 5 methods compared, with temperatures and times",
+    shortTitle: "How to dry filament",
+    description:
+      "Wet filament causes more print failures than people realize. Oven, dedicated dryer, food dehydrator, vacuum bag with desiccant, and the methods to skip. Real temps, real times, by material.",
+    publishedAt: "2026-05-03",
+    readMinutes: 9,
+    relatedToolSlugs: [
+      "failure-rate-calculator",
+      "filament-cost-calculator",
+      "material-comparison",
+    ],
+  },
+  {
+    slug: "slicer-settings-that-waste-filament",
+    title: "Slicer settings that secretly waste filament (fix these first)",
+    shortTitle: "Slicer settings that waste filament",
+    description:
+      "Most cost calculators ignore the slicer settings quietly inflating your filament use. Infill type, support style, brim, retraction, and the purge multiplier explained, with the dollar impact of each.",
+    publishedAt: "2026-05-03",
+    readMinutes: 8,
+    relatedToolSlugs: [
+      "filament-cost-calculator",
+      "ams-purge-waste-calculator",
+      "failure-rate-calculator",
+    ],
+  },
 ];
 
 export function getGuide(slug: string): Guide | undefined {

@@ -66,6 +66,18 @@ export function Header() {
             Guides
           </Link>
           <Link
+            href="/glossary"
+            className={cn(buttonVariants({ variant: "ghost", size: "sm" }))}
+          >
+            Glossary
+          </Link>
+          <Link
+            href="/methodology"
+            className={cn(buttonVariants({ variant: "ghost", size: "sm" }))}
+          >
+            Methodology
+          </Link>
+          <Link
             href="/about"
             className={cn(buttonVariants({ variant: "ghost", size: "sm" }))}
           >
