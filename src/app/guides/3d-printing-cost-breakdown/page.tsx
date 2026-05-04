@@ -123,10 +123,9 @@ export default function GuidePage() {
         </p>
 
         <p>
-          I print on a Bambu P1S almost daily, and I've done the math enough
-          times to have a stable picture of what a real print costs. This
-          breakdown walks through each component, with the small numbers that
-          add up, so you can stop guessing.
+          The numbers below are the stable picture of what a real hobbyist
+          print actually costs. The breakdown walks through each component,
+          with the small numbers that add up, so you can stop guessing.
         </p>
 
         <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">

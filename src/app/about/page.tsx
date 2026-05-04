@@ -15,11 +15,17 @@ export default function AboutPage() {
       <h1 className="text-3xl font-semibold tracking-tight">About {SITE.name}.com</h1>
       <div className="mt-6 space-y-4 text-sm leading-6 text-muted-foreground">
         <p>
-          {SITE.name}.com is a small, independent site focused on practical
-          calculators for 3D printing hobbyists. It&apos;s run by a single
-          person who prints on a Bambu Lab P1S, got tired of pulling up
-          spreadsheets every time a spool ran low, and decided to build the
-          calculator they wished existed.
+          {SITE.name}.com is an independent utility site built to organize
+          common 3D printing cost, filament, electricity, and slicer
+          calculations in one place. Formulas are documented on the{" "}
+          <Link href="/methodology" className="underline underline-offset-4">
+            methodology page
+          </Link>
+          , source data is linked, and corrections can be reported via the{" "}
+          <Link href="/contact" className="underline underline-offset-4">
+            contact page
+          </Link>
+          .
         </p>
         <p>
           Every calculator here runs entirely in your browser. No account is

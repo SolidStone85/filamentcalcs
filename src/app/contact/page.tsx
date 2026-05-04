@@ -21,12 +21,38 @@ export default function ContactPage() {
       <h1 className="text-3xl font-semibold tracking-tight">Contact</h1>
       <div className="mt-6 space-y-4 text-sm leading-7 text-muted-foreground">
         <p>
-          {SITE.name}.com is a small, independent project run by one person.
-          For bug reports, wrong formulas, new calculator ideas, or anything
-          else worth saying, the best place to send feedback is the
-          project&apos;s public issue tracker on GitHub.
+          {SITE.name}.com is an independent utility site. For bug reports,
+          wrong formulas, new calculator ideas, or anything else worth
+          saying, you have two options.
         </p>
 
+        <h2 className="pt-2 text-base font-semibold text-primary">
+          Option 1: Email
+        </h2>
+        <p>
+          Send to{" "}
+          <a
+            href="mailto:contact@filamentcalcs.com"
+            className="font-medium text-foreground underline underline-offset-4"
+          >
+            contact@filamentcalcs.com
+          </a>
+          . This inbox is checked periodically (not daily) for formula
+          corrections, bug reports, and calculator suggestions.
+        </p>
+        <p className="text-xs">
+          When reporting a formula issue, please include your printer model,
+          slicer (Bambu Studio, PrusaSlicer, OrcaSlicer, etc.), and the
+          specific numbers you entered. That makes diagnosis much faster.
+        </p>
+
+        <h2 className="pt-4 text-base font-semibold text-primary">
+          Option 2: Public GitHub issue
+        </h2>
+        <p>
+          For bug reports you want others to be able to see and reference,
+          open a public issue:
+        </p>
         <p>
           <a
             href={GITHUB_ISSUES_URL}
@@ -37,18 +63,10 @@ export default function ContactPage() {
             Open a GitHub issue
           </a>
         </p>
-
         <p>
-          When reporting a formula issue, please include your printer model,
-          slicer (Bambu Studio, PrusaSlicer, OrcaSlicer, etc.), and the
-          specific numbers you entered. That makes diagnosis much faster.
-        </p>
-
-        <p>
-          If you don&apos;t have a GitHub account, signing up is free and
-          takes under a minute. Issues are public by default, which is a
-          feature, not a bug: other users with the same question can find
-          the answer and we avoid the same bug getting reported ten times.
+          Issues are public by default. Other users with the same question
+          can find the answer, and the same bug doesn&apos;t get reported
+          ten times.
         </p>
 
         <p className="pt-4 text-xs">

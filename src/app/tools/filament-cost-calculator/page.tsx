@@ -270,8 +270,8 @@ export default function FilamentCostCalculatorPage() {
           Three real worked examples
         </h2>
         <p className="text-sm leading-6 text-muted-foreground">
-          To make this concrete, here are three prints I've actually run on a
-          Bambu P1S, with the math written out.
+          To make this concrete, here are three typical hobbyist prints on
+          a Bambu P1S, with the math written out.
         </p>
 
         <div className="rounded-md border p-4">
