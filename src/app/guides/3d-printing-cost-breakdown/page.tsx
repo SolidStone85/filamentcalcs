@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 
 import { AdSlot } from "@/components/shared/AdSlot";
@@ -87,6 +88,28 @@ export default function GuidePage() {
           Updated April 2026
         </p>
       </header>
+
+      <figure className="my-8">
+        <Image
+          src="/images/guides/printing-materials.jpg"
+          alt="Assorted 3D printing materials and filaments on display"
+          width={1600}
+          height={1067}
+          className="w-full h-auto rounded-lg object-cover max-h-96"
+          priority
+        />
+        <figcaption className="mt-2 text-xs text-muted-foreground">
+          Filament is the largest single cost in most 3D prints. Photo via{" "}
+          <a
+            href="https://commons.wikimedia.org/wiki/File:3D_Printing_Materials_(16863368275).jpg"
+            className="underline"
+            rel="noreferrer"
+          >
+            Wikimedia Commons
+          </a>
+          .
+        </figcaption>
+      </figure>
 
       <AdSlot slot="top" className="my-8" />
 

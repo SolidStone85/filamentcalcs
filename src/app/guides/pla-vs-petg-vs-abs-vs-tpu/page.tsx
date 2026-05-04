@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 
 import { AdSlot } from "@/components/shared/AdSlot";
@@ -89,6 +90,29 @@ export default function GuidePage() {
         </h1>
         <p className="text-sm text-muted-foreground">Updated April 2026</p>
       </header>
+
+      <figure className="my-8">
+        <Image
+          src="/images/guides/filament-types-qidi.png"
+          alt="A range of 3D printer filament types in different colors"
+          width={1600}
+          height={1067}
+          className="w-full h-auto rounded-lg object-cover max-h-96"
+          priority
+        />
+        <figcaption className="mt-2 text-xs text-muted-foreground">
+          Different filament chemistries print, behave, and age very
+          differently. Photo via{" "}
+          <a
+            href="https://commons.wikimedia.org/wiki/File:QiDi_3D_Printer_Filaments.png"
+            className="underline"
+            rel="noreferrer"
+          >
+            Wikimedia Commons
+          </a>
+          .
+        </figcaption>
+      </figure>
 
       <AdSlot slot="top" className="my-8" />
 

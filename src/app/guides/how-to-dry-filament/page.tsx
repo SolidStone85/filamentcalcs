@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 
 import { AdSlot } from "@/components/shared/AdSlot";
@@ -85,6 +86,29 @@ export default function GuidePage() {
         </h1>
         <p className="text-sm text-muted-foreground">Updated May 2026</p>
       </header>
+
+      <figure className="my-8">
+        <Image
+          src="/images/guides/filament-spools-helsinki.jpg"
+          alt="Stacked spools of colored 3D printing filament on a shelf"
+          width={1600}
+          height={1067}
+          className="w-full h-auto rounded-lg object-cover max-h-96"
+          priority
+        />
+        <figcaption className="mt-2 text-xs text-muted-foreground">
+          Filament spools left out of sealed storage absorb moisture from the
+          surrounding air. Photo via{" "}
+          <a
+            href="https://commons.wikimedia.org/wiki/File:Helsinki,_Oodi,_3D_printer_filament.jpg"
+            className="underline"
+            rel="noreferrer"
+          >
+            Wikimedia Commons
+          </a>
+          .
+        </figcaption>
+      </figure>
 
       <AdSlot slot="top" className="my-8" />
 

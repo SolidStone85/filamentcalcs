@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 
 import { AdSlot } from "@/components/shared/AdSlot";
@@ -136,11 +137,28 @@ export default function GuidePage() {
         <p className="text-sm text-muted-foreground">Updated April 2026</p>
       </header>
 
-      <GuideImagePlaceholder
-        slot="hero"
-        alt="Four 3D printers under $300 lined up for comparison"
-        prompt="Stylized isometric illustration of four FDM 3D printers lined up side by side on a clean surface. Two are compact open-frame bedslingers with cantilever Z-axes, one is a slightly larger bedslinger with a vertical gantry, and one is a taller machine with a much bigger build plate. Cyan and dark slate color scheme. Soft top-down studio lighting. No brand logos, no text labels, no humans. Clean modern editorial style. 16:9 aspect ratio."
-      />
+      <figure className="my-8">
+        <Image
+          src="/images/guides/printer-with-spools.jpg"
+          alt="A 3D printer next to colored filament spools on a workbench"
+          width={1600}
+          height={1067}
+          className="w-full h-auto rounded-lg object-cover max-h-96"
+          priority
+        />
+        <figcaption className="mt-2 text-xs text-muted-foreground">
+          A typical desktop FDM printer setup with filament spools on hand.
+          Photo via{" "}
+          <a
+            href="https://commons.wikimedia.org/wiki/File:BEETHEFIRST_3D_printer_and_3D-printed_filament_spools.jpg"
+            className="underline"
+            rel="noreferrer"
+          >
+            Wikimedia Commons
+          </a>
+          .
+        </figcaption>
+      </figure>
 
       <AdSlot slot="top" className="my-8" />
 
