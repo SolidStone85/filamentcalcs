@@ -57,6 +57,12 @@ const TOOL_DETAILS: Record<string, { useCase: string; whenToUse: string }> = {
     whenToUse:
       "Use before any multi-color print to see if it's worth the material cost. For small parts with many color swaps, purge can exceed the part weight.",
   },
+  "remaining-spool-calculator": {
+    useCase:
+      "Filament left on a partial spool. Weigh the spool on any kitchen scale, pick your spool brand from the preset list, get the remaining grams and percent.",
+    whenToUse:
+      "Use before starting a print to know if your spool will make it, or before reordering to confirm it's actually time. Empty-spool weight presets cover Bambu refillable cores, Polymaker, eSun, Prusament, and generic plastic spools.",
+  },
 };
 
 export default function ToolsIndexPage() {

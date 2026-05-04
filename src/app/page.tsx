@@ -299,6 +299,30 @@ export default function HomePage() {
               </ul>
             </CardContent>
           </Card>
+
+          <Card className="glass-card h-full">
+            <CardHeader>
+              <CardTitle className="text-base">
+                How much filament is left on this spool?
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2 text-sm">
+              <p className="text-muted-foreground">
+                Weigh the spool, pick your brand, see the answer. Includes
+                empty-weight presets for Bambu, Polymaker, eSun, and more.
+              </p>
+              <ul className="space-y-1 text-sm">
+                <li>
+                  <Link
+                    href="/tools/remaining-spool-calculator"
+                    className="text-primary underline underline-offset-4"
+                  >
+                    Remaining Filament Calculator
+                  </Link>
+                </li>
+              </ul>
+            </CardContent>
+          </Card>
         </div>
       </section>
 

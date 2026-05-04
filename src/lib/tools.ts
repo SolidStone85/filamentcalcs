@@ -58,6 +58,14 @@ export const TOOLS: Tool[] = [
       "How much filament your Bambu AMS is actually wasting on color swaps. The calculator nobody else built.",
     available: true,
   },
+  {
+    slug: "remaining-spool-calculator",
+    title: "Remaining Filament Calculator",
+    shortTitle: "Remaining Spool",
+    description:
+      "Weigh your spool on a scale and see exactly how much filament is left. Empty-spool weight presets included for Bambu, Polymaker, eSun, and more.",
+    available: true,
+  },
 ];
 
 export const SITE = {

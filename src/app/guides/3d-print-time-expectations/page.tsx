@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 
 import { AdSlot } from "@/components/shared/AdSlot";
@@ -85,6 +86,30 @@ export default function GuidePage() {
         </h1>
         <p className="text-sm text-muted-foreground">Updated April 2026</p>
       </header>
+
+      <figure className="my-8">
+        <Image
+          src="/images/guides/printer-makers-party.jpg"
+          alt="A 3D printer mid-print at a maker community event"
+          width={4928}
+          height={3264}
+          className="w-full h-auto rounded-lg object-cover max-h-96"
+          priority
+        />
+        <figcaption className="mt-2 text-xs text-muted-foreground">
+          A 3D printer in the middle of a print. How fast a print
+          finishes depends on the printer model far more than the file
+          itself. Photo via{" "}
+          <a
+            href="https://commons.wikimedia.org/wiki/File:Printing_with_a_3D_printer_at_Makers_Party_Bangalore_2013_11.JPG"
+            className="underline"
+            rel="noreferrer"
+          >
+            Wikimedia Commons
+          </a>
+          .
+        </figcaption>
+      </figure>
 
       <AdSlot slot="top" className="my-8" />
 
