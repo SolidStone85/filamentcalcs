@@ -1,43 +1,35 @@
-// Single source of truth for the site's author identity.
-// Used by guide bylines, About page, and JSON-LD across the site so
-// Google sees a consistent Person entity (E-E-A-T signal).
+// Single source of truth for the site's editorial identity.
+// Used by guide bylines, About page, and JSON-LD across the site.
 //
-// IMPORTANT: keep this honest. No fabricated "I print daily" claims.
-// FilamentCalcs is a research-backed reference site. The authority is
-// in the cross-referencing of sources, not in personal print farm
-// experience.
+// Approach: corporate / organizational identity, not a personal byline.
+// Matches what large calculator sites do (calculator.net, rapidtables.com,
+// unitconverters.net) and keeps personal information out of the public
+// AdSense submission. Authority comes from cited sources + transparent
+// methodology, not from a real-name byline.
 
 import { SITE } from "./tools";
 
 export const AUTHOR = {
-  name: "Matthew Carvalho",
-  role: "Founder and researcher",
-  // Short blurb used inline in bylines.
-  shortBio:
-    "Independent researcher behind the FilamentCalcs reference. Cross-references slicer docs, manufacturer specs, EIA data, and published community testing.",
-  // Full block used at the bottom of guides and on the About page.
+  // Display name used in bylines and bio blocks.
+  name: `${SITE.name}.com editorial team`,
+  // Block used at the bottom of guides and on the About page. Talks about
+  // the site, not a person.
   fullBio:
-    "Matthew Carvalho built FilamentCalcs as an independent reference for the math behind hobbyist 3D printing. Every calculator and guide is built from cross-referenced sources: slicer documentation (Bambu Studio, PrusaSlicer, OrcaSlicer), manufacturer specifications, US EIA residential electricity rate data, and published community testing series including CNC Kitchen's tensile and impact comparisons. The site accepts no affiliate revenue, sponsorships, or paid product reviews. Corrections are read and incorporated into the quarterly review cycle.",
-  url: `${SITE.url}/about`,
-  // Profile URLs for sameAs JSON-LD. Add real ones as they exist.
-  sameAs: [] as string[],
+    "FilamentCalcs is an independent reference for the math behind hobbyist 3D printing. Every calculator and guide is built from cross-referenced sources: slicer documentation (Bambu Studio, PrusaSlicer, OrcaSlicer), manufacturer specifications, US EIA residential electricity rate data, Eurostat European household rates, and published community testing series including CNC Kitchen's tensile and impact comparisons. The site accepts no affiliate revenue, sponsorships, or paid product reviews. Reader corrections are read and incorporated into the quarterly review cycle.",
 } as const;
 
-// Reusable Person schema for JSON-LD blocks.
+// Article author = Organization (no real Person). Same pattern used by
+// most well-established calculator sites with AdSense approval.
 export const AUTHOR_JSONLD = {
-  "@type": "Person" as const,
-  name: AUTHOR.name,
-  url: AUTHOR.url,
-  jobTitle: AUTHOR.role,
-  description: AUTHOR.shortBio,
-  ...(AUTHOR.sameAs.length > 0 ? { sameAs: AUTHOR.sameAs } : {}),
+  "@type": "Organization" as const,
+  name: `${SITE.name}.com`,
+  url: SITE.url,
 };
 
-// Reusable Organization schema with founder pointing to the author.
+// Site-level Organization schema for homepage and About page.
 export const ORGANIZATION_JSONLD = {
   "@type": "Organization" as const,
   name: `${SITE.name}.com`,
   url: SITE.url,
-  founder: AUTHOR_JSONLD,
   description: SITE.description,
 };

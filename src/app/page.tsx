@@ -3,16 +3,14 @@ import { ArrowRight } from "lucide-react";
 
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { AUTHOR_JSONLD, ORGANIZATION_JSONLD } from "@/lib/author";
+import { ORGANIZATION_JSONLD } from "@/lib/author";
 import { GUIDES } from "@/lib/guides";
 import { SITE, TOOLS } from "@/lib/tools";
 import { cn } from "@/lib/utils";
 
 export default function HomePage() {
-  // Combined site identity graph: WebSite + Organization + Person.
-  // Lets Google connect the dots between filamentcalcs.com, the publisher
-  // organization, and Matthew Carvalho as the human behind it. Core
-  // E-E-A-T signal for AdSense and Search.
+  // Site identity graph: WebSite + Organization. No personal Person
+  // attached. Matches the convention used by larger calculator sites.
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
@@ -27,7 +25,6 @@ export default function HomePage() {
         "@id": `${SITE.url}/#organization`,
         ...ORGANIZATION_JSONLD,
       },
-      AUTHOR_JSONLD,
     ],
   };
 

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { AUTHOR, AUTHOR_JSONLD } from "@/lib/author";
+import { ORGANIZATION_JSONLD } from "@/lib/author";
 import { SITE } from "@/lib/tools";
 
 export const metadata: Metadata = {
@@ -11,18 +11,21 @@ export const metadata: Metadata = {
 };
 
 export default function AboutPage() {
-  // ProfilePage schema with the Author Person attached. Single source of
-  // truth Google should crawl to confirm the site has a real human behind it.
+  // AboutPage schema referencing the site Organization. No personal
+  // Profile; the site is operated as an editorial entity.
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
       {
-        "@type": "ProfilePage",
+        "@type": "AboutPage",
         url: `${SITE.url}/about`,
-        name: `About ${AUTHOR.name} and ${SITE.name}.com`,
-        mainEntity: AUTHOR_JSONLD,
+        name: `About ${SITE.name}.com`,
+        mainEntity: { "@id": `${SITE.url}/#organization` },
       },
-      AUTHOR_JSONLD,
+      {
+        "@id": `${SITE.url}/#organization`,
+        ...ORGANIZATION_JSONLD,
+      },
     ],
   };
 
@@ -55,17 +58,13 @@ export default function AboutPage() {
           Discord channel.
         </p>
 
-        <h2
-          id="author"
-          className="pt-4 text-lg font-semibold tracking-tight text-primary"
-        >
-          Who runs this site
+        <h2 className="pt-4 text-lg font-semibold tracking-tight text-primary">
+          How the site is operated
         </h2>
         <p>
-          {SITE.name}.com is researched and maintained by{" "}
-          <span className="font-medium text-foreground">{AUTHOR.name}</span>,
-          working independently. The site is not a product of any printer or
-          filament manufacturer, slicer team, or distributor, and has no
+          {SITE.name}.com is operated as an independent editorial
+          reference. It is not affiliated with any printer or filament
+          manufacturer, slicer team, or distributor, and carries no
           affiliate relationships, sponsorships, or paid product reviews.
         </p>
         <p>

@@ -1,6 +1,7 @@
-// Full author-bio block rendered at the bottom of every guide.
-// Doubles as an E-E-A-T signal for AdSense/Google and as a transparent
-// "who wrote this" footer for readers.
+// "About this guide" block rendered at the bottom of every guide.
+// Functions as the trust signal (methodology, sources, contact) without
+// attaching a personal byline. Same pattern as calculator.net's
+// site-level disclosure.
 
 import Link from "next/link";
 
@@ -10,17 +11,15 @@ export function AuthorBio() {
   return (
     <aside className="mt-10 rounded-lg border bg-muted/30 p-5 text-sm leading-6">
       <p className="text-xs uppercase tracking-wide text-muted-foreground">
-        About the author
+        About this guide
       </p>
-      <p className="mt-2 font-semibold text-foreground">{AUTHOR.name}</p>
-      <p className="text-xs text-muted-foreground">{AUTHOR.role}</p>
       <p className="mt-3 text-muted-foreground">{AUTHOR.fullBio}</p>
       <p className="mt-3 text-xs">
         <Link
           href="/about"
           className="underline underline-offset-4 hover:text-primary"
         >
-          More about how the site is researched
+          About the site
         </Link>{" "}
         ·{" "}
         <Link
