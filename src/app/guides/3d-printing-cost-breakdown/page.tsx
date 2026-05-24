@@ -3,7 +3,10 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { AdSlot } from "@/components/shared/AdSlot";
+import { AuthorBio } from "@/components/shared/AuthorBio";
+import { AuthorByline } from "@/components/shared/AuthorByline";
 import { Highlight3D } from "@/components/shared/Highlight3D";
+import { AUTHOR_JSONLD } from "@/lib/author";
 import { getGuide } from "@/lib/guides";
 import { SITE } from "@/lib/tools";
 
@@ -55,7 +58,7 @@ export default function GuidePage() {
         headline: guide.title,
         description: guide.description,
         datePublished: guide.publishedAt,
-        author: { "@type": "Organization", name: SITE.name },
+        author: AUTHOR_JSONLD,
         publisher: { "@type": "Organization", name: SITE.name },
         mainEntityOfPage: { "@type": "WebPage", "@id": `${SITE.url}/guides/${SLUG}` },
       },
@@ -84,9 +87,7 @@ export default function GuidePage() {
         <h1 className="text-3xl font-semibold tracking-tight lg:text-4xl">
           <Highlight3D>{guide.title}</Highlight3D>
         </h1>
-        <p className="text-sm text-muted-foreground">
-          Updated April 2026
-        </p>
+        <AuthorByline updatedLabel="Updated April 2026" />
       </header>
 
       <figure className="my-8">
@@ -286,7 +287,63 @@ export default function GuidePage() {
             </div>
           ))}
         </dl>
+
+        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+          Sources and references
+        </h2>
+        <ul className="list-disc pl-5 space-y-1 text-xs leading-6 marker:text-primary">
+          <li>
+            US Energy Information Administration,{" "}
+            <a
+              href="https://www.eia.gov/electricity/monthly/epm_table_grapher.php?t=epmt_5_6_a"
+              className="underline"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              average retail price of electricity to ultimate customers
+            </a>{" "}
+            (residential rates by state)
+          </li>
+          <li>
+            Bambu Lab,{" "}
+            <a
+              href="https://wiki.bambulab.com/en/software/bambu-studio"
+              className="underline"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Bambu Studio documentation
+            </a>{" "}
+            (flush volume defaults, slicer behavior)
+          </li>
+          <li>
+            Prusa Research,{" "}
+            <a
+              href="https://help.prusa3d.com/category/prusaslicer_204"
+              className="underline"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              PrusaSlicer knowledge base
+            </a>{" "}
+            (default print profiles, waste assumptions)
+          </li>
+          <li>
+            CNC Kitchen on YouTube,{" "}
+            <a
+              href="https://www.youtube.com/@CNCKitchen"
+              className="underline"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              3D printing material and process testing series
+            </a>{" "}
+            (real-world tensile and throughput data)
+          </li>
+        </ul>
       </div>
+
+      <AuthorBio />
 
       <AdSlot slot="inline" className="my-10" />
 

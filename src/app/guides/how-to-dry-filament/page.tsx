@@ -3,7 +3,10 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { AdSlot } from "@/components/shared/AdSlot";
+import { AuthorBio } from "@/components/shared/AuthorBio";
+import { AuthorByline } from "@/components/shared/AuthorByline";
 import { Highlight3D } from "@/components/shared/Highlight3D";
+import { AUTHOR_JSONLD } from "@/lib/author";
 import { getGuide } from "@/lib/guides";
 import { SITE } from "@/lib/tools";
 
@@ -55,7 +58,7 @@ export default function GuidePage() {
         headline: guide.title,
         description: guide.description,
         datePublished: guide.publishedAt,
-        author: { "@type": "Organization", name: SITE.name },
+        author: AUTHOR_JSONLD,
         publisher: { "@type": "Organization", name: SITE.name },
         mainEntityOfPage: { "@type": "WebPage", "@id": `${SITE.url}/guides/${SLUG}` },
       },
@@ -84,7 +87,7 @@ export default function GuidePage() {
         <h1 className="text-3xl font-semibold tracking-tight lg:text-4xl">
           <Highlight3D>{guide.title}</Highlight3D>
         </h1>
-        <p className="text-sm text-muted-foreground">Updated May 2026</p>
+        <AuthorByline updatedLabel="Updated May 2026" />
       </header>
 
       <figure className="my-8">
@@ -338,7 +341,61 @@ export default function GuidePage() {
             </div>
           ))}
         </dl>
+
+        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+          Sources and references
+        </h2>
+        <ul className="list-disc pl-5 space-y-1 text-xs leading-6 marker:text-primary">
+          <li>
+            Prusa Research,{" "}
+            <a
+              href="https://help.prusa3d.com/article/how-to-dry-filament_124458"
+              className="underline"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              how to dry filament knowledge-base article
+            </a>{" "}
+            (drying temperatures and times per material)
+          </li>
+          <li>
+            Polymaker,{" "}
+            <a
+              href="https://us.polymaker.com/pages/material-properties"
+              className="underline"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              material properties and glass-transition data
+            </a>
+          </li>
+          <li>
+            Bambu Lab,{" "}
+            <a
+              href="https://wiki.bambulab.com/en/filament-acc/filament/h2d-filament-guide"
+              className="underline"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              filament storage and humidity guidance
+            </a>
+          </li>
+          <li>
+            Sunlu,{" "}
+            <a
+              href="https://www.sunlu.com/collections/filament-dryer"
+              className="underline"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              S2 and S4 filament dryer specifications
+            </a>{" "}
+            (rated temperatures and times referenced in the guide)
+          </li>
+        </ul>
       </div>
+
+      <AuthorBio />
 
       <AdSlot slot="inline" className="my-10" />
 

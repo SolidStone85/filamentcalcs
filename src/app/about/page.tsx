@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { AUTHOR, AUTHOR_JSONLD } from "@/lib/author";
 import { SITE } from "@/lib/tools";
 
 export const metadata: Metadata = {
@@ -10,8 +11,28 @@ export const metadata: Metadata = {
 };
 
 export default function AboutPage() {
+  // ProfilePage schema with the Author Person attached. Single source of
+  // truth Google should crawl to confirm the site has a real human behind it.
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "ProfilePage",
+        url: `${SITE.url}/about`,
+        name: `About ${AUTHOR.name} and ${SITE.name}.com`,
+        mainEntity: AUTHOR_JSONLD,
+      },
+      AUTHOR_JSONLD,
+    ],
+  };
+
   return (
     <div className="mx-auto max-w-3xl px-4 py-12 lg:py-16">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       <h1 className="text-3xl font-semibold tracking-tight">About {SITE.name}.com</h1>
       <div className="mt-6 space-y-4 text-sm leading-6 text-muted-foreground">
         <p>
@@ -32,6 +53,40 @@ export default function AboutPage() {
           required, and no data is sent to a server. URLs include your inputs
           so you can bookmark a result or share it in a Reddit thread or
           Discord channel.
+        </p>
+
+        <h2
+          id="author"
+          className="pt-4 text-lg font-semibold tracking-tight text-primary"
+        >
+          Who runs this site
+        </h2>
+        <p>
+          {SITE.name}.com is researched and maintained by{" "}
+          <span className="font-medium text-foreground">{AUTHOR.name}</span>,
+          working independently. The site is not a product of any printer or
+          filament manufacturer, slicer team, or distributor, and has no
+          affiliate relationships, sponsorships, or paid product reviews.
+        </p>
+        <p>
+          The angle of authority here is research, not personal print-farm
+          mileage. Every calculator is built from cross-referenced sources:
+          slicer documentation (Bambu Studio, PrusaSlicer, OrcaSlicer),
+          manufacturer datasheets, US EIA residential electricity rate data,
+          Eurostat European household rates, and published community testing
+          including CNC Kitchen&apos;s tensile and impact comparison series.
+          Where sources disagree, the calculator notes which way it leans and
+          why. Where confidence is low (print-time estimation being the
+          obvious example), the page says so out loud.
+        </p>
+        <p>
+          Corrections from readers are read and integrated into the quarterly
+          review cycle. The fastest path to fix a wrong default or a stale
+          price is the{" "}
+          <Link href="/contact" className="underline underline-offset-4">
+            contact page
+          </Link>
+          .
         </p>
 
         <h2 className="pt-4 text-lg font-semibold tracking-tight text-primary">

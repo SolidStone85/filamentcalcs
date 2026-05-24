@@ -3,17 +3,32 @@ import { ArrowRight } from "lucide-react";
 
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { AUTHOR_JSONLD, ORGANIZATION_JSONLD } from "@/lib/author";
 import { GUIDES } from "@/lib/guides";
 import { SITE, TOOLS } from "@/lib/tools";
 import { cn } from "@/lib/utils";
 
 export default function HomePage() {
+  // Combined site identity graph: WebSite + Organization + Person.
+  // Lets Google connect the dots between filamentcalcs.com, the publisher
+  // organization, and Matthew Carvalho as the human behind it. Core
+  // E-E-A-T signal for AdSense and Search.
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "WebSite",
-    name: SITE.name,
-    url: SITE.url,
-    description: SITE.description,
+    "@graph": [
+      {
+        "@type": "WebSite",
+        name: SITE.name,
+        url: SITE.url,
+        description: SITE.description,
+        publisher: { "@id": `${SITE.url}/#organization` },
+      },
+      {
+        "@id": `${SITE.url}/#organization`,
+        ...ORGANIZATION_JSONLD,
+      },
+      AUTHOR_JSONLD,
+    ],
   };
 
   // Latest 3 guides for the homepage feed.

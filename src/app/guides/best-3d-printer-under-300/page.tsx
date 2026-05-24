@@ -3,8 +3,11 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { AdSlot } from "@/components/shared/AdSlot";
-import { Highlight3D } from "@/components/shared/Highlight3D";
+import { AuthorBio } from "@/components/shared/AuthorBio";
+import { AuthorByline } from "@/components/shared/AuthorByline";
 import { GuideImagePlaceholder } from "@/components/shared/GuideImagePlaceholder";
+import { Highlight3D } from "@/components/shared/Highlight3D";
+import { AUTHOR_JSONLD } from "@/lib/author";
 import { getGuide } from "@/lib/guides";
 import { SITE } from "@/lib/tools";
 
@@ -102,7 +105,7 @@ export default function GuidePage() {
         headline: guide.title,
         description: guide.description,
         datePublished: guide.publishedAt,
-        author: { "@type": "Organization", name: SITE.name },
+        author: AUTHOR_JSONLD,
         publisher: { "@type": "Organization", name: SITE.name },
         mainEntityOfPage: {
           "@type": "WebPage",
@@ -134,7 +137,7 @@ export default function GuidePage() {
         <h1 className="text-3xl font-semibold tracking-tight lg:text-4xl">
           <Highlight3D>{guide.title}</Highlight3D>
         </h1>
-        <p className="text-sm text-muted-foreground">Updated April 2026</p>
+        <AuthorByline updatedLabel="Updated April 2026" />
       </header>
 
       <figure className="my-8">
@@ -532,6 +535,8 @@ export default function GuidePage() {
           </div>
         ))}
       </div>
+
+      <AuthorBio />
 
       <AdSlot slot="inline" className="my-8" />
     </article>
