@@ -15,7 +15,7 @@ export const AUTHOR = {
   // Block used at the bottom of guides and on the About page. Talks about
   // the site, not a person.
   fullBio:
-    "FilamentCalcs is an independent reference for the math behind hobbyist 3D printing. Every calculator and guide is built from cross-referenced sources: slicer documentation (Bambu Studio, PrusaSlicer, OrcaSlicer), manufacturer specifications, US EIA residential electricity rate data, Eurostat European household rates, and published community testing series including CNC Kitchen's tensile and impact comparisons. The site accepts no affiliate revenue, sponsorships, or paid product reviews. Reader corrections are read and incorporated into the quarterly review cycle.",
+    "FilamentCalcs is an independent reference for the math behind hobbyist 3D printing. Every calculator and guide is built from cross-referenced sources: slicer documentation (Bambu Studio, PrusaSlicer, OrcaSlicer), manufacturer specifications, US EIA residential electricity rate data, Eurostat European household rates, and published community testing series including CNC Kitchen's tensile and impact comparisons. Some pages include Amazon affiliate links when products are directly relevant; the site does not accept manufacturer sponsorships or paid product reviews. Reader corrections are read and incorporated into the quarterly review cycle.",
 } as const;
 
 // Article author = Organization (no real Person). Same pattern used by

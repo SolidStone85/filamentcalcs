@@ -64,8 +64,9 @@ export default function AboutPage() {
         <p>
           {SITE.name}.com is operated as an independent editorial
           reference. It is not affiliated with any printer or filament
-          manufacturer, slicer team, or distributor, and carries no
-          affiliate relationships, sponsorships, or paid product reviews.
+          manufacturer, slicer team, or distributor. Some pages include
+          Amazon affiliate links, but the site does not accept manufacturer
+          sponsorships or paid product reviews.
         </p>
         <p>
           The angle of authority here is research, not personal print-farm
@@ -173,12 +174,12 @@ export default function AboutPage() {
           Monetization and what we do not do
         </h2>
         <p>
-          This site carries Google AdSense to offset hosting costs and
-          time spent maintaining the calculators. No affiliate links, no
-          sponsored placements, no &quot;recommended retailers&quot; or
-          paid product reviews. When a guide names a specific printer or
-          filament brand, that name was chosen because it&apos;s relevant
-          to the topic, not because of any commercial relationship.
+          This site may earn from Amazon affiliate links on pages where a
+          product is directly relevant to the calculator or guide. Those
+          picks are a small monetization test, not paid reviews, and not
+          manufacturer-controlled placements. When a guide names a specific
+          printer or filament brand, that name was chosen because it&apos;s
+          relevant to the topic.
         </p>
         <p>
           We do not collect personal data beyond standard Google

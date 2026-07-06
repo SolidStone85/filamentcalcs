@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { GUIDES } from "@/lib/guides";
+import { AMAZON_DISCLOSURE } from "@/lib/commerce";
 import { SITE, TOOLS } from "@/lib/tools";
 
 export function Footer() {
@@ -119,7 +120,7 @@ export function Footer() {
           <p className="max-w-md">
             Not affiliated with any 3D printer or filament manufacturer.
             All calculations are estimates. Always verify with your slicer
-            and local rates.
+            and local rates. {AMAZON_DISCLOSURE}
           </p>
           <nav className="flex flex-wrap gap-4">
             <Link href="/privacy" className="hover:text-foreground">

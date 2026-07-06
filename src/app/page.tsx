@@ -70,6 +70,74 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ----- Top traffic pages ----- */}
+      <section className="mt-16">
+        <div className="mb-6 flex items-end justify-between gap-3">
+          <h2 className="text-xl font-semibold tracking-tight">
+            Popular right now
+          </h2>
+          <Link
+            href="/tools"
+            className="text-sm text-muted-foreground underline underline-offset-4 hover:text-primary"
+          >
+            All calculators
+          </Link>
+        </div>
+        <div className="grid gap-4 md:grid-cols-3">
+          <Link href="/guides/best-3d-printer-under-300">
+            <Card className="glass-card fc-card-lift h-full hover:border-primary/70">
+              <CardHeader>
+                <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                  Buyer&apos;s guide
+                </p>
+                <CardTitle className="mt-1 text-base">
+                  Best 3D printer under $300
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground">
+                  Compare the budget printers that make sense before you buy.
+                </p>
+              </CardContent>
+            </Card>
+          </Link>
+          <Link href="/guides/multi-color-printing-ams-worth-it">
+            <Card className="glass-card fc-card-lift h-full hover:border-primary/70">
+              <CardHeader>
+                <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                  AMS guide
+                </p>
+                <CardTitle className="mt-1 text-base">
+                  Is multi-color printing worth it?
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground">
+                  See when AMS purge waste is reasonable and when it gets silly.
+                </p>
+              </CardContent>
+            </Card>
+          </Link>
+          <Link href="/tools/ams-purge-waste-calculator">
+            <Card className="glass-card fc-card-lift h-full hover:border-primary/70">
+              <CardHeader>
+                <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                  Calculator
+                </p>
+                <CardTitle className="mt-1 text-base">
+                  AMS Purge Waste Calculator
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground">
+                  Run the color-swap math before wasting half a spool.
+                </p>
+              </CardContent>
+            </Card>
+          </Link>
+        </div>
+      </section>
+
       {/* ----- Latest guides feed ----- */}
       <section className="mt-16">
         <div className="mb-6 flex items-end justify-between gap-3">
@@ -418,9 +486,9 @@ export default function HomePage() {
               Are the calculators actually free?
             </dt>
             <dd className="mt-1">
-              Yes. No sign-up, no email collection, no paid tier. The site
-              runs Google AdSense to offset hosting costs and time spent
-              maintaining the calculators.
+              Yes. No sign-up, no email collection, no paid tier. Some pages
+              include Amazon product links that may earn a commission at no
+              extra cost to you.
             </dd>
           </div>
           <div>
@@ -484,10 +552,9 @@ export default function HomePage() {
               Are you affiliated with any printer or filament brand?
             </dt>
             <dd className="mt-1">
-              No. No affiliate links, no sponsored placements, no paid
-              product reviews. When a guide names a specific brand or
-              printer, it&apos;s because that name is relevant to the
-              topic.
+              No printer or filament company owns, sponsors, or reviews this
+              site. Amazon links are affiliate links, and named products are
+              picked because they fit the calculator or guide topic.
             </dd>
           </div>
           <div>

@@ -3,6 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { AdSlot } from "@/components/shared/AdSlot";
+import { AffiliatePicks } from "@/components/shared/AffiliatePicks";
+import { RelatedContent } from "@/components/shared/RelatedContent";
 import { AuthorBio } from "@/components/shared/AuthorBio";
 import { AuthorByline } from "@/components/shared/AuthorByline";
 import { GuideImagePlaceholder } from "@/components/shared/GuideImagePlaceholder";
@@ -164,6 +166,8 @@ export default function GuidePage() {
       </figure>
 
       <AdSlot slot="top" className="my-8" />
+
+      <AffiliatePicks pagePath={`/guides/${SLUG}`} className="my-8" />
 
       <div className="prose prose-sm dark:prose-invert max-w-none space-y-5 text-sm leading-7">
         <p>
@@ -537,6 +541,8 @@ export default function GuidePage() {
       </div>
 
       <AuthorBio />
+
+      <RelatedContent pagePath={`/guides/${SLUG}`} className="mt-8" />
 
       <AdSlot slot="inline" className="my-8" />
     </article>

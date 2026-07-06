@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 
 import { AdSlot } from "@/components/shared/AdSlot";
+import { AffiliatePicks } from "@/components/shared/AffiliatePicks";
+import { RelatedContent } from "@/components/shared/RelatedContent";
 import { SITE } from "@/lib/tools";
 
 import { Calculator } from "./Calculator";
@@ -98,6 +100,8 @@ export default function MaterialComparisonPage() {
       <Suspense fallback={<div className="h-[500px]" />}>
         <Calculator />
       </Suspense>
+
+      <AffiliatePicks pagePath="/tools/material-comparison" className="mx-auto mt-8 max-w-3xl" />
 
       <section className="mx-auto mt-12 max-w-3xl space-y-3">
         <h2 className="text-xl font-semibold tracking-tight text-primary">
@@ -386,6 +390,8 @@ export default function MaterialComparisonPage() {
           ))}
         </dl>
       </section>
+
+      <RelatedContent pagePath="/tools/material-comparison" className="mx-auto mt-10 max-w-3xl" />
 
       <AdSlot slot="inline" className="mx-auto mt-10 max-w-3xl" />
     </div>

@@ -22,8 +22,8 @@ export default function GuidesIndexPage() {
         <p className="mt-3 text-sm leading-7 text-muted-foreground">
           Practical write-ups on filament choice, printer cost, reliability,
           and the other questions hobbyists actually ask. Every guide links
-          to the calculators on this site that apply. No affiliate spam, no
-          listicle filler, no AI-generated nonsense.
+          to the calculators on this site that apply, with product links only
+          where they are useful to the topic.
         </p>
       </header>
 
