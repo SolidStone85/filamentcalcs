@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
@@ -7,6 +8,10 @@ import { ORGANIZATION_JSONLD } from "@/lib/author";
 import { GUIDES } from "@/lib/guides";
 import { SITE, TOOLS } from "@/lib/tools";
 import { cn } from "@/lib/utils";
+
+export const metadata: Metadata = {
+  alternates: { canonical: SITE.url },
+};
 
 export default function HomePage() {
   // Site identity graph: WebSite + Organization. No personal Person
