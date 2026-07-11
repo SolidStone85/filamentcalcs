@@ -1,6 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import {
+  AlertTriangle,
+  ArrowRight,
+  Coins,
+  Disc3,
+  Layers,
+  Palette,
+  Timer,
+  Zap,
+  type LucideIcon,
+} from "lucide-react";
 
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,6 +21,18 @@ import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
   alternates: { canonical: SITE.url },
+};
+
+// Icon per calculator, keyed by slug. Display only; TOOLS stays the single
+// source of truth for the list itself.
+const TOOL_ICONS: Record<string, LucideIcon> = {
+  "filament-cost-calculator": Coins,
+  "print-time-estimator": Timer,
+  "material-comparison": Layers,
+  "electricity-cost-calculator": Zap,
+  "failure-rate-calculator": AlertTriangle,
+  "ams-purge-waste-calculator": Palette,
+  "remaining-spool-calculator": Disc3,
 };
 
 export default function HomePage() {
@@ -47,32 +69,39 @@ export default function HomePage() {
 
       {/* ----- Hero ----- */}
       <section className="mx-auto max-w-3xl text-center">
-        <h1 className="text-4xl font-semibold tracking-tight lg:text-5xl">
+        <h1 className="text-4xl font-semibold tracking-tight md:text-5xl lg:text-6xl">
           Practical calculators and guides for{" "}
           <span className="text-3d">3D</span>{" "}
           printing hobbyists
         </h1>
-        <p className="mt-4 text-lg text-muted-foreground">
+        <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-muted-foreground">
           Material cost, electricity, print time, failure tracking, and the
           AMS purge math nobody warns you about. Plus longer guides on
           picking filament, fixing failures, and what each setting actually
           does. All free, all in your browser, no sign-up.
         </p>
-        <div className="mt-6 flex flex-wrap justify-center gap-3">
+        <div className="mt-7 flex flex-wrap justify-center gap-3">
           <Link
             href="/tools/filament-cost-calculator"
-            className={cn(buttonVariants({ size: "lg" }))}
+            className={cn(buttonVariants({ size: "lg" }), "h-10 px-5")}
           >
             Try the filament cost calculator
             <ArrowRight className="ml-2 h-4 w-4" />
           </Link>
           <Link
             href="/guides"
-            className={cn(buttonVariants({ size: "lg", variant: "outline" }))}
+            className={cn(
+              buttonVariants({ size: "lg", variant: "outline" }),
+              "h-10 px-5",
+            )}
           >
             Read the guides
           </Link>
         </div>
+        <p className="mt-5 text-xs text-muted-foreground">
+          {TOOLS.filter((t) => t.available).length} calculators · no sign-up
+          · nothing leaves your browser
+        </p>
       </section>
 
       {/* ----- Top traffic pages ----- */}
@@ -90,7 +119,7 @@ export default function HomePage() {
         </div>
         <div className="grid gap-4 md:grid-cols-3">
           <Link href="/guides/best-3d-printer-under-300">
-            <Card className="glass-card fc-card-lift h-full hover:border-primary/70">
+            <Card className="glass-card fc-card-lift h-full">
               <CardHeader>
                 <p className="text-xs uppercase tracking-wide text-muted-foreground">
                   Buyer&apos;s guide
@@ -107,7 +136,7 @@ export default function HomePage() {
             </Card>
           </Link>
           <Link href="/guides/multi-color-printing-ams-worth-it">
-            <Card className="glass-card fc-card-lift h-full hover:border-primary/70">
+            <Card className="glass-card fc-card-lift h-full">
               <CardHeader>
                 <p className="text-xs uppercase tracking-wide text-muted-foreground">
                   AMS guide
@@ -124,7 +153,7 @@ export default function HomePage() {
             </Card>
           </Link>
           <Link href="/tools/ams-purge-waste-calculator">
-            <Card className="glass-card fc-card-lift h-full hover:border-primary/70">
+            <Card className="glass-card fc-card-lift h-full">
               <CardHeader>
                 <p className="text-xs uppercase tracking-wide text-muted-foreground">
                   Calculator
@@ -159,7 +188,7 @@ export default function HomePage() {
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {latestGuides.map((guide) => (
             <Link key={guide.slug} href={`/guides/${guide.slug}`}>
-              <Card className="glass-card fc-card-lift h-full hover:border-primary/70">
+              <Card className="glass-card fc-card-lift h-full">
                 <CardHeader>
                   <p className="text-xs uppercase tracking-wide text-muted-foreground">
                     {guide.readMinutes} min read
@@ -418,15 +447,19 @@ export default function HomePage() {
         </h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {TOOLS.map((tool) => {
+            const Icon = TOOL_ICONS[tool.slug];
             const content = (
               <Card
                 className={`glass-card h-full ${
-                  tool.available
-                    ? "fc-card-lift hover:border-primary/70"
-                    : "opacity-60"
+                  tool.available ? "fc-card-lift" : "opacity-60"
                 }`}
               >
                 <CardHeader>
+                  {Icon && (
+                    <div className="mb-1 flex size-9 items-center justify-center rounded-lg bg-primary/10 text-primary ring-1 ring-primary/20">
+                      <Icon className="size-4.5" aria-hidden="true" />
+                    </div>
+                  )}
                   <CardTitle className="flex items-center justify-between gap-2 text-base">
                     {tool.shortTitle}
                     {!tool.available && (

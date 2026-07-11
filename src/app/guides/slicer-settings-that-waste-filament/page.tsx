@@ -136,7 +136,7 @@ export default function GuidePage() {
           equivalents are noted where they differ meaningfully.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           1. Flush volumes (multi-color only): biggest single win
         </h2>
         <p>
@@ -165,7 +165,7 @@ export default function GuidePage() {
           shows the dollar impact for any combination.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           2. Brim width and skirt count
         </h2>
         <p>
@@ -187,7 +187,7 @@ export default function GuidePage() {
           worrying about. The brim is where the savings are.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           3. Infill density
         </h2>
         <p>
@@ -208,7 +208,7 @@ export default function GuidePage() {
           strength, you probably also need to switch to PETG or PA.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           4. Support style and overhang threshold
         </h2>
         <p>
@@ -230,7 +230,7 @@ export default function GuidePage() {
           degree rotation eliminates all supports.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           5. Wall count and top/bottom layers
         </h2>
         <p>
@@ -245,7 +245,7 @@ export default function GuidePage() {
           uses dramatically less material.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           6. Layer height (affects time more than material)
         </h2>
         <p>
@@ -261,7 +261,7 @@ export default function GuidePage() {
           0.12-0.16mm is justified.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           7. Retraction (waste from stringing, not retraction itself)
         </h2>
         <p>
@@ -278,7 +278,7 @@ export default function GuidePage() {
           quality improvement is significant.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           Combined impact: a real example
         </h2>
         <p>
@@ -305,7 +305,7 @@ export default function GuidePage() {
           can model the exact impact for your specific part.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           What NOT to optimize for waste
         </h2>
         <ul className="list-disc pl-5 space-y-1 marker:text-primary">
@@ -323,7 +323,7 @@ export default function GuidePage() {
           </li>
         </ul>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           Frequently asked
         </h2>
         <dl className="space-y-4">

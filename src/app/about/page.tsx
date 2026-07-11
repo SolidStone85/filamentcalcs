@@ -58,7 +58,7 @@ export default function AboutPage() {
           Discord channel.
         </p>
 
-        <h2 className="pt-4 text-lg font-semibold tracking-tight text-primary">
+        <h2 className="pt-4 text-lg font-semibold tracking-tight">
           How the site is operated
         </h2>
         <p>
@@ -89,7 +89,7 @@ export default function AboutPage() {
           .
         </p>
 
-        <h2 className="pt-4 text-lg font-semibold tracking-tight text-primary">
+        <h2 className="pt-4 text-lg font-semibold tracking-tight">
           Why this site exists
         </h2>
         <p>
@@ -108,7 +108,7 @@ export default function AboutPage() {
           one or two printers, not commercial farms.
         </p>
 
-        <h2 className="pt-4 text-lg font-semibold tracking-tight text-primary">
+        <h2 className="pt-4 text-lg font-semibold tracking-tight">
           What makes this different from other calculator sites
         </h2>
         <p>
@@ -129,7 +129,7 @@ export default function AboutPage() {
           documents every formula and the source data it draws on.
         </p>
 
-        <h2 className="pt-4 text-lg font-semibold tracking-tight text-primary">
+        <h2 className="pt-4 text-lg font-semibold tracking-tight">
           Sources and method
         </h2>
         <p>
@@ -148,7 +148,7 @@ export default function AboutPage() {
           per-file estimate.
         </p>
 
-        <h2 className="pt-4 text-lg font-semibold tracking-tight text-primary">
+        <h2 className="pt-4 text-lg font-semibold tracking-tight">
           How the site is maintained
         </h2>
         <p>
@@ -170,7 +170,7 @@ export default function AboutPage() {
           .
         </p>
 
-        <h2 className="pt-4 text-lg font-semibold tracking-tight text-primary">
+        <h2 className="pt-4 text-lg font-semibold tracking-tight">
           Monetization and what we do not do
         </h2>
         <p>
@@ -189,7 +189,7 @@ export default function AboutPage() {
           bookmark or share, but those URLs are never sent to our server.
         </p>
 
-        <h2 className="pt-4 text-lg font-semibold tracking-tight text-primary">
+        <h2 className="pt-4 text-lg font-semibold tracking-tight">
           Feedback
         </h2>
         <p>

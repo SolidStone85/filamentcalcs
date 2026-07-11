@@ -1,12 +1,32 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import {
+  AlertTriangle,
+  Coins,
+  Disc3,
+  Layers,
+  Palette,
+  Timer,
+  Zap,
+  type LucideIcon,
+} from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SITE, TOOLS } from "@/lib/tools";
 
 const TITLE = "All 3D printing calculators on filamentcalcs.com";
 const DESCRIPTION =
-  "Six free 3D printing calculators in one place: filament cost, print time, electricity, material comparison, failure rate, and AMS purge waste. No sign-up, runs in your browser.";
+  "Seven free 3D printing calculators in one place: filament cost, print time, electricity, material comparison, failure rate, AMS purge waste, and remaining spool. No sign-up, runs in your browser.";
+
+const TOOL_ICONS: Record<string, LucideIcon> = {
+  "filament-cost-calculator": Coins,
+  "print-time-estimator": Timer,
+  "material-comparison": Layers,
+  "electricity-cost-calculator": Zap,
+  "failure-rate-calculator": AlertTriangle,
+  "ams-purge-waste-calculator": Palette,
+  "remaining-spool-calculator": Disc3,
+};
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -90,7 +110,7 @@ export default function ToolsIndexPage() {
           All 3D printing calculators
         </h1>
         <p className="mt-3 text-muted-foreground">
-          Six focused calculators for the things hobbyist 3D printer owners
+          Seven focused calculators for the things hobbyist 3D printer owners
           actually need to compute. Free, fast, mobile-friendly. Every
           calculator runs in your browser, results update as you type, and
           URLs encode your inputs so you can bookmark or share. No sign-up,
@@ -109,10 +129,16 @@ export default function ToolsIndexPage() {
       <section className="space-y-6">
         {TOOLS.filter((t) => t.available).map((tool) => {
           const details = TOOL_DETAILS[tool.slug];
+          const Icon = TOOL_ICONS[tool.slug];
           return (
             <Card key={tool.slug} className="glass-card">
               <CardHeader>
-                <CardTitle className="text-lg">
+                <CardTitle className="flex items-center gap-3 text-lg">
+                  {Icon && (
+                    <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary ring-1 ring-primary/20">
+                      <Icon className="size-4.5" aria-hidden="true" />
+                    </span>
+                  )}
                   <Link
                     href={`/tools/${tool.slug}`}
                     className="hover:text-primary"
@@ -144,7 +170,7 @@ export default function ToolsIndexPage() {
       </section>
 
       <section className="mt-12 max-w-3xl space-y-3">
-        <h2 className="text-xl font-semibold tracking-tight text-primary">
+        <h2 className="text-xl font-semibold tracking-tight">
           What if you don&apos;t see what you need?
         </h2>
         <p className="text-sm leading-6 text-muted-foreground">

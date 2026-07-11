@@ -106,7 +106,7 @@ export default function FilamentCostCalculatorPage() {
       <AffiliatePicks pagePath="/tools/filament-cost-calculator" className="mx-auto mt-8 max-w-3xl" />
 
       <section className="mx-auto mt-12 max-w-3xl space-y-3">
-        <h2 className="text-xl font-semibold tracking-tight text-primary">
+        <h2 className="text-xl font-semibold tracking-tight">
           How this works
         </h2>
         <p className="text-sm leading-6 text-muted-foreground">
@@ -125,7 +125,7 @@ export default function FilamentCostCalculatorPage() {
       </section>
 
       <section className="mx-auto mt-10 max-w-3xl space-y-3">
-        <h2 className="text-xl font-semibold tracking-tight text-primary">
+        <h2 className="text-xl font-semibold tracking-tight">
           The formula in detail
         </h2>
         <p className="text-sm leading-6 text-muted-foreground">
@@ -151,7 +151,7 @@ export default function FilamentCostCalculatorPage() {
       </section>
 
       <section className="mx-auto mt-10 max-w-3xl space-y-3">
-        <h2 className="text-xl font-semibold tracking-tight text-primary">
+        <h2 className="text-xl font-semibold tracking-tight">
           What "waste" actually covers
         </h2>
         <p className="text-sm leading-6 text-muted-foreground">
@@ -196,7 +196,7 @@ export default function FilamentCostCalculatorPage() {
       </section>
 
       <section className="mx-auto mt-10 max-w-3xl space-y-3">
-        <h2 className="text-xl font-semibold tracking-tight text-primary">
+        <h2 className="text-xl font-semibold tracking-tight">
           Material-specific waste rates
         </h2>
         <p className="text-sm leading-6 text-muted-foreground">
@@ -270,7 +270,7 @@ export default function FilamentCostCalculatorPage() {
       </section>
 
       <section className="mx-auto mt-10 max-w-3xl space-y-3">
-        <h2 className="text-xl font-semibold tracking-tight text-primary">
+        <h2 className="text-xl font-semibold tracking-tight">
           Three real worked examples
         </h2>
         <p className="text-sm leading-6 text-muted-foreground">
@@ -279,7 +279,7 @@ export default function FilamentCostCalculatorPage() {
         </p>
 
         <div className="rounded-md border p-4">
-          <p className="text-sm font-medium text-primary">
+          <p className="text-sm font-medium text-foreground">
             Small: 3DBenchy in PLA
           </p>
           <ul className="mt-2 list-disc pl-5 text-sm leading-6 text-muted-foreground">
@@ -291,7 +291,7 @@ export default function FilamentCostCalculatorPage() {
         </div>
 
         <div className="rounded-md border p-4">
-          <p className="text-sm font-medium text-primary">
+          <p className="text-sm font-medium text-foreground">
             Medium: phone case in PETG
           </p>
           <ul className="mt-2 list-disc pl-5 text-sm leading-6 text-muted-foreground">
@@ -303,7 +303,7 @@ export default function FilamentCostCalculatorPage() {
         </div>
 
         <div className="rounded-md border p-4">
-          <p className="text-sm font-medium text-primary">
+          <p className="text-sm font-medium text-foreground">
             Large: articulated dragon in dual-color PLA
           </p>
           <ul className="mt-2 list-disc pl-5 text-sm leading-6 text-muted-foreground">
@@ -330,7 +330,7 @@ export default function FilamentCostCalculatorPage() {
       </section>
 
       <section className="mx-auto mt-10 max-w-3xl space-y-3">
-        <h2 className="text-xl font-semibold tracking-tight text-primary">
+        <h2 className="text-xl font-semibold tracking-tight">
           Common mistakes that throw the number off
         </h2>
         <ol className="list-decimal pl-5 space-y-2 text-sm leading-6 text-muted-foreground">
@@ -388,7 +388,7 @@ export default function FilamentCostCalculatorPage() {
       </section>
 
       <section className="mx-auto mt-10 max-w-3xl space-y-3">
-        <h2 className="text-xl font-semibold tracking-tight text-primary">
+        <h2 className="text-xl font-semibold tracking-tight">
           When this estimate is wrong
         </h2>
         <p className="text-sm leading-6 text-muted-foreground">
@@ -426,13 +426,13 @@ export default function FilamentCostCalculatorPage() {
       <AdSlot slot="inline" className="mx-auto my-10 max-w-3xl" />
 
       <section className="mx-auto max-w-3xl space-y-4">
-        <h2 className="text-xl font-semibold tracking-tight text-primary">
+        <h2 className="text-xl font-semibold tracking-tight">
           Frequently asked
         </h2>
         <dl className="space-y-4">
           {FAQ.map((item) => (
             <div key={item.q} className="space-y-1">
-              <dt className="font-medium text-primary">{item.q}</dt>
+              <dt className="font-medium text-foreground">{item.q}</dt>
               <dd className="text-sm leading-6 text-muted-foreground">
                 {item.a}
               </dd>

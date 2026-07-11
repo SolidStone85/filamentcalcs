@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { Logo } from "@/components/layout/Logo";
 import { GUIDES } from "@/lib/guides";
 import { AMAZON_DISCLOSURE } from "@/lib/commerce";
 import { SITE, TOOLS } from "@/lib/tools";
@@ -13,23 +14,24 @@ export function Footer() {
 
   return (
     <footer className="mt-auto border-t bg-muted/30">
-      <div className="mx-auto max-w-6xl px-4 py-10">
+      <div className="mx-auto max-w-6xl px-4 py-12">
         <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-4">
           <div>
-            <p className="text-sm font-medium text-foreground">
+            <p className="flex items-center gap-2 text-sm font-semibold text-foreground">
+              <Logo size={20} />
               {SITE.name}.com
             </p>
-            <p className="mt-2 max-w-xs text-xs text-muted-foreground">
+            <p className="mt-3 max-w-xs text-xs leading-5 text-muted-foreground">
               Practical calculators and guides for 3D printing hobbyists.
               Free, fast, no sign-up.
             </p>
           </div>
 
           <div>
-            <p className="text-sm font-medium text-foreground">
+            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
               Popular calculators
             </p>
-            <ul className="mt-2 space-y-1 text-xs">
+            <ul className="mt-3 space-y-1.5 text-xs">
               {popularTools.map((tool) => (
                 <li key={tool.slug}>
                   <Link
@@ -52,10 +54,10 @@ export function Footer() {
           </div>
 
           <div>
-            <p className="text-sm font-medium text-foreground">
+            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
               Latest guides
             </p>
-            <ul className="mt-2 space-y-1 text-xs">
+            <ul className="mt-3 space-y-1.5 text-xs">
               {latestGuides.map((g) => (
                 <li key={g.slug}>
                   <Link
@@ -78,8 +80,10 @@ export function Footer() {
           </div>
 
           <div>
-            <p className="text-sm font-medium text-foreground">Resources</p>
-            <ul className="mt-2 space-y-1 text-xs">
+            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              Resources
+            </p>
+            <ul className="mt-3 space-y-1.5 text-xs">
               <li>
                 <Link
                   href="/glossary"

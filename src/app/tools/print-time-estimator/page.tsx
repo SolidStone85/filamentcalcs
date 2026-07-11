@@ -101,7 +101,7 @@ export default function PrintTimeEstimatorPage() {
       <AffiliatePicks pagePath="/tools/print-time-estimator" className="mx-auto mt-8 max-w-3xl" />
 
       <section className="mx-auto mt-12 max-w-3xl space-y-3">
-        <h2 className="text-xl font-semibold tracking-tight text-primary">
+        <h2 className="text-xl font-semibold tracking-tight">
           How this works
         </h2>
         <p className="text-sm leading-6 text-muted-foreground">
@@ -121,7 +121,7 @@ export default function PrintTimeEstimatorPage() {
       </section>
 
       <section className="mx-auto mt-10 max-w-3xl space-y-3">
-        <h2 className="text-xl font-semibold tracking-tight text-primary">
+        <h2 className="text-xl font-semibold tracking-tight">
           The formula in detail
         </h2>
         <p className="text-sm leading-6 text-muted-foreground">
@@ -148,7 +148,7 @@ export default function PrintTimeEstimatorPage() {
       </section>
 
       <section className="mx-auto mt-10 max-w-3xl space-y-3">
-        <h2 className="text-xl font-semibold tracking-tight text-primary">
+        <h2 className="text-xl font-semibold tracking-tight">
           Throughput by printer class
         </h2>
         <p className="text-sm leading-6 text-muted-foreground">
@@ -211,7 +211,7 @@ export default function PrintTimeEstimatorPage() {
       </section>
 
       <section className="mx-auto mt-10 max-w-3xl space-y-3">
-        <h2 className="text-xl font-semibold tracking-tight text-primary">
+        <h2 className="text-xl font-semibold tracking-tight">
           What slows your print down
         </h2>
         <p className="text-sm leading-6 text-muted-foreground">
@@ -253,12 +253,12 @@ export default function PrintTimeEstimatorPage() {
       </section>
 
       <section className="mx-auto mt-10 max-w-3xl space-y-3">
-        <h2 className="text-xl font-semibold tracking-tight text-primary">
+        <h2 className="text-xl font-semibold tracking-tight">
           Three quick examples
         </h2>
 
         <div className="rounded-md border p-4">
-          <p className="text-sm font-medium text-primary">Quick 3DBenchy</p>
+          <p className="text-sm font-medium text-foreground">Quick 3DBenchy</p>
           <ul className="mt-2 list-disc pl-5 text-sm leading-6 text-muted-foreground">
             <li>20 g of PLA on a Bambu A1 (26 g/hr typical)</li>
             <li>Math: 20 / 26 = 0.77 hours, about 46 minutes</li>
@@ -267,7 +267,7 @@ export default function PrintTimeEstimatorPage() {
         </div>
 
         <div className="rounded-md border p-4">
-          <p className="text-sm font-medium text-primary">Mid-size cosplay piece</p>
+          <p className="text-sm font-medium text-foreground">Mid-size cosplay piece</p>
           <ul className="mt-2 list-disc pl-5 text-sm leading-6 text-muted-foreground">
             <li>180 g of PLA on a Bambu P1S (28 g/hr typical)</li>
             <li>Math: 180 / 28 = 6.4 hours</li>
@@ -276,7 +276,7 @@ export default function PrintTimeEstimatorPage() {
         </div>
 
         <div className="rounded-md border p-4">
-          <p className="text-sm font-medium text-primary">Articulated dragon (heavy supports)</p>
+          <p className="text-sm font-medium text-foreground">Articulated dragon (heavy supports)</p>
           <ul className="mt-2 list-disc pl-5 text-sm leading-6 text-muted-foreground">
             <li>320 g of PLA on a Bambu P1S</li>
             <li>Math: 320 / 28 = 11.4 hours</li>
@@ -293,7 +293,7 @@ export default function PrintTimeEstimatorPage() {
       </section>
 
       <section className="mx-auto mt-10 max-w-3xl space-y-3">
-        <h2 className="text-xl font-semibold tracking-tight text-primary">
+        <h2 className="text-xl font-semibold tracking-tight">
           When to trust this estimate vs the slicer
         </h2>
         <ul className="list-disc pl-5 space-y-1 text-sm leading-6 text-muted-foreground">
@@ -320,13 +320,13 @@ export default function PrintTimeEstimatorPage() {
       <AdSlot slot="inline" className="mx-auto my-10 max-w-3xl" />
 
       <section className="mx-auto max-w-3xl space-y-4">
-        <h2 className="text-xl font-semibold tracking-tight text-primary">
+        <h2 className="text-xl font-semibold tracking-tight">
           Frequently asked
         </h2>
         <dl className="space-y-4">
           {FAQ.map((item) => (
             <div key={item.q} className="space-y-1">
-              <dt className="font-medium text-primary">{item.q}</dt>
+              <dt className="font-medium text-foreground">{item.q}</dt>
               <dd className="text-sm leading-6 text-muted-foreground">
                 {item.a}
               </dd>

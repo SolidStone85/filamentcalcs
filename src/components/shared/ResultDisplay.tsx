@@ -10,6 +10,8 @@ import { cn } from "@/lib/utils";
 type Props = {
   label: string;
   value: string;
+  /** Optional unit rendered as a smaller suffix ("g", "kWh"). Display only. */
+  unit?: string;
   sublabel?: string;
   copyValue?: string;
   prominent?: boolean;
@@ -18,6 +20,7 @@ type Props = {
 export function ResultDisplay({
   label,
   value,
+  unit,
   sublabel,
   copyValue,
   prominent = false,
@@ -39,43 +42,49 @@ export function ResultDisplay({
   return (
     <Card
       className={cn(
-        "glass-card gap-2 p-5",
-        prominent && "border-primary/40 ring-1 ring-primary/20",
+        "glass-card gap-2.5 p-5",
+        prominent && "border-primary/45 ring-1 ring-primary/20",
       )}
     >
       <div className="flex items-start justify-between gap-3">
-        <div className="text-xs uppercase tracking-wide text-muted-foreground">
+        <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
           {label}
         </div>
         {canCopy && (
           <Button
             variant="ghost"
             size="icon"
-            className="h-7 w-7"
+            className="-mt-1 -mr-1 size-7"
             onClick={handleCopy}
             aria-label={`Copy ${label}`}
           >
             {copied ? (
-              <Check className="h-4 w-4 text-emerald-500" />
+              <Check className="size-4 text-emerald-500" />
             ) : (
-              <Copy className="h-4 w-4" />
+              <Copy className="size-4" />
             )}
           </Button>
         )}
       </div>
       <div
-        key={value}
         className={cn(
-          "font-mono tabular-nums animate-in fade-in zoom-in-95 duration-300",
+          "flex flex-wrap items-baseline gap-x-1.5 font-mono tabular-nums leading-none",
           prominent
-            ? "text-5xl font-bold text-primary"
-            : "text-3xl font-semibold",
+            ? "text-4xl font-medium text-primary md:text-5xl"
+            : "text-2xl font-medium md:text-[1.75rem]",
         )}
       >
-        {value}
+        <span className="break-all">{value}</span>
+        {unit && (
+          <span className="font-sans text-sm font-normal text-muted-foreground md:text-base">
+            {unit}
+          </span>
+        )}
       </div>
       {sublabel && (
-        <div className="text-xs text-muted-foreground">{sublabel}</div>
+        <div className="text-xs tabular-nums leading-5 text-muted-foreground">
+          {sublabel}
+        </div>
       )}
     </Card>
   );

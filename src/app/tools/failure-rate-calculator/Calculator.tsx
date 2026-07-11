@@ -71,6 +71,11 @@ function encodeState(state: State): string {
   return p.toString();
 }
 
+const CURRENCY_ITEMS = CURRENCIES.map((c) => ({
+  value: c.code,
+  label: `${c.symbol} ${c.code}`,
+}));
+
 const BENCHMARK_COLORS: Record<
   "excellent" | "typical" | "investigate" | "serious",
   string
@@ -168,16 +173,17 @@ export function Calculator() {
             placeholder="20"
           />
 
-          <div className="space-y-1.5">
-            <Label className="text-sm font-medium text-primary">Currency</Label>
+          <div className="space-y-2">
+            <Label htmlFor="currency">Currency</Label>
             <Select
               value={state.currency}
+              items={CURRENCY_ITEMS}
               onValueChange={(v) => {
                 if (v !== null)
                   setState((s) => ({ ...s, currency: v as CurrencyCode }));
               }}
             >
-              <SelectTrigger>
+              <SelectTrigger id="currency" className="w-full">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -230,7 +236,8 @@ export function Calculator() {
             <div className="grid grid-cols-2 gap-3">
               <ResultDisplay
                 label="Filament wasted"
-                value={`${result.wastedGrams.toFixed(0)} g`}
+                value={result.wastedGrams.toFixed(0)}
+                unit="g"
                 sublabel={`${failed} failed × ${avgGrams} g avg`}
               />
               <ResultDisplay

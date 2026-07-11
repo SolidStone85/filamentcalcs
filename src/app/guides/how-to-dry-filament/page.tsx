@@ -137,7 +137,7 @@ export default function GuidePage() {
           different amounts and give different results.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           Drying temperatures by material
         </h2>
         <p>
@@ -195,7 +195,7 @@ export default function GuidePage() {
           </table>
         </div>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           Method 1: Kitchen oven (free, works for most filaments)
         </h2>
         <p>
@@ -216,7 +216,7 @@ export default function GuidePage() {
           taking longer.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           Method 2: Food dehydrator ($40-60, best cheap option)
         </h2>
         <p>
@@ -234,7 +234,7 @@ export default function GuidePage() {
           25 cents at average US electricity rates.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           Method 3: Dedicated filament dryer ($60-150)
         </h2>
         <p>
@@ -253,7 +253,7 @@ export default function GuidePage() {
           doesn&apos;t sit open for long.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           Method 4: Vacuum bag plus desiccant (preventive, not corrective)
         </h2>
         <p>
@@ -273,7 +273,7 @@ export default function GuidePage() {
           the printer.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           Method 5: Microwave (don&apos;t)
         </h2>
         <p>
@@ -289,7 +289,7 @@ export default function GuidePage() {
           and inconsistent extrusion later. Use any other method.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           Cost summary
         </h2>
         <ul className="list-disc pl-5 space-y-1 marker:text-primary">
@@ -315,7 +315,7 @@ export default function GuidePage() {
           </li>
         </ul>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           When wet filament becomes a real cost
         </h2>
         <p>
@@ -332,7 +332,7 @@ export default function GuidePage() {
           rate spikes after a humid week, drying is usually the answer.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           Frequently asked
         </h2>
         <dl className="space-y-4">
@@ -346,7 +346,7 @@ export default function GuidePage() {
           ))}
         </dl>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           Sources and references
         </h2>
         <ul className="list-disc pl-5 space-y-1 text-xs leading-6 marker:text-primary">

@@ -144,7 +144,7 @@ export default function GuidePage() {
           has the specs side by side if you prefer a table.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           PLA: the default, and the right default
         </h2>
         <p>
@@ -171,7 +171,7 @@ export default function GuidePage() {
           inconsistently.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           PETG: PLA's tougher cousin
         </h2>
         <p>
@@ -197,7 +197,7 @@ export default function GuidePage() {
           PLA, worth it for functional parts.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           ABS: legacy tough-guy, mostly outclassed now
         </h2>
         <p>
@@ -223,7 +223,7 @@ export default function GuidePage() {
           Most hobbyists skip it in favor of ASA or just use PETG.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           TPU: the flexible one
         </h2>
         <p>
@@ -249,7 +249,7 @@ export default function GuidePage() {
           hardness that makes prints unpredictable.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           Decision shortcut
         </h2>
         <ul className="list-disc pl-5 space-y-1 marker:text-primary">
@@ -270,7 +270,7 @@ export default function GuidePage() {
           has the price defaults for each of these plus a custom option.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           Frequently asked
         </h2>
         <dl className="space-y-4">

@@ -147,7 +147,7 @@ export default function GuidePage() {
           worth it, when it isn&apos;t, and what to do about the waste.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           How AMS actually works (the purge mechanic)
         </h2>
         <p>
@@ -184,7 +184,7 @@ export default function GuidePage() {
           weight, and filament price.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           The real math, concrete numbers
         </h2>
         <p>
@@ -217,7 +217,7 @@ export default function GuidePage() {
           makes sense.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           When multi-color IS worth it
         </h2>
         <p>
@@ -248,7 +248,7 @@ export default function GuidePage() {
           </li>
         </ul>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           When multi-color is NOT worth it
         </h2>
         <ul className="list-disc pl-5 space-y-1 marker:text-primary">
@@ -276,7 +276,7 @@ export default function GuidePage() {
           </li>
         </ul>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           How to reduce purge waste (without buying hardware)
         </h2>
         <p>
@@ -315,7 +315,7 @@ export default function GuidePage() {
           </li>
         </ol>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           Worked example: two phone cases compared
         </h2>
         <p>Both prints are 100g PLA phone cases, Bambu P1S, PLA at $20/kg.</p>
@@ -348,7 +348,7 @@ export default function GuidePage() {
           knowing what you&apos;re paying and deciding on purpose.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           Frequently asked
         </h2>
         <dl className="space-y-4">

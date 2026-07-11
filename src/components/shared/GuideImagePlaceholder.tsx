@@ -15,8 +15,8 @@ type Props = {
 };
 
 /**
- * Renders an Image when `src` is provided, otherwise a stylized placeholder
- * card so the layout looks intentional. To wire up a real image:
+ * Renders an Image when `src` is provided, otherwise nothing (readers never
+ * see an unfinished placeholder). To wire up a real image:
  *   1. Save the image to `public/guides/<guide-slug>/<slot>.png` (or .jpg/.webp)
  *   2. Pass `src="/guides/<guide-slug>/<slot>.png"` to the component
  */
@@ -40,15 +40,10 @@ export function GuideImagePlaceholder({ slot, alt, prompt, src }: Props) {
     );
   }
 
-  return (
-    <div className="my-8 rounded-xl border border-dashed border-primary/40 bg-primary/5 p-6">
-      <p className="text-xs font-mono uppercase tracking-wide text-primary">
-        Image · {slot}
-      </p>
-      <p className="mt-2 text-sm font-medium text-foreground">{alt}</p>
-      <p className="mt-3 text-xs leading-5 text-muted-foreground">
-        {prompt}
-      </p>
-    </div>
-  );
+  // No image yet: render nothing. The prompt stays in code (props above) so
+  // the image can be generated later, but readers never see an unfinished
+  // dashed box with an internal generation prompt.
+  void slot;
+  void prompt;
+  return null;
 }

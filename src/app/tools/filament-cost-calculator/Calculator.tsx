@@ -86,6 +86,16 @@ function encodeState(state: State): string {
 
 // -----------------------------------------------------------------------
 
+const MATERIAL_ITEMS = MATERIAL_PRESETS.map((m) => ({
+  value: m.id,
+  label: m.label,
+}));
+
+const CURRENCY_ITEMS = CURRENCIES.map((c) => ({
+  value: c.code,
+  label: `${c.symbol} ${c.code}`,
+}));
+
 export function Calculator() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -141,15 +151,14 @@ export function Calculator() {
           <CardTitle>Inputs</CardTitle>
         </CardHeader>
         <CardContent className="space-y-5">
-          <div className="space-y-1.5">
-            <Label htmlFor="material" className="text-sm font-medium text-primary">
-              Material
-            </Label>
+          <div className="space-y-2">
+            <Label htmlFor="material">Material</Label>
             <Select
               value={state.materialId}
+              items={MATERIAL_ITEMS}
               onValueChange={(v) => applyMaterial(v as MaterialPreset["id"])}
             >
-              <SelectTrigger id="material">
+              <SelectTrigger id="material" className="w-full">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -204,7 +213,7 @@ export function Calculator() {
 
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label className="text-sm font-medium text-primary">Waste factor</Label>
+              <Label>Waste factor</Label>
               <span className="font-mono text-sm tabular-nums text-muted-foreground">
                 {Math.round(state.wasteFactor * 100)}%
               </span>
@@ -229,15 +238,16 @@ export function Calculator() {
             </p>
           </div>
 
-          <div className="space-y-1.5">
-            <Label className="text-sm font-medium text-primary">Currency</Label>
+          <div className="space-y-2">
+            <Label htmlFor="currency">Currency</Label>
             <Select
               value={state.currency}
+              items={CURRENCY_ITEMS}
               onValueChange={(v) =>
                 setState((s) => ({ ...s, currency: v as CurrencyCode }))
               }
             >
-              <SelectTrigger>
+              <SelectTrigger id="currency" className="w-full">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -284,27 +294,28 @@ export function Calculator() {
               />
               <ResultDisplay
                 label="Filament used (incl. waste)"
-                value={`${result.effectiveGrams.toFixed(1)} g`}
+                value={result.effectiveGrams.toFixed(1)}
+                unit="g"
               />
             </div>
 
             <div className="flex flex-wrap gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium">
-                <span className="text-muted-foreground">Prints per kg:</span>
-                <span className="font-mono tabular-nums text-foreground">
+              <span className="inline-flex items-center gap-1.5 rounded-full border bg-card/70 px-3 py-1 text-xs">
+                <span className="text-muted-foreground">Prints per kg</span>
+                <span className="font-mono font-medium tabular-nums text-foreground">
                   {Math.max(1, Math.floor(1000 / gramsNum)).toLocaleString()}
                 </span>
               </span>
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium">
-                <span className="text-muted-foreground">Cost for 10 prints:</span>
-                <span className="font-mono tabular-nums text-foreground">
+              <span className="inline-flex items-center gap-1.5 rounded-full border bg-card/70 px-3 py-1 text-xs">
+                <span className="text-muted-foreground">Cost for 10 prints</span>
+                <span className="font-mono font-medium tabular-nums text-foreground">
                   {formatCurrency(result.cost * 10, state.currency)}
                 </span>
               </span>
               {result.cost >= 1 && (
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium">
-                  <span className="text-muted-foreground">≈ coffees ($5):</span>
-                  <span className="font-mono tabular-nums text-foreground">
+                <span className="inline-flex items-center gap-1.5 rounded-full border bg-card/70 px-3 py-1 text-xs">
+                  <span className="text-muted-foreground">≈ coffees ($5)</span>
+                  <span className="font-mono font-medium tabular-nums text-foreground">
                     {(result.cost / 5).toFixed(1)}
                   </span>
                 </span>

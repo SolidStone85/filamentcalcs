@@ -43,7 +43,7 @@ export default function MethodologyPage() {
           and disagree with the defaults if your situation is different.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           1. Filament Cost Calculator
         </h2>
         <p className="rounded-md bg-muted p-3 font-mono text-xs">
@@ -63,7 +63,7 @@ export default function MethodologyPage() {
           same. The "USD" / "EUR" toggle is cosmetic only.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           2. Print Time Estimator
         </h2>
         <p className="rounded-md bg-muted p-3 font-mono text-xs">
@@ -83,7 +83,7 @@ export default function MethodologyPage() {
           every move at your configured speeds.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           3. Electricity Cost Calculator
         </h2>
         <p className="rounded-md bg-muted p-3 font-mono text-xs">
@@ -104,7 +104,7 @@ export default function MethodologyPage() {
           averages 110 to 130W during a print.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           4. Failure Rate Calculator
         </h2>
         <p className="rounded-md bg-muted p-3 font-mono text-xs">
@@ -127,7 +127,7 @@ export default function MethodologyPage() {
           gives a useful upper bound on amortized cost.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           5. AMS Purge Waste Calculator
         </h2>
         <p className="rounded-md bg-muted p-3 font-mono text-xs">
@@ -142,7 +142,7 @@ export default function MethodologyPage() {
           adjustable in slicer settings between 0.4x and 1.5x.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           6. Material Comparison
         </h2>
         <p>
@@ -160,7 +160,7 @@ export default function MethodologyPage() {
           in a warm car?).
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           Source data summary
         </h2>
         <ul className="list-disc pl-5 space-y-1 marker:text-primary">
@@ -186,7 +186,7 @@ export default function MethodologyPage() {
           </li>
         </ul>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           Update policy
         </h2>
         <p>
@@ -205,7 +205,7 @@ export default function MethodologyPage() {
           made silently.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           Limitations and what this site does not do
         </h2>
         <ul className="list-disc pl-5 space-y-1 marker:text-primary">
@@ -231,7 +231,7 @@ export default function MethodologyPage() {
           </li>
         </ul>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           Corrections and feedback
         </h2>
         <p>

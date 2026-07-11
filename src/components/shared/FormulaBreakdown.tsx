@@ -23,19 +23,21 @@ export function FormulaBreakdown({ formula, steps, note }: Props) {
           Show the math
         </AccordionTrigger>
         <AccordionContent className="space-y-3">
-          <div className="rounded-md bg-muted p-3 font-mono text-sm">
+          <div className="whitespace-pre-line rounded-md border bg-muted/60 p-3 font-mono text-xs leading-5 text-muted-foreground sm:text-sm">
             {formula}
           </div>
-          <dl className="grid grid-cols-[auto,1fr] gap-x-4 gap-y-1.5 text-sm">
+          <dl className="grid grid-cols-[auto_1fr] gap-x-6 gap-y-1.5 text-sm">
             {steps.map((step) => (
               <div key={step.label} className="contents">
                 <dt className="text-muted-foreground">{step.label}</dt>
-                <dd className="font-mono tabular-nums">{step.value}</dd>
+                <dd className="text-right font-mono tabular-nums">
+                  {step.value}
+                </dd>
               </div>
             ))}
           </dl>
           {note && (
-            <p className="text-xs italic text-muted-foreground">{note}</p>
+            <p className="text-xs leading-5 text-muted-foreground">{note}</p>
           )}
         </AccordionContent>
       </AccordionItem>

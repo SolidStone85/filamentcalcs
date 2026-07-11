@@ -1,90 +1,29 @@
 import Link from "next/link";
 
 import { Logo } from "@/components/layout/Logo";
+import { MainNav } from "@/components/layout/MainNav";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
-import { Button, buttonVariants } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { SITE, TOOLS } from "@/lib/tools";
-import { cn } from "@/lib/utils";
-import { ChevronDown } from "lucide-react";
+import { SITE } from "@/lib/tools";
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-40 w-full border-b bg-background/90 backdrop-blur">
-      <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
+    <header className="sticky top-0 z-40 w-full border-b border-border/70 bg-background/85 backdrop-blur-md">
+      <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-2 px-4">
         <Link
           href="/"
-          className="flex items-center gap-2 text-lg font-semibold tracking-tight transition-opacity hover:opacity-80"
+          className="flex min-w-0 items-center gap-2 text-lg font-semibold tracking-tight transition-opacity hover:opacity-80"
         >
-          <Logo size={26} />
-          <span>
+          <Logo size={26} className="shrink-0" />
+          <span className="truncate">
             {SITE.name}
             <span className="text-muted-foreground">.com</span>
           </span>
         </Link>
 
-        <nav className="flex items-center gap-1">
-          <DropdownMenu>
-            <DropdownMenuTrigger
-              render={
-                <Button variant="ghost" size="sm" className="gap-1">
-                  Tools
-                  <ChevronDown className="h-4 w-4" />
-                </Button>
-              }
-            />
-            <DropdownMenuContent align="end" className="w-64">
-              {TOOLS.map((tool) =>
-                tool.available ? (
-                  <DropdownMenuItem
-                    key={tool.slug}
-                    render={<Link href={`/tools/${tool.slug}`} />}
-                  >
-                    {tool.shortTitle}
-                  </DropdownMenuItem>
-                ) : (
-                  <DropdownMenuItem key={tool.slug} disabled>
-                    {tool.shortTitle}
-                    <span className="ml-auto text-xs text-muted-foreground">
-                      soon
-                    </span>
-                  </DropdownMenuItem>
-                ),
-              )}
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          <Link
-            href="/guides"
-            className={cn(buttonVariants({ variant: "ghost", size: "sm" }))}
-          >
-            Guides
-          </Link>
-          <Link
-            href="/glossary"
-            className={cn(buttonVariants({ variant: "ghost", size: "sm" }))}
-          >
-            Glossary
-          </Link>
-          <Link
-            href="/methodology"
-            className={cn(buttonVariants({ variant: "ghost", size: "sm" }))}
-          >
-            Methodology
-          </Link>
-          <Link
-            href="/about"
-            className={cn(buttonVariants({ variant: "ghost", size: "sm" }))}
-          >
-            About
-          </Link>
+        <div className="flex items-center gap-1">
+          <MainNav />
           <ThemeToggle />
-        </nav>
+        </div>
       </div>
     </header>
   );

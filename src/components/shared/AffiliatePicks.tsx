@@ -47,7 +47,7 @@ export function AffiliatePicks({ pagePath, className }: Props) {
             rel="sponsored nofollow"
             className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           >
-            <Card className="glass-card fc-card-lift h-full hover:border-primary/60">
+            <Card className="glass-card h-full transition-colors duration-150 hover:border-primary/45">
               <CardHeader>
                 <p className="text-xs font-medium uppercase text-muted-foreground">
                   {product.eyebrow}

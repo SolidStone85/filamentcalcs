@@ -94,6 +94,21 @@ function encodeState(state: State): string {
   return p.toString();
 }
 
+const PRINTER_ITEMS = PRINTER_PRESETS.map((p) => ({
+  value: p.id,
+  label: p.label,
+}));
+
+const RATE_ITEMS = ELECTRICITY_RATE_PRESETS.map((r) => ({
+  value: r.id,
+  label: r.label,
+}));
+
+const CURRENCY_ITEMS = CURRENCIES.map((c) => ({
+  value: c.code,
+  label: `${c.symbol} ${c.code}`,
+}));
+
 export function Calculator() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -153,17 +168,16 @@ export function Calculator() {
           <CardTitle>Inputs</CardTitle>
         </CardHeader>
         <CardContent className="space-y-5">
-          <div className="space-y-1.5">
-            <Label htmlFor="printer" className="text-sm font-medium text-primary">
-              Printer
-            </Label>
+          <div className="space-y-2">
+            <Label htmlFor="printer">Printer</Label>
             <Select
               value={state.printerId}
+              items={PRINTER_ITEMS}
               onValueChange={(v) => {
                 if (v !== null) setState((s) => ({ ...s, printerId: v }));
               }}
             >
-              <SelectTrigger id="printer">
+              <SelectTrigger id="printer" className="w-full">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -209,17 +223,16 @@ export function Calculator() {
             hint="Use your slicer's estimate or the Print Time Estimator."
           />
 
-          <div className="space-y-1.5">
-            <Label htmlFor="rate" className="text-sm font-medium text-primary">
-              Electricity rate
-            </Label>
+          <div className="space-y-2">
+            <Label htmlFor="rate">Electricity rate</Label>
             <Select
               value={state.rateId}
+              items={RATE_ITEMS}
               onValueChange={(v) => {
                 if (v !== null) setState((s) => ({ ...s, rateId: v }));
               }}
             >
-              <SelectTrigger id="rate">
+              <SelectTrigger id="rate" className="w-full">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -256,16 +269,17 @@ export function Calculator() {
             />
           )}
 
-          <div className="space-y-1.5">
-            <Label className="text-sm font-medium text-primary">Currency</Label>
+          <div className="space-y-2">
+            <Label htmlFor="currency">Currency</Label>
             <Select
               value={state.currency}
+              items={CURRENCY_ITEMS}
               onValueChange={(v) => {
                 if (v !== null)
                   setState((s) => ({ ...s, currency: v as CurrencyCode }));
               }}
             >
-              <SelectTrigger>
+              <SelectTrigger id="currency" className="w-full">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -304,7 +318,8 @@ export function Calculator() {
             <div className="grid grid-cols-2 gap-3">
               <ResultDisplay
                 label="kWh used"
-                value={`${result.kwhUsed.toFixed(3)} kWh`}
+                value={result.kwhUsed.toFixed(3)}
+                unit="kWh"
               />
               <ResultDisplay
                 label="Cost per hour"

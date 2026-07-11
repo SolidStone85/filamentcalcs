@@ -102,7 +102,7 @@ export default function RemainingSpoolCalculatorPage() {
       <AffiliatePicks pagePath="/tools/remaining-spool-calculator" className="mx-auto mt-8 max-w-3xl" />
 
       <section className="mx-auto mt-12 max-w-3xl space-y-3">
-        <h2 className="text-xl font-semibold tracking-tight text-primary">
+        <h2 className="text-xl font-semibold tracking-tight">
           How this works
         </h2>
         <p className="text-sm leading-6 text-muted-foreground">
@@ -121,7 +121,7 @@ export default function RemainingSpoolCalculatorPage() {
       </section>
 
       <section className="mx-auto mt-10 max-w-3xl space-y-3">
-        <h2 className="text-xl font-semibold tracking-tight text-primary">
+        <h2 className="text-xl font-semibold tracking-tight">
           The formula in detail
         </h2>
         <p className="rounded-md bg-muted p-3 font-mono text-xs">
@@ -140,7 +140,7 @@ export default function RemainingSpoolCalculatorPage() {
       </section>
 
       <section className="mx-auto mt-10 max-w-3xl space-y-3">
-        <h2 className="text-xl font-semibold tracking-tight text-primary">
+        <h2 className="text-xl font-semibold tracking-tight">
           Common empty spool weights
         </h2>
         <div className="overflow-x-auto rounded-md border">
@@ -209,7 +209,7 @@ export default function RemainingSpoolCalculatorPage() {
       </section>
 
       <section className="mx-auto mt-10 max-w-3xl space-y-3">
-        <h2 className="text-xl font-semibold tracking-tight text-primary">
+        <h2 className="text-xl font-semibold tracking-tight">
           When the result feels off
         </h2>
         <ul className="list-disc pl-5 space-y-1 text-sm leading-6 text-muted-foreground">
@@ -243,13 +243,13 @@ export default function RemainingSpoolCalculatorPage() {
       <AdSlot slot="inline" className="mx-auto my-10 max-w-3xl" />
 
       <section className="mx-auto max-w-3xl space-y-4">
-        <h2 className="text-xl font-semibold tracking-tight text-primary">
+        <h2 className="text-xl font-semibold tracking-tight">
           Frequently asked
         </h2>
         <dl className="space-y-4">
           {FAQ.map((item) => (
             <div key={item.q} className="space-y-1">
-              <dt className="font-medium text-primary">{item.q}</dt>
+              <dt className="font-medium text-foreground">{item.q}</dt>
               <dd className="text-sm leading-6 text-muted-foreground">
                 {item.a}
               </dd>

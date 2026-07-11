@@ -143,7 +143,7 @@ export default function GuidePage() {
           has presets for common printer classes.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           Throughput by printer class
         </h2>
         <p>Realistic g/hr averages for default quality settings:</p>
@@ -161,7 +161,7 @@ export default function GuidePage() {
           one can achieve in most cases.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           Real-world examples
         </h2>
         <p>Actual prints with weight-based time estimates:</p>
@@ -188,7 +188,7 @@ export default function GuidePage() {
           </li>
         </ul>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           What makes prints slower than weight suggests
         </h2>
         <p>
@@ -225,7 +225,7 @@ export default function GuidePage() {
           </li>
         </ul>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           Why your slicer's estimate isn't always right
         </h2>
         <p>
@@ -253,7 +253,7 @@ export default function GuidePage() {
           is usually within 5 to 10% on Bambu printers.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           Planning overnight prints
         </h2>
         <p>
@@ -264,7 +264,7 @@ export default function GuidePage() {
           for clog risk.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           Frequently asked
         </h2>
         <dl className="space-y-4">

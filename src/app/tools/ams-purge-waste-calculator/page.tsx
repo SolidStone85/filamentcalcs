@@ -104,7 +104,7 @@ export default function AmsPurgeWastePage() {
       <AffiliatePicks pagePath="/tools/ams-purge-waste-calculator" className="mx-auto mt-8 max-w-3xl" />
 
       <section className="mx-auto mt-12 max-w-3xl space-y-3">
-        <h2 className="text-xl font-semibold tracking-tight text-primary">
+        <h2 className="text-xl font-semibold tracking-tight">
           How this works
         </h2>
         <p className="text-sm leading-6 text-muted-foreground">
@@ -134,7 +134,7 @@ export default function AmsPurgeWastePage() {
       </section>
 
       <section className="mx-auto mt-10 max-w-3xl space-y-3">
-        <h2 className="text-xl font-semibold tracking-tight text-primary">
+        <h2 className="text-xl font-semibold tracking-tight">
           The formula in detail
         </h2>
         <p className="rounded-md bg-muted p-3 font-mono text-xs">
@@ -160,7 +160,7 @@ export default function AmsPurgeWastePage() {
       </section>
 
       <section className="mx-auto mt-10 max-w-3xl space-y-3">
-        <h2 className="text-xl font-semibold tracking-tight text-primary">
+        <h2 className="text-xl font-semibold tracking-tight">
           Purge per swap by system
         </h2>
         <div className="overflow-x-auto rounded-md border">
@@ -209,7 +209,7 @@ export default function AmsPurgeWastePage() {
       </section>
 
       <section className="mx-auto mt-10 max-w-3xl space-y-3">
-        <h2 className="text-xl font-semibold tracking-tight text-primary">
+        <h2 className="text-xl font-semibold tracking-tight">
           When multi-color is worth the waste
         </h2>
         <ul className="list-disc pl-5 space-y-1 text-sm leading-6 text-muted-foreground">
@@ -241,7 +241,7 @@ export default function AmsPurgeWastePage() {
       </section>
 
       <section className="mx-auto mt-10 max-w-3xl space-y-3">
-        <h2 className="text-xl font-semibold tracking-tight text-primary">
+        <h2 className="text-xl font-semibold tracking-tight">
           How to cut purge waste 30 to 50% (free, no extra hardware)
         </h2>
         <ol className="list-decimal pl-5 space-y-2 text-sm leading-6 text-muted-foreground">
@@ -290,13 +290,13 @@ export default function AmsPurgeWastePage() {
       <AdSlot slot="inline" className="mx-auto my-10 max-w-3xl" />
 
       <section className="mx-auto max-w-3xl space-y-4">
-        <h2 className="text-xl font-semibold tracking-tight text-primary">
+        <h2 className="text-xl font-semibold tracking-tight">
           Frequently asked
         </h2>
         <dl className="space-y-4">
           {FAQ.map((item) => (
             <div key={item.q} className="space-y-1">
-              <dt className="font-medium text-primary">{item.q}</dt>
+              <dt className="font-medium text-foreground">{item.q}</dt>
               <dd className="text-sm leading-6 text-muted-foreground">
                 {item.a}
               </dd>

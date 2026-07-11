@@ -141,7 +141,7 @@ export default function GuidePage() {
           helps with this and compares you to hobbyist benchmarks.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           1. Poor first layer adhesion
         </h2>
         <p>
@@ -156,7 +156,7 @@ export default function GuidePage() {
           <li>Glue stick or hairspray as a bed prep if the surface is worn.</li>
         </ul>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           2. Wet filament
         </h2>
         <p>
@@ -171,7 +171,7 @@ export default function GuidePage() {
           silica gel packs.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           3. Clogged or partially clogged nozzle
         </h2>
         <p>
@@ -185,7 +185,7 @@ export default function GuidePage() {
           500 hours typically).
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           4. Warping (ABS especially)
         </h2>
         <p>
@@ -199,7 +199,7 @@ export default function GuidePage() {
           can't enclose, switch to PETG or PLA.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           5. Layer shift
         </h2>
         <p>
@@ -213,7 +213,7 @@ export default function GuidePage() {
           catching on the print.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           6. Stringing and oozing
         </h2>
         <p>
@@ -226,7 +226,7 @@ export default function GuidePage() {
           temp, combing enabled in slicer, dry the filament.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           7. Spaghetti (complete mid-print failure)
         </h2>
         <p>
@@ -240,7 +240,7 @@ export default function GuidePage() {
           waste 6 hours of filament.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           8. Supports fail or fuse to the part
         </h2>
         <p>
@@ -254,7 +254,7 @@ export default function GuidePage() {
           two materials and use a water-soluble support material.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           9. Bridging failure
         </h2>
         <p>
@@ -267,7 +267,7 @@ export default function GuidePage() {
           slightly if droopy.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           10. Elephant's foot
         </h2>
         <p>
@@ -280,7 +280,7 @@ export default function GuidePage() {
           model.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           11. Filament run-out
         </h2>
         <p>
@@ -293,7 +293,7 @@ export default function GuidePage() {
           into multiple files you start manually.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           12. Slicer setting mistakes
         </h2>
         <p>
@@ -309,7 +309,7 @@ export default function GuidePage() {
           print.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           Frequently asked
         </h2>
         <dl className="space-y-4">
@@ -323,7 +323,7 @@ export default function GuidePage() {
           ))}
         </dl>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           Sources and references
         </h2>
         <ul className="list-disc pl-5 space-y-1 text-xs leading-6 marker:text-primary">

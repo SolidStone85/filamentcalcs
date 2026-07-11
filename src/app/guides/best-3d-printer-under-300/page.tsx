@@ -187,7 +187,7 @@ export default function GuidePage() {
           machines I have never seen.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           The four picks at a glance
         </h2>
 
@@ -230,7 +230,7 @@ export default function GuidePage() {
           Year sales when these can drop 20% or more.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           1. Bambu A1 mini: the safest buy
         </h2>
 
@@ -271,7 +271,7 @@ export default function GuidePage() {
           a bigger plate from day one.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           2. Bambu A1: same printer, bigger plate
         </h2>
 
@@ -313,7 +313,7 @@ export default function GuidePage() {
           prompt="Clean infographic-style illustration showing four transparent cubes side by side, scaled to represent the build volumes of four 3D printers: 180×180×180mm, 256×256×256mm, 220×220×240mm, and 320×320×385mm. Each cube has its dimensions labeled in cyan-on-dark below it. Minimal flat design, dark background, cyan accents. No printers shown, just the volumes. 16:9 aspect ratio."
         />
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           3. Creality Ender 3 V3 KE: for tinkerers who like Klipper
         </h2>
 
@@ -351,7 +351,7 @@ export default function GuidePage() {
           a print to come off the bed without thinking.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           4. Elegoo Neptune 4 Plus: when build volume matters most
         </h2>
 
@@ -389,7 +389,7 @@ export default function GuidePage() {
           than scale.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           The decision tree
         </h2>
 
@@ -431,7 +431,7 @@ export default function GuidePage() {
           </li>
         </ol>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           What to skip
         </h2>
 
@@ -465,7 +465,7 @@ export default function GuidePage() {
           </li>
         </ul>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           Costs after the printer
         </h2>
 
@@ -508,7 +508,7 @@ export default function GuidePage() {
           prompt="Minimalist illustration of a 3D-printer-shopping checklist on a tablet screen, with hand-drawn-style cyan checkmarks beside items: 'Printer', 'Filament spool', 'Spare nozzles', 'Build plate', 'Filament dryer'. Top of tablet shows a small icon of a 3D printer. Dark slate background with cyan accent color. Editorial flat-design style, no humans. 16:9 aspect ratio."
         />
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           The honest summary
         </h2>
 
@@ -528,7 +528,7 @@ export default function GuidePage() {
           buy the printer that prints.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           Frequently asked questions
         </h2>
 

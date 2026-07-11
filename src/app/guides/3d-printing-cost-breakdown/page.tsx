@@ -133,7 +133,7 @@ export default function GuidePage() {
           with the small numbers that add up, so you can stop guessing.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           The five costs that matter
         </h2>
         <ol className="list-decimal pl-5 space-y-1 marker:text-primary font-medium">
@@ -144,7 +144,7 @@ export default function GuidePage() {
           <li>Your time</li>
         </ol>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           1. Filament (the biggest cost, easy to calculate)
         </h2>
         <p>
@@ -175,7 +175,7 @@ export default function GuidePage() {
           That's often more filament than the print itself.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           2. Electricity (almost nothing, most people get this wrong)
         </h2>
         <p>
@@ -197,7 +197,7 @@ export default function GuidePage() {
           covers the full range of printer classes and regional rates.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           3. Failure waste (small per print, real over time)
         </h2>
         <p>
@@ -221,7 +221,7 @@ export default function GuidePage() {
           tracks this and compares to benchmark bands.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           4. Printer wear (the controversial one)
         </h2>
         <p>
@@ -240,7 +240,7 @@ export default function GuidePage() {
           already paid off.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           5. Your time (the cost people really miss)
         </h2>
         <p>
@@ -255,7 +255,7 @@ export default function GuidePage() {
           prints for yourself, call it a hobby cost. Either way, it's real.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           Worked example: a 100g phone case
         </h2>
         <p>Standard PLA, 8-hour print on a Bambu P1S:</p>
@@ -278,7 +278,7 @@ export default function GuidePage() {
           electricity). Everything else is sunk.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           Frequently asked
         </h2>
         <dl className="space-y-4">
@@ -292,7 +292,7 @@ export default function GuidePage() {
           ))}
         </dl>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           Sources and references
         </h2>
         <ul className="list-disc pl-5 space-y-1 text-xs leading-6 marker:text-primary">

@@ -90,6 +90,16 @@ function encodeState(state: State): string {
   return p.toString();
 }
 
+const PROFILE_ITEMS = AMS_PROFILES.map((p) => ({
+  value: p.id,
+  label: p.label,
+}));
+
+const CURRENCY_ITEMS = CURRENCIES.map((c) => ({
+  value: c.code,
+  label: `${c.symbol} ${c.code}`,
+}));
+
 function verdictForPercent(percent: number): {
   label: string;
   color: string;
@@ -174,17 +184,16 @@ export function Calculator() {
           <CardTitle>Inputs</CardTitle>
         </CardHeader>
         <CardContent className="space-y-5">
-          <div className="space-y-1.5">
-            <Label htmlFor="profile" className="text-sm font-medium text-primary">
-              AMS profile
-            </Label>
+          <div className="space-y-2">
+            <Label htmlFor="profile">AMS profile</Label>
             <Select
               value={state.profileId}
+              items={PROFILE_ITEMS}
               onValueChange={(v) => {
                 if (v !== null) applyProfile(v);
               }}
             >
-              <SelectTrigger id="profile">
+              <SelectTrigger id="profile" className="w-full">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -222,9 +231,7 @@ export function Calculator() {
 
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label className="text-sm font-medium text-primary">
-                Purge per swap
-              </Label>
+              <Label>Purge per swap</Label>
               <span className="font-mono text-sm tabular-nums text-muted-foreground">
                 {state.purgePerSwap} g
               </span>
@@ -276,18 +283,17 @@ export function Calculator() {
             hint="For multi-color prints, use an average across the colors you&apos;re using."
           />
 
-          <div className="space-y-1.5">
-            <Label className="text-sm font-medium text-primary">
-              Currency
-            </Label>
+          <div className="space-y-2">
+            <Label htmlFor="currency">Currency</Label>
             <Select
               value={state.currency}
+              items={CURRENCY_ITEMS}
               onValueChange={(v) => {
                 if (v !== null)
                   setState((s) => ({ ...s, currency: v as CurrencyCode }));
               }}
             >
-              <SelectTrigger>
+              <SelectTrigger id="currency" className="w-full">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -340,7 +346,8 @@ export function Calculator() {
             <div className="grid grid-cols-2 gap-3">
               <ResultDisplay
                 label="Total filament used"
-                value={`${result.totalFilamentGrams.toFixed(0)} g`}
+                value={result.totalFilamentGrams.toFixed(0)}
+                unit="g"
                 sublabel={formatCurrency(
                   result.totalFilamentCost,
                   state.currency,

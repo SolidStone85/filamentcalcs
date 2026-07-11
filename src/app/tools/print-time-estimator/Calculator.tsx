@@ -66,6 +66,11 @@ function encodeState(state: State): string {
   return p.toString();
 }
 
+const PRINTER_ITEMS = PRINTER_PRESETS.map((p) => ({
+  value: p.id,
+  label: p.label,
+}));
+
 export function Calculator() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -107,17 +112,16 @@ export function Calculator() {
           <CardTitle>Inputs</CardTitle>
         </CardHeader>
         <CardContent className="space-y-5">
-          <div className="space-y-1.5">
-            <Label htmlFor="printer" className="text-sm font-medium text-primary">
-              Printer class
-            </Label>
+          <div className="space-y-2">
+            <Label htmlFor="printer">Printer class</Label>
             <Select
               value={state.printerId}
+              items={PRINTER_ITEMS}
               onValueChange={(v) => {
                 if (v !== null) setState((s) => ({ ...s, printerId: v }));
               }}
             >
-              <SelectTrigger id="printer">
+              <SelectTrigger id="printer" className="w-full">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>

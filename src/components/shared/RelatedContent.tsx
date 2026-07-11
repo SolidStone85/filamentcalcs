@@ -25,7 +25,7 @@ export function RelatedContent({ pagePath, className }: Props) {
       <div className="grid gap-3 sm:grid-cols-3">
         {links.map((link) => (
           <Link key={link.href} href={link.href} className="block">
-            <Card className="glass-card fc-card-lift h-full hover:border-primary/60">
+            <Card className="glass-card h-full transition-colors duration-150 hover:border-primary/45">
               <CardHeader>
                 <CardTitle className="text-sm">{link.label}</CardTitle>
               </CardHeader>

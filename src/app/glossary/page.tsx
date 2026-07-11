@@ -313,7 +313,7 @@ export default function GlossaryPage() {
             id={t.term.toLowerCase().replace(/\s+/g, "-")}
             className="border-b pb-4"
           >
-            <h2 className="text-lg font-semibold text-primary">{t.term}</h2>
+            <h2 className="text-lg font-semibold">{t.term}</h2>
             <p className="mt-1 text-sm leading-7 text-muted-foreground">
               {t.definition}
             </p>

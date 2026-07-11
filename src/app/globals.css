@@ -56,7 +56,7 @@
   --card-foreground: oklch(0.17 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.17 0 0);
-  --primary: oklch(0.62 0.13 210); /* cyan, button bg */
+  --primary: oklch(0.52 0.12 210); /* deep cyan: 4.5:1+ on white for links and button labels */
   --primary-foreground: oklch(0.99 0 0);
   --secondary: oklch(0.965 0 0);
   --secondary-foreground: oklch(0.22 0 0);
@@ -67,8 +67,8 @@
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.92 0 0);
   --input: oklch(0.92 0 0);
-  --ring: oklch(0.62 0.13 210);
-  --chart-1: oklch(0.62 0.13 210);
+  --ring: oklch(0.52 0.12 210);
+  --chart-1: oklch(0.52 0.12 210);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
   --chart-4: oklch(0.371 0 0);
@@ -76,12 +76,12 @@
   --radius: 0.625rem;
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.17 0 0);
-  --sidebar-primary: oklch(0.62 0.13 210);
+  --sidebar-primary: oklch(0.52 0.12 210);
   --sidebar-primary-foreground: oklch(0.99 0 0);
   --sidebar-accent: oklch(0.97 0 0);
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.62 0.13 210);
+  --sidebar-ring: oklch(0.52 0.12 210);
 }
 
 .dark {
@@ -131,6 +131,19 @@
     @apply font-sans;
   }
 
+  /* Typographic defaults: headings avoid orphan words, body text avoids
+     awkward rag. Both are progressive enhancements (no-ops in old engines). */
+  h1, h2, h3, h4 {
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background-color: oklch(0.75 0.14 205 / 0.3);
+  }
+
   /* Light mode: very faint neutral hex pattern. Same tile as dark mode so the
      site feels consistent when toggling, but opacity is lower and stroke is
      a cool gray so it recedes on white. Exists mostly so glass cards have
@@ -164,14 +177,16 @@
   .text-3d {
     font-weight: 800;
     letter-spacing: -0.02em;
-    color: oklch(0.78 0.14 205); /* cyan face */
+    /* Light mode face is deep cyan so the headline accent passes 3:1 on
+       near-white; the extrusion ramp steps darker beneath it. */
+    color: oklch(0.55 0.13 210);
     text-shadow:
-      0 1px 0 oklch(0.65 0.13 205),
-      0 2px 0 oklch(0.55 0.12 205),
-      0 3px 0 oklch(0.48 0.11 205),
-      0 4px 0 oklch(0.42 0.1 205),
-      0 5px 0 oklch(0.36 0.09 205),
-      0 8px 14px oklch(0 0 0 / 0.35);
+      0 1px 0 oklch(0.47 0.12 210),
+      0 2px 0 oklch(0.41 0.11 210),
+      0 3px 0 oklch(0.36 0.1 210),
+      0 4px 0 oklch(0.31 0.09 210),
+      0 5px 0 oklch(0.27 0.08 210),
+      0 8px 14px oklch(0 0 0 / 0.25);
   }
 
   .dark .text-3d {
@@ -189,21 +204,23 @@
      the honeycomb texture show through subtly. Border has a bright inner
      edge highlight to feel like a glass bezel. Works in both themes. */
   .glass-card {
-    background-color: oklch(from var(--card) l c h / 0.55);
+    background-color: oklch(from var(--card) l c h / 0.72);
     backdrop-filter: blur(10px) saturate(140%);
     -webkit-backdrop-filter: blur(10px) saturate(140%);
-    border: 1px solid oklch(from var(--foreground) l c h / 0.08);
+    border: 1px solid oklch(from var(--foreground) l c h / 0.1);
     box-shadow:
       inset 0 1px 0 oklch(from var(--foreground) l c h / 0.06),
-      0 1px 2px oklch(0 0 0 / 0.04);
+      0 1px 2px oklch(0 0 0 / 0.05),
+      0 8px 24px -12px oklch(0 0 0 / 0.08);
   }
 
   .dark .glass-card {
-    background-color: oklch(from var(--card) l c h / 0.45);
-    border-color: oklch(from var(--foreground) l c h / 0.1);
+    background-color: oklch(from var(--card) l c h / 0.62);
+    border-color: oklch(from var(--foreground) l c h / 0.13);
     box-shadow:
-      inset 0 1px 0 oklch(from var(--foreground) l c h / 0.08),
-      0 1px 3px oklch(0 0 0 / 0.3);
+      inset 0 1px 0 oklch(from var(--foreground) l c h / 0.09),
+      0 1px 3px oklch(0 0 0 / 0.35),
+      0 12px 32px -16px oklch(0 0 0 / 0.5);
   }
 
 }
@@ -218,9 +235,9 @@
     background-color 150ms ease, border-color 150ms ease;
 }
 .fc-glow-strong:hover:not(:disabled) {
-  filter: brightness(1.15);
-  box-shadow: 0 0 28px -4px oklch(0.78 0.16 205 / 0.7),
-    0 6px 14px -2px oklch(0 0 0 / 0.3);
+  filter: brightness(1.1);
+  box-shadow: 0 0 18px -6px oklch(0.78 0.16 205 / 0.55),
+    0 4px 10px -2px oklch(0 0 0 / 0.25);
   transform: translateY(-1px);
 }
 .fc-glow-strong:active:not(:disabled) {
@@ -233,10 +250,10 @@
     background-color 150ms ease, transform 150ms ease;
 }
 .fc-glow-soft:hover:not(:disabled) {
-  box-shadow: 0 0 22px -6px oklch(0.78 0.16 205 / 0.55),
-    0 2px 8px -2px oklch(0 0 0 / 0.2);
-  border-color: oklch(0.78 0.16 205 / 0.65);
-  background-color: oklch(0.78 0.16 205 / 0.06);
+  box-shadow: 0 0 14px -6px oklch(0.78 0.16 205 / 0.4),
+    0 2px 6px -2px oklch(0 0 0 / 0.15);
+  border-color: oklch(0.78 0.16 205 / 0.55);
+  background-color: oklch(0.78 0.16 205 / 0.05);
 }
 
 .fc-ghost-hover {
@@ -252,12 +269,27 @@
 }
 
 .fc-card-lift {
-  transition: transform 200ms ease, box-shadow 200ms ease,
-    border-color 200ms ease;
+  transition: transform 180ms ease, box-shadow 180ms ease,
+    border-color 180ms ease;
 }
 .fc-card-lift:hover {
-  transform: translateY(-4px);
-  border-color: oklch(0.78 0.16 205 / 0.75);
-  box-shadow: 0 12px 32px -8px oklch(0.78 0.16 205 / 0.45),
-    0 4px 12px -4px oklch(0 0 0 / 0.25);
+  transform: translateY(-2px);
+  border-color: oklch(0.78 0.16 205 / 0.6);
+  box-shadow: 0 8px 24px -10px oklch(0.78 0.16 205 / 0.3),
+    0 4px 12px -4px oklch(0 0 0 / 0.2);
+}
+
+/* Motion is feedback, not decoration: honor the OS-level preference. */
+@media (prefers-reduced-motion: reduce) {
+  .fc-glow-strong,
+  .fc-glow-soft,
+  .fc-ghost-hover,
+  .fc-card-lift {
+    transition: none;
+  }
+  .fc-glow-strong:hover:not(:disabled),
+  .fc-glow-strong:active:not(:disabled),
+  .fc-card-lift:hover {
+    transform: none;
+  }
 }

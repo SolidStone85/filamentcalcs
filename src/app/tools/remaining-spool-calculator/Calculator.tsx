@@ -116,6 +116,16 @@ function encodeState(state: State): string {
   return p.toString();
 }
 
+const SPOOL_ITEMS = SPOOL_PRESETS.map((p) => ({
+  value: p.id,
+  label: p.label,
+}));
+
+const CURRENCY_ITEMS = CURRENCIES.map((c) => ({
+  value: c.code,
+  label: `${c.symbol} ${c.code}`,
+}));
+
 const STATUS_COLORS: Record<"plenty" | "low" | "near-empty", string> = {
   plenty: "text-emerald-500",
   low: "text-amber-500",
@@ -195,12 +205,11 @@ export function Calculator() {
             hint="Weigh the spool with filament still on it. A kitchen scale is plenty accurate."
           />
 
-          <div className="space-y-1.5">
-            <Label className="text-sm font-medium text-primary">
-              Spool type
-            </Label>
+          <div className="space-y-2">
+            <Label htmlFor="spool-type">Spool type</Label>
             <Select
               value={state.spoolPresetId}
+              items={SPOOL_ITEMS}
               onValueChange={(v) => {
                 if (v === null) return;
                 const preset = getSpoolPreset(v);
@@ -212,7 +221,7 @@ export function Calculator() {
                 }));
               }}
             >
-              <SelectTrigger>
+              <SelectTrigger id="spool-type" className="w-full">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -275,16 +284,17 @@ export function Calculator() {
             hint="Used to estimate the dollar value of filament left on the spool."
           />
 
-          <div className="space-y-1.5">
-            <Label className="text-sm font-medium text-primary">Currency</Label>
+          <div className="space-y-2">
+            <Label htmlFor="currency">Currency</Label>
             <Select
               value={state.currency}
+              items={CURRENCY_ITEMS}
               onValueChange={(v) => {
                 if (v !== null)
                   setState((s) => ({ ...s, currency: v as CurrencyCode }));
               }}
             >
-              <SelectTrigger>
+              <SelectTrigger id="currency" className="w-full">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -303,11 +313,8 @@ export function Calculator() {
         <ResultDisplay
           prominent
           label="Filament remaining"
-          value={
-            hasInput
-              ? `${result.remainingGrams.toFixed(0)} g`
-              : "-"
-          }
+          value={hasInput ? result.remainingGrams.toFixed(0) : "-"}
+          unit={hasInput ? "g" : undefined}
           sublabel={
             hasInput
               ? `${result.percentRemaining.toFixed(1)}% of original ${originalWeight} g spool`
@@ -345,7 +352,7 @@ export function Calculator() {
 
             {result.belowEmpty && (
               <Card className="glass-card gap-2 border-destructive/40 p-5">
-                <div className="text-xs uppercase tracking-wide text-destructive">
+                <div className="text-xs font-medium uppercase tracking-wide text-destructive">
                   Input check
                 </div>
                 <div className="text-sm text-destructive">
@@ -358,7 +365,7 @@ export function Calculator() {
 
             {result.overFull && !result.belowEmpty && (
               <Card className="glass-card gap-2 border-amber-500/40 p-5">
-                <div className="text-xs uppercase tracking-wide text-amber-500">
+                <div className="text-xs font-medium uppercase tracking-wide text-amber-500">
                   Input check
                 </div>
                 <div className="text-sm text-amber-500">

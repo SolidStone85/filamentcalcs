@@ -142,17 +142,27 @@ export function Calculator() {
               <p className="text-sm text-muted-foreground">{m.tagline}</p>
             </CardHeader>
             <CardContent className="space-y-4 text-sm">
-              <dl className="grid grid-cols-[auto,1fr] gap-x-3 gap-y-2">
+              <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-2">
                 <dt className="text-muted-foreground">Nozzle</dt>
-                <dd className="font-mono">{m.nozzleTempC}°C</dd>
+                <dd className="text-right font-mono tabular-nums">
+                  {m.nozzleTempC}°C
+                </dd>
                 <dt className="text-muted-foreground">Bed</dt>
-                <dd className="font-mono">{m.bedTempC}°C</dd>
+                <dd className="text-right font-mono tabular-nums">
+                  {m.bedTempC}°C
+                </dd>
                 <dt className="text-muted-foreground">Density</dt>
-                <dd className="font-mono">{m.densityGPerCm3} g/cm³</dd>
+                <dd className="text-right font-mono tabular-nums">
+                  {m.densityGPerCm3} g/cm³
+                </dd>
                 <dt className="text-muted-foreground">Shrinkage</dt>
-                <dd className="font-mono">~{m.shrinkagePercent}%</dd>
+                <dd className="text-right font-mono tabular-nums">
+                  ~{m.shrinkagePercent}%
+                </dd>
                 <dt className="text-muted-foreground">Typical price</dt>
-                <dd className="font-mono">${m.typicalPriceUsdPerKg}/kg</dd>
+                <dd className="text-right font-mono tabular-nums">
+                  ${m.typicalPriceUsdPerKg}/kg
+                </dd>
               </dl>
 
               <div className="space-y-2">

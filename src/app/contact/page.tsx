@@ -26,7 +26,7 @@ export default function ContactPage() {
           saying, you have two options.
         </p>
 
-        <h2 className="pt-2 text-base font-semibold text-primary">
+        <h2 className="pt-2 text-base font-semibold">
           Option 1: Email
         </h2>
         <p>
@@ -46,7 +46,7 @@ export default function ContactPage() {
           specific numbers you entered. That makes diagnosis much faster.
         </p>
 
-        <h2 className="pt-4 text-base font-semibold text-primary">
+        <h2 className="pt-4 text-base font-semibold">
           Option 2: Public GitHub issue
         </h2>
         <p>

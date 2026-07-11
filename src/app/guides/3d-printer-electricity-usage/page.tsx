@@ -129,7 +129,7 @@ export default function GuidePage() {
           the cheapest things in your house to run.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           Typical wattage by printer class
         </h2>
         <p>
@@ -154,7 +154,7 @@ export default function GuidePage() {
           the first few minutes.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           The math: hourly cost
         </h2>
         <p>
@@ -183,7 +183,7 @@ export default function GuidePage() {
           does this for any wattage, duration, and rate combination.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           Regional rate variation matters more than printer choice
         </h2>
         <p>
@@ -203,7 +203,7 @@ export default function GuidePage() {
           charge" line.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           Annualized: what a real hobby costs
         </h2>
         <p>
@@ -222,7 +222,7 @@ export default function GuidePage() {
           an old fridge.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           When electricity does matter
         </h2>
         <p>
@@ -234,7 +234,7 @@ export default function GuidePage() {
           <li><strong>You're comparing total cost vs. buying prints.</strong> Even then, electricity is usually under 5% of the all-in per-print cost. Filament dominates.</li>
         </ul>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           Frequently asked
         </h2>
         <dl className="space-y-4">
@@ -248,7 +248,7 @@ export default function GuidePage() {
           ))}
         </dl>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4 text-primary">
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
           Sources and references
         </h2>
         <ul className="list-disc pl-5 space-y-1 text-xs leading-6 marker:text-primary">
