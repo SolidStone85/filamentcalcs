@@ -1,12 +1,13 @@
 import type { MetadataRoute } from "next";
 
 import { GUIDES } from "@/lib/guides";
+import { SPOOL_BRAND_PAGES } from "@/lib/spoolBrands";
 import { SITE, TOOLS } from "@/lib/tools";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
 
-  const staticRoutes = ["", "/about", "/methodology", "/glossary", "/tools", "/guides", "/privacy", "/terms", "/contact"];
+  const staticRoutes = ["", "/about", "/methodology", "/glossary", "/tools", "/guides", "/spools", "/privacy", "/terms", "/contact"];
 
   return [
     ...staticRoutes.map((path) => ({
@@ -24,6 +25,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...GUIDES.map((guide) => ({
       url: `${SITE.url}/guides/${guide.slug}`,
       lastModified: new Date(guide.publishedAt),
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    })),
+    ...SPOOL_BRAND_PAGES.map((page) => ({
+      url: `${SITE.url}/spools/${page.slug}`,
+      lastModified: now,
       changeFrequency: "monthly" as const,
       priority: 0.7,
     })),

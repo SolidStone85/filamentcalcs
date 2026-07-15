@@ -86,6 +86,14 @@ export function Footer() {
             <ul className="mt-3 space-y-1.5 text-xs">
               <li>
                 <Link
+                  href="/spools"
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  Spool weights
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/glossary"
                   className="text-muted-foreground hover:text-foreground"
                 >

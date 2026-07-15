@@ -18,31 +18,8 @@ import {
 } from "@/components/ui/select";
 import { CURRENCIES, formatCurrency, type CurrencyCode } from "@/lib/currency";
 import { calculateRemainingSpool } from "@/lib/formulas/remainingSpool";
+import { SPOOL_PRESETS, getSpoolPreset } from "@/lib/presets/spools";
 import { cn } from "@/lib/utils";
-
-// --- Spool presets -------------------------------------------------------
-// Common empty spool weights so users don't need to weigh their empty spool
-// to get a useful estimate. Numbers reflect typical real spools as of 2026.
-
-type SpoolPreset = {
-  id: string;
-  label: string;
-  emptyWeightGrams: number;
-};
-
-const SPOOL_PRESETS: SpoolPreset[] = [
-  { id: "bambu-refill", label: "Bambu refillable core", emptyWeightGrams: 125 },
-  { id: "bambu-cardboard", label: "Bambu cardboard spool", emptyWeightGrams: 205 },
-  { id: "polymaker", label: "Polymaker spool (typical)", emptyWeightGrams: 215 },
-  { id: "esun", label: "eSun spool (typical)", emptyWeightGrams: 200 },
-  { id: "prusament", label: "Prusament spool", emptyWeightGrams: 230 },
-  { id: "standard-plastic", label: "Generic plastic spool", emptyWeightGrams: 220 },
-  { id: "custom", label: "Custom (enter weight)", emptyWeightGrams: 200 },
-];
-
-function getSpoolPreset(id: string): SpoolPreset {
-  return SPOOL_PRESETS.find((p) => p.id === id) ?? SPOOL_PRESETS[5];
-}
 
 // --- URL state -----------------------------------------------------------
 //   c = current total weight (g)
@@ -134,13 +111,40 @@ const STATUS_COLORS: Record<"plenty" | "low" | "near-empty", string> = {
 
 // -----------------------------------------------------------------------
 
-export function Calculator() {
+type CalculatorProps = {
+  /**
+   * Preset to start on when the URL carries no spool state. Used by the
+   * per-brand landing pages; the shared calculator page passes nothing.
+   * Display-level default only: any `sp` URL param still wins.
+   */
+  initialSpoolPresetId?: string;
+};
+
+export function Calculator({ initialSpoolPresetId }: CalculatorProps = {}) {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const [state, setState] = useState<State>(() =>
-    parseStateFromParams(new URLSearchParams(searchParams.toString())),
-  );
+  const [state, setState] = useState<State>(() => {
+    const parsed = parseStateFromParams(
+      new URLSearchParams(searchParams.toString()),
+    );
+    // Apply the brand-page default only when the URL carries no explicit
+    // spool state at all. Any bookmarked `sp` or `e` param must still win.
+    if (
+      initialSpoolPresetId &&
+      !searchParams.get("sp") &&
+      !searchParams.get("e") &&
+      SPOOL_PRESETS.some((p) => p.id === initialSpoolPresetId)
+    ) {
+      const preset = getSpoolPreset(initialSpoolPresetId);
+      return {
+        ...parsed,
+        spoolPresetId: preset.id,
+        emptySpoolWeight: preset.emptyWeightGrams,
+      };
+    }
+    return parsed;
+  });
 
   useEffect(() => {
     router.replace(`?${encodeState(state)}`, { scroll: false });
@@ -390,7 +394,7 @@ export function Calculator() {
                   value: `${result.percentRemaining.toFixed(1)}%`,
                 },
               ]}
-              note="Empty spool weight varies by manufacturer (Bambu refillable cores ~125 g, most plastic spools 200-230 g, Bambu cardboard ~205 g). Weigh one empty spool of each type you use, write it on the spool with a Sharpie, save yourself this question forever."
+              note="Empty spool weight varies by manufacturer (Bambu reusable spool with a refill core ~233 g, cardboard spools ~140-205 g, most plastic spools 200-230 g). Weigh one empty spool of each type you use, write it on the spool with a Sharpie, save yourself this question forever."
             />
           </>
         )}

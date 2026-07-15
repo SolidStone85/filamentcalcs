@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Suspense } from "react";
 
 import { AdSlot } from "@/components/shared/AdSlot";
@@ -30,7 +31,7 @@ export const metadata: Metadata = {
 const FAQ: { q: string; a: string }[] = [
   {
     q: "Why does empty spool weight matter so much?",
-    a: "If you assume the wrong empty spool weight, the calculation is off by exactly that amount in grams. A Bambu refillable core is around 125 g, while a generic plastic spool can be 220 g or more. That's a 95 g swing, which is a third of a typical print on a small part. Use the right preset for your spool brand or weigh one empty spool of each type you keep around.",
+    a: "If you assume the wrong empty spool weight, the calculation is off by exactly that amount in grams. A Polymaker cardboard spool is around 140 g, while a generic plastic spool can be 220 g or more. That's an 80 g swing, roughly a third of a small print. Use the right preset for your spool brand or weigh one empty spool of each type you keep around.",
   },
   {
     q: "How do I weigh the spool?",
@@ -99,6 +100,38 @@ export default function RemainingSpoolCalculatorPage() {
         <Calculator />
       </Suspense>
 
+      <p className="mt-6 text-sm text-muted-foreground">
+        Looking for one brand's numbers? Dedicated pages:{" "}
+        <Link
+          href="/spools/bambu-lab"
+          className="text-primary underline underline-offset-4"
+        >
+          Bambu Lab
+        </Link>
+        ,{" "}
+        <Link
+          href="/spools/polymaker"
+          className="text-primary underline underline-offset-4"
+        >
+          Polymaker
+        </Link>
+        ,{" "}
+        <Link
+          href="/spools/esun"
+          className="text-primary underline underline-offset-4"
+        >
+          eSun
+        </Link>
+        ,{" "}
+        <Link
+          href="/spools/prusament"
+          className="text-primary underline underline-offset-4"
+        >
+          Prusament
+        </Link>
+        .
+      </p>
+
       <AffiliatePicks pagePath="/tools/remaining-spool-calculator" className="mx-auto mt-8 max-w-3xl" />
 
       <section className="mx-auto mt-12 max-w-3xl space-y-3">
@@ -113,10 +146,11 @@ export default function RemainingSpoolCalculatorPage() {
         </p>
         <p className="text-sm leading-6 text-muted-foreground">
           The trick is knowing the empty spool weight. Spool weights vary
-          surprisingly: Bambu&apos;s refillable cores are around 125 g,
-          their cardboard spools are around 205 g, and most generic plastic
-          spools are 200-230 g. We&apos;ve included presets for the common
-          brands so you don&apos;t have to weigh an empty spool every time.
+          surprisingly: a Bambu reusable spool with a refill core is around
+          233 g, a Polymaker cardboard spool is around 140 g, and most
+          generic plastic spools are 200-230 g. We&apos;ve included presets
+          for the common brands so you don&apos;t have to weigh an empty
+          spool every time.
         </p>
       </section>
 
@@ -132,10 +166,10 @@ export default function RemainingSpoolCalculatorPage() {
         </p>
         <p className="text-sm leading-6 text-muted-foreground">
           Worked example. You set a Polymaker spool on a kitchen scale and
-          it reads 540 g. The empty Polymaker spool weighs about 215 g. So
-          remaining = 540 - 215 = 325 g. From a 1 kg spool, that&apos;s
-          325 / 1000 × 100 = 32.5% remaining. At $22/kg, the value
-          remaining is 0.325 × 22 = $7.15.
+          it reads 540 g. The empty Polymaker cardboard spool weighs about
+          140 g. So remaining = 540 - 140 = 400 g. From a 1 kg spool,
+          that&apos;s 400 / 1000 × 100 = 40% remaining. At $22/kg, the value
+          remaining is 0.40 × 22 = $8.80.
         </p>
       </section>
 
@@ -154,24 +188,25 @@ export default function RemainingSpoolCalculatorPage() {
             </thead>
             <tbody>
               <tr className="border-b">
-                <td className="px-3 py-2">Bambu refillable core</td>
-                <td className="px-3 py-2">~125 g</td>
+                <td className="px-3 py-2">Bambu reusable spool + refill core</td>
+                <td className="px-3 py-2">~233 g</td>
                 <td className="px-3 py-2">
-                  Lightweight plastic core, refilled with bulk filament
+                  Reusable spool (~208 g) plus the refill&apos;s cardboard
+                  core (~25 g)
                 </td>
               </tr>
               <tr className="border-b">
                 <td className="px-3 py-2">Bambu cardboard spool</td>
                 <td className="px-3 py-2">~205 g</td>
                 <td className="px-3 py-2">
-                  Default for most Bambu Lab filament purchases
+                  Full cardboard spool when you don&apos;t buy refills
                 </td>
               </tr>
               <tr className="border-b">
-                <td className="px-3 py-2">Polymaker (PolyTerra etc.)</td>
-                <td className="px-3 py-2">~215 g</td>
+                <td className="px-3 py-2">Polymaker cardboard spool</td>
+                <td className="px-3 py-2">~140 g</td>
                 <td className="px-3 py-2">
-                  Plastic spool, occasionally cardboard for PolyTerra
+                  Current standard; older plastic spools are ~215 g
                 </td>
               </tr>
               <tr className="border-b">
@@ -181,8 +216,10 @@ export default function RemainingSpoolCalculatorPage() {
               </tr>
               <tr className="border-b">
                 <td className="px-3 py-2">Prusament</td>
-                <td className="px-3 py-2">~230 g</td>
-                <td className="px-3 py-2">Slightly heavier plastic spool</td>
+                <td className="px-3 py-2">~200 g</td>
+                <td className="px-3 py-2">
+                  Cardboard-core spool, community-measured 192-207 g
+                </td>
               </tr>
               <tr className="border-b">
                 <td className="px-3 py-2">Generic plastic spool</td>
