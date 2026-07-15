@@ -256,6 +256,18 @@
   background-color: oklch(0.78 0.16 205 / 0.05);
 }
 
+/* Inline teal content links (text-primary + underline) brighten on hover so
+   it's obvious they're the click target. Scoped to anchors that use the
+   primary color; nav and card links have their own affordances. Color-only
+   fade on small text is the allowed case for animating a paint property. */
+a.text-primary {
+  transition: color 120ms ease;
+}
+a.text-primary:hover {
+  color: oklch(from var(--primary) calc(l + 0.12) c h);
+  text-decoration-thickness: 2px;
+}
+
 .fc-ghost-hover {
   transition: background-color 120ms ease, color 120ms ease;
 }
