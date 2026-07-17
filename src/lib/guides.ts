@@ -28,12 +28,12 @@ export const GUIDES: Guide[] = [
   },
   {
     slug: "pla-vs-petg-vs-abs-vs-tpu",
-    title: "PLA vs PETG vs ABS vs TPU: which filament should you actually pick?",
+    title: "PLA vs PETG vs ABS vs TPU: real use cases and which to pick",
     shortTitle: "Pick the right filament",
     description:
-      "Plain-English comparison of the four most common 3D printing materials. When each one is right, and when it isn't.",
+      "Plain-English comparison of the four common filaments: strength, temperature, food safety, and what each is actually good for, job by job.",
     publishedAt: "2026-04-23",
-    readMinutes: 7,
+    readMinutes: 8,
     relatedToolSlugs: ["material-comparison", "filament-cost-calculator"],
   },
   {
@@ -74,7 +74,7 @@ export const GUIDES: Guide[] = [
     title: "Best 3D printer under $300 in 2026: honest buyer's guide",
     shortTitle: "Best printer under $300",
     description:
-      "Bambu A1 mini, A1, Ender 3 V3 KE, Elegoo Neptune 4 Plus. Real specs, real tradeoffs, and which one matches your situation.",
+      "Bambu A1 mini vs A1 vs Ender 3 V3 KE vs Neptune 4 Plus, compared honestly: real prices, build volume, multi-color support, and which one fits how you'll actually print.",
     publishedAt: "2026-04-29",
     readMinutes: 9,
     relatedToolSlugs: [

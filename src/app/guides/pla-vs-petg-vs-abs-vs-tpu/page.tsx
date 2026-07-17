@@ -50,6 +50,18 @@ const FAQ: { q: string; a: string }[] = [
     a: "PLA+ is a marketing term with no standard definition. In practice it usually means PLA with small additives for better layer adhesion and toughness. It prints almost identically to regular PLA at the same temperature. Worth a slight premium if you're printing functional parts, overkill for display models.",
   },
   {
+    q: "Is 3D printed PLA or PETG food safe?",
+    a: "Not in any certified sense, and anyone who tells you otherwise is skipping the details. The problem isn't only the plastic: layer lines trap bacteria that washing doesn't fully clear, colorants and additives are rarely food-rated, and brass nozzles can shed trace lead into the first prints after a nozzle change. If you accept those limits, PETG is the better candidate for short-contact items like cookie cutters: rinse before use, hand wash cold, and treat them as semi-disposable. PLA deforms in hot water so it fails even the dishwasher test. For anything holding food or drink for real, use a food-safe epoxy coating or just buy the part.",
+  },
+  {
+    q: "PETG or TPU for a phone case or anything that needs grip?",
+    a: "TPU, almost every time. PETG is stiff with a little spring; TPU actually flexes and absorbs impact, which is the whole point of a case, a gasket, or a foot. Reach for PETG instead when the part needs to hold a shape under constant load, live outside, or slide smoothly against other parts, because TPU's grippy surface drags.",
+  },
+  {
+    q: "Which filament should I use for outdoor parts?",
+    a: "PETG for most outdoor jobs: planters, brackets, mounts, garden fittings. It shrugs off moisture and UV far better than PLA, which gets brittle and chalky within a season. If the part also bakes in direct sun or sits in a hot car, step up to ASA (the outdoor-grade cousin of ABS). PLA outdoors is a one-summer part.",
+  },
+  {
     q: "Does filament expire?",
     a: "Sort of. Dry filament in a sealed bag with silica packs is good for years. Filament exposed to humid air absorbs moisture, and wet filament prints badly (popping, brittleness, stringing). PLA tolerates some humidity. PETG and TPU absorb moisture fast and need a filament dryer before use if stored open.",
   },
@@ -268,6 +280,109 @@ export default function GuidePage() {
             Filament Cost Calculator
           </Link>{" "}
           has the price defaults for each of these plus a custom option.
+        </p>
+
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
+          Which filament for which job
+        </h2>
+        <p>
+          Same decision, longer list. These are the jobs people actually
+          print, matched to the material I&apos;d reach for first and the
+          one I&apos;d avoid.
+        </p>
+        <div className="overflow-x-auto rounded-md border not-prose">
+          <table className="w-full text-xs leading-6">
+            <thead>
+              <tr className="border-b bg-muted/50">
+                <th className="px-3 py-2 text-left font-medium">The job</th>
+                <th className="px-3 py-2 text-left font-medium">Print it in</th>
+                <th className="px-3 py-2 text-left font-medium">Why</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-b">
+                <td className="px-3 py-2">Miniatures, display models, desk toys</td>
+                <td className="px-3 py-2 font-medium">PLA</td>
+                <td className="px-3 py-2 text-muted-foreground">Best detail, easiest to print, no warping drama</td>
+              </tr>
+              <tr className="border-b">
+                <td className="px-3 py-2">Planters, garden fittings, outdoor mounts</td>
+                <td className="px-3 py-2 font-medium">PETG</td>
+                <td className="px-3 py-2 text-muted-foreground">Handles moisture and UV; PLA goes brittle in a season</td>
+              </tr>
+              <tr className="border-b">
+                <td className="px-3 py-2">Phone cases, gaskets, feet, grips</td>
+                <td className="px-3 py-2 font-medium">TPU</td>
+                <td className="px-3 py-2 text-muted-foreground">Actually flexes and absorbs impact instead of cracking</td>
+              </tr>
+              <tr className="border-b">
+                <td className="px-3 py-2">Load-bearing brackets and hooks</td>
+                <td className="px-3 py-2 font-medium">PETG</td>
+                <td className="px-3 py-2 text-muted-foreground">Tougher than PLA, bends before it snaps</td>
+              </tr>
+              <tr className="border-b">
+                <td className="px-3 py-2">Anything living in a car</td>
+                <td className="px-3 py-2 font-medium">ABS or ASA</td>
+                <td className="px-3 py-2 text-muted-foreground">Summer dashboards pass 60°C; PLA and PETG soften</td>
+              </tr>
+              <tr className="border-b">
+                <td className="px-3 py-2">Cookie cutters, food-adjacent tools</td>
+                <td className="px-3 py-2 font-medium">PETG, with caveats</td>
+                <td className="px-3 py-2 text-muted-foreground">See the food-safety section below before printing these</td>
+              </tr>
+              <tr className="border-b">
+                <td className="px-3 py-2">Drone frames, RC parts</td>
+                <td className="px-3 py-2 font-medium">PETG (or ABS)</td>
+                <td className="px-3 py-2 text-muted-foreground">Impact tolerance; add TPU for bumpers and mounts</td>
+              </tr>
+              <tr>
+                <td className="px-3 py-2">Replacement knobs, clips, appliance parts</td>
+                <td className="px-3 py-2 font-medium">PETG</td>
+                <td className="px-3 py-2 text-muted-foreground">Repeated handling and load; PLA clips fatigue and snap</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
+          Is PLA, PETG, ABS, or TPU food safe?
+        </h2>
+        <p>
+          Short version: no 3D printed part is food safe in a certified
+          sense, no matter which filament you buy. Saying that out loud
+          matters, because &quot;food safe PLA&quot; marketing skips three
+          separate problems that have nothing to do with the base plastic.
+        </p>
+        <ul className="list-disc pl-5 space-y-1 marker:text-primary">
+          <li>
+            <strong>Layer lines trap bacteria.</strong> The microscopic
+            grooves between layers hold residue that normal washing
+            doesn&apos;t fully clear. This is the problem that never goes
+            away, on any filament.
+          </li>
+          <li>
+            <strong>Colorants and additives aren&apos;t food rated.</strong>{" "}
+            The base polymer might be; the pigment, the flow additives, and
+            whatever else is in the pellets usually are not tested at all.
+          </li>
+          <li>
+            <strong>The nozzle contaminates the plastic.</strong> Standard
+            brass nozzles contain lead, and the first prints after a nozzle
+            or filament change can carry traces of whatever ran through
+            before.
+          </li>
+        </ul>
+        <p>
+          The practical hierarchy, if you accept those limits: PETG is the
+          least-bad option for short-contact items like cookie cutters,
+          because it tolerates washing and doesn&apos;t soak up water. Hand
+          wash cold, rinse before use, and treat them as semi-disposable.
+          PLA fails even sooner: it deforms in hot water, so one dishwasher
+          cycle ruins it. ABS is a no (styrene chemistry), and TPU is a no
+          (the surface grips and absorbs). For anything that holds food or
+          drink for real, either seal the part with a food-safe epoxy
+          coating or buy the finished item; a printed prototype is for
+          checking fit, not for eating off.
         </p>
 
         <h2 className="text-xl font-semibold tracking-tight pt-4">

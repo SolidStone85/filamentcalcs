@@ -201,6 +201,10 @@ export const AFFILIATE_PICKS: Record<string, string[]> = {
     "filament-storage-bags",
     "sunlu-s4",
   ],
+  "/spools/bambu-lab": ["digital-scale", "filament-storage-bags"],
+  "/spools/polymaker": ["digital-scale", "sunlu-s4"],
+  "/spools/esun": ["digital-scale", "filament-storage-bags"],
+  "/spools/prusament": ["digital-scale", "sunlu-s4"],
   "/guides/3d-printing-cost-breakdown": [
     "digital-scale",
     "kill-a-watt",

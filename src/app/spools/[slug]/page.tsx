@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
 import { Calculator } from "@/app/tools/remaining-spool-calculator/Calculator";
+import { AffiliatePicks } from "@/components/shared/AffiliatePicks";
 import { RelatedContent } from "@/components/shared/RelatedContent";
 import { SPOOL_BRAND_PAGES, getSpoolBrandPage } from "@/lib/spoolBrands";
 import { SITE } from "@/lib/tools";
@@ -138,6 +139,11 @@ export default async function SpoolBrandPage({
           and pick Custom in the calculator from then on.
         </p>
       </section>
+
+      <AffiliatePicks
+        pagePath={`/spools/${page.slug}`}
+        className="mx-auto mt-10 max-w-3xl"
+      />
 
       <section className="mx-auto mt-10 max-w-3xl space-y-3">
         <h2 className="text-xl font-semibold tracking-tight">
