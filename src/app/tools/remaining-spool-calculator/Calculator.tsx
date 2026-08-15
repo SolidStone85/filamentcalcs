@@ -309,6 +309,10 @@ export function Calculator({ initialSpoolPresetId }: CalculatorProps = {}) {
                 ))}
               </SelectContent>
             </Select>
+            <p className="text-xs text-muted-foreground">
+              Sets the symbol. Your numbers stay in the currency you type,
+              nothing is converted.
+            </p>
           </div>
         </CardContent>
       </Card>

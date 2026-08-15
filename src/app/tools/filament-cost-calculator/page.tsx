@@ -38,7 +38,7 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "Does this include electricity or printer wear?",
-    a: "No, this is material cost only. For electricity, use the Electricity Cost Calculator. For full per-print cost including printer depreciation, use the Print Pricing guide.",
+    a: "No, this is material cost only. For electricity, use the Electricity Cost Calculator. For a full sale price including printer wear, failures, and your time, use the 3D Print Pricing Calculator.",
   },
   {
     q: "How do I convert spool price to price per kg?",
@@ -374,8 +374,15 @@ export default function FilamentCostCalculatorPage() {
               Treating the calculator's number as final.
             </span>{" "}
             This estimates material cost only. To price a sale piece on Etsy
-            or Patreon, multiply by 3 to cover wear, electricity, and your
-            time. The full breakdown lives in the{" "}
+            or Patreon, run the{" "}
+            <a
+              href="/tools/print-pricing-calculator"
+              className="underline underline-offset-4"
+            >
+              3D Print Pricing Calculator
+            </a>
+            , which adds wear, electricity, failures, and your time. The
+            written version lives in the{" "}
             <a
               href="/guides/3d-printing-cost-breakdown"
               className="underline underline-offset-4"

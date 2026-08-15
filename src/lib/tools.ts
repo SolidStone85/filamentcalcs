@@ -19,6 +19,14 @@ export const TOOLS: Tool[] = [
     available: true,
   },
   {
+    slug: "print-pricing-calculator",
+    title: "3D Print Pricing Calculator",
+    shortTitle: "Print Pricing",
+    description:
+      "Work out what to charge for a print: material, electricity, printer wear, failures, and your time.",
+    available: true,
+  },
+  {
     slug: "print-time-estimator",
     title: "Print Time Estimator",
     shortTitle: "Print Time",
@@ -64,6 +72,14 @@ export const TOOLS: Tool[] = [
     shortTitle: "Remaining Spool",
     description:
       "Weigh your spool on a scale and see exactly how much filament is left. Empty-spool weight presets included for Bambu, Polymaker, eSun, and more.",
+    available: true,
+  },
+  {
+    slug: "enough-filament-calculator",
+    title: "Enough Filament Calculator",
+    shortTitle: "Enough Filament?",
+    description:
+      "Check whether what's left on the spool covers your next print, before you start it.",
     available: true,
   },
 ];

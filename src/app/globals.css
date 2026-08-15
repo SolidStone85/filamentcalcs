@@ -98,7 +98,7 @@
   --secondary: oklch(0.22 0 0);
   --secondary-foreground: oklch(0.98 0 0);
   --muted: oklch(0.2 0 0);
-  --muted-foreground: oklch(0.7 0 0);
+  --muted-foreground: oklch(0.78 0 0); /* brightened from 0.7: body/secondary text was reading dim on the matte black */
   --accent: oklch(0.28 0.05 205);         /* tinted dark accent for hover states */
   --accent-foreground: oklch(0.98 0 0);
   --destructive: oklch(0.704 0.191 22.216);

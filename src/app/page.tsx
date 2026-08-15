@@ -3,10 +3,12 @@ import Link from "next/link";
 import {
   AlertTriangle,
   ArrowRight,
+  CircleCheck,
   Coins,
   Disc3,
   Layers,
   Palette,
+  Tag,
   Timer,
   Zap,
   type LucideIcon,
@@ -27,12 +29,14 @@ export const metadata: Metadata = {
 // source of truth for the list itself.
 const TOOL_ICONS: Record<string, LucideIcon> = {
   "filament-cost-calculator": Coins,
+  "print-pricing-calculator": Tag,
   "print-time-estimator": Timer,
   "material-comparison": Layers,
   "electricity-cost-calculator": Zap,
   "failure-rate-calculator": AlertTriangle,
   "ams-purge-waste-calculator": Palette,
   "remaining-spool-calculator": Disc3,
+  "enough-filament-calculator": CircleCheck,
 };
 
 export default function HomePage() {
@@ -75,10 +79,10 @@ export default function HomePage() {
           printing hobbyists
         </h1>
         <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-muted-foreground">
-          Material cost, electricity, print time, failure tracking, and the
-          AMS purge math nobody warns you about. Plus longer guides on
-          picking filament, fixing failures, and what each setting actually
-          does. All free, all in your browser, no sign-up.
+          Material cost, electricity, print time, what to charge for a
+          print, and the AMS purge math nobody warns you about. Plus longer
+          guides on picking filament, fixing failures, and what each setting
+          actually does. All free, all in your browser, no sign-up.
         </p>
         <div className="mt-7 flex flex-wrap justify-center gap-3">
           <Link

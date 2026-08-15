@@ -174,6 +174,16 @@ export const AFFILIATE_PICKS: Record<string, string[]> = {
     "digital-scale",
     "sunlu-s4",
   ],
+  "/tools/print-pricing-calculator": [
+    "digital-scale",
+    "kill-a-watt",
+    "nozzle-cleaning-kit",
+  ],
+  "/tools/enough-filament-calculator": [
+    "digital-scale",
+    "filament-storage-bags",
+    "overture-pla",
+  ],
   "/tools/print-time-estimator": [
     "digital-calipers",
     "bambu-a1-mini",
@@ -273,9 +283,25 @@ export const RELATED_CONTENT: { path: string; links: RelatedLink[] }[] = [
   {
     path: "/tools/filament-cost-calculator",
     links: [
-      related("/guides/3d-printing-cost-breakdown", "True cost breakdown", "Add electricity, failure rate, and wear."),
+      related("/tools/print-pricing-calculator", "Turn cost into a price", "Markup, wear, failures, and your time."),
       related("/tools/remaining-spool-calculator", "Remaining spool calculator", "Weigh a spool before starting the print."),
-      related("/tools/ams-purge-waste-calculator", "AMS purge waste", "Include color-swap waste in the total."),
+      related("/guides/3d-printing-cost-breakdown", "True cost breakdown", "Add electricity, failure rate, and wear."),
+    ],
+  },
+  {
+    path: "/tools/print-pricing-calculator",
+    links: [
+      related("/tools/filament-cost-calculator", "Start with material cost", "Grams and spool price, waste included."),
+      related("/tools/failure-rate-calculator", "Measure your failure rate", "Most people guess low. Track it instead."),
+      related("/guides/3d-printing-cost-breakdown", "Every cost line explained", "The full per-print economics, written out."),
+    ],
+  },
+  {
+    path: "/tools/enough-filament-calculator",
+    links: [
+      related("/tools/remaining-spool-calculator", "Weigh what's left first", "Scale weight minus the empty spool weight."),
+      related("/tools/ams-purge-waste-calculator", "Multi-color? Count the purge", "Color swaps eat filament the model never sees."),
+      related("/tools/filament-cost-calculator", "Price the same print", "Convert the grams into real money."),
     ],
   },
   {
@@ -307,15 +333,15 @@ export const RELATED_CONTENT: { path: string; links: RelatedLink[] }[] = [
     links: [
       related("/guides/why-3d-prints-fail", "Why prints fail", "Work through the most common failure fixes."),
       related("/guides/how-to-dry-filament", "Dry wet filament", "Moisture is a common hidden failure source."),
-      related("/tools/filament-cost-calculator", "Cost failed prints", "Turn failure rate into material cost."),
+      related("/tools/print-pricing-calculator", "Price prints properly", "Your failure rate belongs in every price."),
     ],
   },
   {
     path: "/tools/remaining-spool-calculator",
     links: [
+      related("/tools/enough-filament-calculator", "Will it cover the next print?", "Check the spool against the slicer estimate."),
       related("/tools/filament-cost-calculator", "Filament cost calculator", "Use remaining grams in your cost math."),
       related("/guides/how-to-dry-filament", "Dry and store filament", "Keep opened spools usable longer."),
-      related("/tools/material-comparison", "Material comparison", "Match spool type to the next print."),
     ],
   },
   {

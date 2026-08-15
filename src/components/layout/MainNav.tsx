@@ -37,7 +37,7 @@ export function MainNav() {
                 variant="ghost"
                 size="sm"
                 className={cn(
-                  "gap-1 text-muted-foreground",
+                  "gap-1 text-foreground/75",
                   toolsActive && "bg-primary/10 text-foreground",
                 )}
               >
@@ -81,7 +81,7 @@ export function MainNav() {
                 "fc-ghost-hover inline-flex h-7 items-center rounded-lg px-2.5 text-[0.8rem] font-medium",
                 active
                   ? "bg-primary/10 text-foreground"
-                  : "text-muted-foreground",
+                  : "text-foreground/75",
               )}
             >
               {link.label}
