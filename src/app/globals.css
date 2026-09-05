@@ -155,7 +155,7 @@
      clear visual priority. */
   body {
     background-image:
-      url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100' viewBox='0 0 56 100'%3E%3Cg fill='none' stroke='%2322d3ee' stroke-opacity='0.02' stroke-width='1'%3E%3Cpath d='M28 66L0 50L0 16L28 0L56 16L56 50L28 66L28 100'/%3E%3Cpath d='M28 0L28 34L0 50L0 84L28 100L56 84L56 50L28 34'/%3E%3C/g%3E%3C/svg%3E");
+      url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100' viewBox='0 0 56 100'%3E%3Cg fill='none' stroke='%2322d3ee' stroke-opacity='0.16' stroke-width='1'%3E%3Cpath d='M28 66L0 50L0 16L28 0L56 16L56 50L28 66L28 100'/%3E%3Cpath d='M28 0L28 34L0 50L0 84L28 100L56 84L56 50L28 34'/%3E%3C/g%3E%3C/svg%3E");
     background-attachment: fixed;
     background-repeat: repeat;
   }
@@ -167,7 +167,7 @@
     background-image:
       radial-gradient(ellipse 900px 500px at 50% -10%,
         oklch(0.22 0.06 205 / 0.7), transparent 70%),
-      url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100' viewBox='0 0 56 100'%3E%3Cg fill='none' stroke='%2322d3ee' stroke-opacity='0.025' stroke-width='1'%3E%3Cpath d='M28 66L0 50L0 16L28 0L56 16L56 50L28 66L28 100'/%3E%3Cpath d='M28 0L28 34L0 50L0 84L28 100L56 84L56 50L28 34'/%3E%3C/g%3E%3C/svg%3E");
+      url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100' viewBox='0 0 56 100'%3E%3Cg fill='none' stroke='%2322d3ee' stroke-opacity='0.12' stroke-width='1'%3E%3Cpath d='M28 66L0 50L0 16L28 0L56 16L56 50L28 66L28 100'/%3E%3Cpath d='M28 0L28 34L0 50L0 84L28 100L56 84L56 50L28 34'/%3E%3C/g%3E%3C/svg%3E");
     background-attachment: fixed, fixed;
     background-position: center top, 0 0;
     background-repeat: no-repeat, repeat;
@@ -175,15 +175,27 @@
 }
 
 @layer components {
-  /* Keep the cyan signature quiet enough for calculator headings. */
+  /* Raised lettering preserves the site's 3D signature without animation. */
   .text-3d {
     font-weight: 800;
     letter-spacing: -0.02em;
     color: var(--primary);
+    text-shadow:
+      0 1px 0 oklch(0.44 0.11 210),
+      0 2px 0 oklch(0.38 0.1 210),
+      0 3px 0 oklch(0.32 0.09 210),
+      0 4px 0 oklch(0.27 0.08 210),
+      0 6px 8px oklch(0 0 0 / 0.16);
   }
 
   .dark .text-3d {
-    color: var(--primary);
+    color: oklch(0.85 0.15 205);
+    text-shadow:
+      0 1px 0 oklch(0.7 0.14 205),
+      0 2px 0 oklch(0.59 0.13 205),
+      0 3px 0 oklch(0.48 0.12 205),
+      0 4px 0 oklch(0.38 0.1 205),
+      0 6px 10px oklch(0 0 0 / 0.4);
   }
 
   /* Solid calculator surfaces keep the inputs legible against the texture.

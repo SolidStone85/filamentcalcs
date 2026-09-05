@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
@@ -49,14 +50,24 @@ export default function HomePage() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 lg:py-12">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <header className="max-w-3xl">
-        <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl lg:text-5xl">
-          A little math. A better <span className="text-primary">3D print.</span>
-        </h1>
-        <p className="mt-4 max-w-2xl text-base leading-7 text-muted-foreground">
-          Work out print costs, set a price and check your remaining filament.
-          Nine free calculators, ready when you are. No sign-up.
-        </p>
+      <header className="flex items-center justify-between gap-8">
+        <div className="max-w-3xl">
+          <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl lg:text-5xl">
+            A little math. A better <span className="text-3d">3D</span> <span className="text-primary">print.</span>
+          </h1>
+          <p className="mt-4 max-w-2xl text-base leading-7 text-muted-foreground">
+            Work out print costs, set a price and check your remaining filament.
+            Nine free calculators, ready when you are. No sign-up.
+          </p>
+        </div>
+        <Image
+          src="/images/printer-illustration.png"
+          alt=""
+          width={160}
+          height={160}
+          sizes="160px"
+          className="hidden size-40 shrink-0 rounded-2xl border border-border md:block"
+        />
       </header>
 
       <section aria-label="Choose a calculator" className="mt-8 grid gap-8 lg:mt-10 lg:grid-cols-3 lg:gap-8">
