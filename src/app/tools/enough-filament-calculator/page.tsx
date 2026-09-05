@@ -30,11 +30,11 @@ export const metadata: Metadata = {
 const FAQ: { q: string; a: string }[] = [
   {
     q: "How accurate is the slicer's weight estimate?",
-    a: "Usually within a few percent for the model itself. What it can miss depends on settings: priming lines, skirts, brims, and ooze add grams the preview doesn't always show. That is what the waste margin slider covers. 5% is enough for most single-color prints on a tuned machine.",
+    a: "Accuracy depends on the model, filament and settings. Compare a sliced estimate with your own completed prints. The extra-material slider is a planning allowance for material excluded from your entered total, not a guarantee. Set it to zero when the total already includes all relevant material.",
   },
   {
     q: "How do I find out how much filament is actually left?",
-    a: "Weigh the spool on a kitchen or 0.1 g scale, then subtract the empty spool weight. Empty weights run from about 140 g for cardboard spools to 250 g for heavy plastic ones. The Remaining Filament Calculator on this site has verified empty-spool presets for Bambu, Polymaker, eSun, Prusament, and others.",
+    a: "Weigh the loaded spool, then subtract the matching empty spool weight, including any core or parts still on the scale. The Remaining Filament Calculator has estimated empty-spool presets for several brands. Check your own spool's tare before relying on a small remaining margin.",
   },
   {
     q: "Can I trust the last few meters of a spool?",
@@ -115,14 +115,14 @@ export default function EnoughFilamentCalculatorPage() {
         <p className="text-sm leading-6 text-muted-foreground">
           The math is short: the print's slicer weight, plus a waste margin
           for priming and skirts, plus purge for multi-color jobs. That total
-          gets compared against what the spool has left. The interesting part
-          is the judgment band. A print that fits with 3 grams to spare is
-          not a yes, it is a coin flip, because slicer estimates drift and
-          spool tails misbehave.
+          gets compared against what the spool has left. A print that fits
+          with 3 grams to spare is below this tool's planning margin.
+          That is a caution prompt, not a calculated probability of failure.
         </p>
         <p className="text-sm leading-6 text-muted-foreground">
-          So the verdict demands headroom before it says yes: 8% of the job,
-          or 10 grams, whichever is bigger. Inside that window you get
+          The tool uses a planning rule of 8% of the required material,
+          or 10 grams, whichever is bigger. It is not a measured guarantee
+          against runout. Inside that window you get
           "risky" instead. You can still hit print, but do it knowing the
           margin, ideally on a job where a runout swap or a failed tail
           doesn't hurt.
@@ -163,13 +163,12 @@ export default function EnoughFilamentCalculatorPage() {
           >
             Remaining Filament Calculator
           </a>{" "}
-          does the subtraction with verified empty weights per brand, and the{" "}
+          does the subtraction with estimated empty weights per brand, and the{" "}
           <a href="/spools" className="underline underline-offset-4">
             spool weight pages
           </a>{" "}
-          list the common ones if you just want the raw numbers. Eyeballing
-          the spool's side window is how half-finished prints happen; a $12
-          scale ends the guessing permanently.
+          list starting values. A scale and a matching tare help you estimate
+          the amount left; check both before relying on a small margin.
         </p>
       </section>
 

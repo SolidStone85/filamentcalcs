@@ -1,7 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useMemo } from "react";
+import Link from "next/link";
+import { CalculatorSettings } from "@/components/shared/CalculatorSettings";
+import { CalculatorSummary } from "@/components/shared/CalculatorSummary";
+import { useCalculatorState } from "@/lib/useCalculatorState";
 
 import { FormulaBreakdown } from "@/components/shared/FormulaBreakdown";
 import { InputWithUnit } from "@/components/shared/InputWithUnit";
@@ -61,7 +64,7 @@ function parseStateFromParams(params: URLSearchParams): State {
     currentWeight: toNumOrEmpty(params.get("c")),
     emptySpoolWeight:
       params.get("e") === null
-        ? DEFAULT_STATE.emptySpoolWeight
+        ? getSpoolPreset(spId ?? DEFAULT_STATE.spoolPresetId).emptyWeightGrams
         : toNumOrEmpty(params.get("e")),
     originalWeight:
       params.get("o") === null
@@ -84,10 +87,10 @@ function parseStateFromParams(params: URLSearchParams): State {
 
 function encodeState(state: State): string {
   const p = new URLSearchParams();
-  if (state.currentWeight !== "") p.set("c", String(state.currentWeight));
-  if (state.emptySpoolWeight !== "") p.set("e", String(state.emptySpoolWeight));
-  if (state.originalWeight !== "") p.set("o", String(state.originalWeight));
-  if (state.pricePerKg !== "") p.set("p", String(state.pricePerKg));
+  p.set("c", String(state.currentWeight));
+  p.set("e", String(state.emptySpoolWeight));
+  p.set("o", String(state.originalWeight));
+  p.set("p", String(state.pricePerKg));
   p.set("cur", state.currency);
   p.set("sp", state.spoolPresetId);
   return p.toString();
@@ -121,19 +124,14 @@ type CalculatorProps = {
 };
 
 export function Calculator({ initialSpoolPresetId }: CalculatorProps = {}) {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-
-  const [state, setState] = useState<State>(() => {
-    const parsed = parseStateFromParams(
-      new URLSearchParams(searchParams.toString()),
-    );
+  const { state, setState, settings } = useCalculatorState((params) => {
+    const parsed = parseStateFromParams(params);
     // Apply the brand-page default only when the URL carries no explicit
     // spool state at all. Any bookmarked `sp` or `e` param must still win.
     if (
       initialSpoolPresetId &&
-      !searchParams.get("sp") &&
-      !searchParams.get("e") &&
+      !params.has("sp") &&
+      !params.has("e") &&
       SPOOL_PRESETS.some((p) => p.id === initialSpoolPresetId)
     ) {
       const preset = getSpoolPreset(initialSpoolPresetId);
@@ -144,12 +142,9 @@ export function Calculator({ initialSpoolPresetId }: CalculatorProps = {}) {
       };
     }
     return parsed;
-  });
-
-  useEffect(() => {
-    router.replace(`?${encodeState(state)}`, { scroll: false });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state]);
+  }, encodeState, initialSpoolPresetId
+    ? { cur: "currency", p: "pricePerKg", o: "originalSpoolWeight" }
+    : { cur: "currency", p: "pricePerKg", e: "emptySpoolWeight", o: "originalSpoolWeight", sp: "spoolPresetId" }, [["e", "sp"]]);
 
   const currentWeight =
     typeof state.currentWeight === "number" ? state.currentWeight : 0;
@@ -160,7 +155,8 @@ export function Calculator({ initialSpoolPresetId }: CalculatorProps = {}) {
   const pricePerKg =
     typeof state.pricePerKg === "number" ? state.pricePerKg : 0;
 
-  const hasInput = currentWeight > 0 && emptySpoolWeight > 0;
+  const validInputs = state.currentWeight !== "" && state.emptySpoolWeight !== "" && state.originalWeight !== "" &&
+    [currentWeight, emptySpoolWeight, originalWeight, pricePerKg].every((v) => Number.isFinite(v) && v >= 0) && originalWeight > 0;
 
   const result = useMemo(
     () =>
@@ -172,6 +168,7 @@ export function Calculator({ initialSpoolPresetId }: CalculatorProps = {}) {
       }),
     [currentWeight, emptySpoolWeight, originalWeight, pricePerKg],
   );
+  const hasInput = validInputs && Object.values(result).every((value) => typeof value !== "number" || Number.isFinite(value));
 
   const status: "plenty" | "low" | "near-empty" =
     result.percentRemaining >= 30
@@ -190,6 +187,7 @@ export function Calculator({ initialSpoolPresetId }: CalculatorProps = {}) {
 
   return (
     <div className="grid gap-6 lg:grid-cols-[1.2fr_1fr]">
+      <CalculatorSummary label="Filament remaining" value={hasInput ? `${result.remainingGrams.toFixed(0)} g` : "Enter spool weight"} />
       <Card className="glass-card">
         <CardHeader>
           <CardTitle>Inputs</CardTitle>
@@ -314,10 +312,11 @@ export function Calculator({ initialSpoolPresetId }: CalculatorProps = {}) {
               nothing is converted.
             </p>
           </div>
+          <CalculatorSettings {...settings} />
         </CardContent>
       </Card>
 
-      <div className="space-y-4">
+      <div id="calculator-results" tabIndex={-1} className="scroll-mt-40 space-y-4 lg:sticky lg:top-24 lg:self-start">
         <ResultDisplay
           prominent
           label="Filament remaining"
@@ -335,6 +334,7 @@ export function Calculator({ initialSpoolPresetId }: CalculatorProps = {}) {
 
         {hasInput && (
           <>
+            {!result.belowEmpty && !result.overFull && <Link href={`/tools/enough-filament-calculator?${new URLSearchParams({ r: String(result.remainingGrams) })}`} className="flex min-h-11 items-center justify-center rounded-lg bg-primary px-4 py-3 text-center text-sm font-medium text-primary-foreground hover:opacity-90">Check whether this will finish my print</Link>}
             <Card className="glass-card gap-2 p-5">
               <div className="text-xs uppercase tracking-wide text-muted-foreground">
                 Status
@@ -364,9 +364,9 @@ export function Calculator({ initialSpoolPresetId }: CalculatorProps = {}) {
                   Input check
                 </div>
                 <div className="text-sm text-destructive">
-                  Current weight is less than the empty spool weight. Either
-                  the spool is fully empty, or one of the input values is
-                  wrong.
+                  The loaded spool cannot weigh less than its empty tare.
+                  Check the scale reading, its zero setting and the empty
+                  weight for this spool. Equal weights indicate no filament left.
                 </div>
               </Card>
             )}
@@ -377,9 +377,9 @@ export function Calculator({ initialSpoolPresetId }: CalculatorProps = {}) {
                   Input check
                 </div>
                 <div className="text-sm text-amber-500">
-                  Calculated remaining is more than the original filament
-                  weight. Probably means the empty spool weight is set too
-                  low for this spool type.
+                  Calculated remaining exceeds the original net filament
+                  weight. Check the loaded weight, empty tare and original
+                  net fill before using this estimate.
                 </div>
               </Card>
             )}

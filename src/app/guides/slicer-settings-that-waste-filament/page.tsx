@@ -137,25 +137,25 @@ export default function GuidePage() {
         </p>
 
         <h2 className="text-xl font-semibold tracking-tight pt-4">
-          1. Flush volumes (multi-color only): biggest single win
+          1. Flush volumes (multi-color only)
         </h2>
         <p>
-          On Bambu AMS prints, the Flushing volumes matrix controls how
-          much filament gets purged on each color transition. Default
-          flush is around 8 grams per swap with a 1.0x multiplier.
+          On Bambu AMS prints, the Flushing volumes matrix uses cubic
+          millimeters for each ordered filament pair. Grams depend on
+          density and the transitions in your plate. There is no universal
+          8-gram-per-swap default.
         </p>
         <p>
-          A two-color print with 40 swaps purges 320 grams of filament,
-          which is often more than the part itself weighs. Drop the
-          multiplier to 0.6x and you save 128 grams per print at this
-          scale. On a $22/kg PLA spool, that&apos;s $2.82 saved per print.
+          Compare the slicer&apos;s discarded-material totals before and after
+          a change. For example, reducing discarded flushing from 20 g to
+          12 g would save 8 g, or about $0.18 at an assumed $22/kg. This is
+          an arithmetic example, not a recommended setting or guaranteed saving.
         </p>
         <p>
-          The risk is that aggressive flush reduction causes color bleed
-          in the first layer or two after a swap. Compatible color pairs
-          (white to cream, blue to teal) tolerate low flush. High contrast
-          pairs (white to black, neon to dark) do not. Tune per pair in
-          the Flushing volumes matrix, not globally. The{" "}
+          Reducing flushing can leave color or incompatible material behind.
+          The direction matters: a dark-to-light transition can need more
+          flushing than the reverse. Test the actual combination and inspect
+          the sliced preview. The{" "}
           <Link
             href="/tools/ams-purge-waste-calculator"
             className="underline underline-offset-4"

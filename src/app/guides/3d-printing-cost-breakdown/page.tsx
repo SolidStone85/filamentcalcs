@@ -14,6 +14,7 @@ import { SITE } from "@/lib/tools";
 
 const SLUG = "3d-printing-cost-breakdown";
 const guide = getGuide(SLUG)!;
+const UPDATED_AT = "2026-09-05";
 
 export const metadata: Metadata = {
   title: guide.title,
@@ -25,6 +26,7 @@ export const metadata: Metadata = {
     url: `${SITE.url}/guides/${SLUG}`,
     type: "article",
     publishedTime: guide.publishedAt,
+    modifiedTime: UPDATED_AT,
   },
 };
 
@@ -35,19 +37,19 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "Is 3D printing cheaper than buying the same thing on Amazon?",
-    a: "Almost always no, for anything mass-produced. A plastic phone case on Amazon is $10 including shipping. Printing one yourself runs $5 to $15 when you count everything honestly. The win is custom parts, parts nobody sells, or parts you can iterate on quickly. It's rarely about saving money.",
+    a: "Compare the delivered price of a suitable product with your own material, machine and labor costs. A custom fit, an unavailable replacement part or quick design changes can make printing useful even when it is not the cheapest option. There is no fixed saving that applies to every model.",
   },
   {
     q: "Does infill percentage change the cost much?",
-    a: "Yes, linearly with material. 20% infill uses roughly half the filament of 40% infill on the same model. For most display parts, 10 to 15% is fine. Functional parts that need to hold weight can justify 30 to 50%.",
+    a: "More infill can increase material and print time, but halving the infill percentage does not halve total filament: walls, top and bottom layers, supports and other structures remain. Slice both settings and compare total grams. Choose walls, orientation and infill for the part's actual requirements.",
   },
   {
     q: "What about multi-color prints?",
-    a: "Multi-color adds a surprising amount. Bambu's AMS purges 5 to 15 grams of filament per color swap, and prints with dozens of swaps can easily waste half the filament on purge. For a two-color phone case with 40 swaps, you might use 30g on the part and another 200g on purge. The dedicated AMS waste calculator handles this specifically.",
+    a: "Use final slicer totals for the useful model, supports, discarded flushing and tower. The amount varies by model, transitions and profile; there is no universal grams-per-change default. Count each gram once, including any startup material, and use the AMS waste calculator to compare consumption and cost.",
   },
   {
     q: "How do I price a print I'm selling on Etsy?",
-    a: "A rough formula that works: (filament cost + electricity) x 3 + your time at a fair hourly rate. The 3x multiplier covers printer wear, failure amortization, post-processing supplies, and a small margin. Then compare to what similar items sell for and adjust. If your number is way above market, your cost structure is off.",
+    a: "Start with material, electricity, machine wear, expected failures and labor. Add packaging, finishing supplies, applicable selling fees and your intended profit. A fixed 3x multiplier does not guarantee those costs are covered. The pricing calculator provides a starting estimate; compare that with what buyers will pay for the particular product.",
   },
 ];
 
@@ -60,6 +62,7 @@ export default function GuidePage() {
         headline: guide.title,
         description: guide.description,
         datePublished: guide.publishedAt,
+        dateModified: UPDATED_AT,
         author: AUTHOR_JSONLD,
         publisher: { "@type": "Organization", name: SITE.name },
         mainEntityOfPage: { "@type": "WebPage", "@id": `${SITE.url}/guides/${SLUG}` },
@@ -89,7 +92,7 @@ export default function GuidePage() {
         <h1 className="text-3xl font-semibold tracking-tight lg:text-4xl">
           <Highlight3D>{guide.title}</Highlight3D>
         </h1>
-        <AuthorByline updatedLabel="Updated April 2026" />
+        <AuthorByline updatedLabel="Reviewed September 5, 2026 (UTC)" />
       </header>
 
       <figure className="my-8">
@@ -102,7 +105,7 @@ export default function GuidePage() {
           priority
         />
         <figcaption className="mt-2 text-xs text-muted-foreground">
-          Filament is the largest single cost in most 3D prints. Photo via{" "}
+          Filament is one component of a print&apos;s total cost. Photo via{" "}
           <a
             href="https://commons.wikimedia.org/wiki/File:3D_Printing_Materials_(16863368275).jpg"
             className="underline"
@@ -120,17 +123,17 @@ export default function GuidePage() {
 
       <div className="prose prose-sm dark:prose-invert max-w-none space-y-5 text-sm leading-7">
         <p>
-          Most 3D printing cost estimates you find online are either wrong or
-          incomplete. Manufacturer marketing talks about "prints for pennies."
-          Doom-posters on Reddit lump in printer wear at $5 per print. The
-          actual number, for most hobbyist prints, sits in between, and it's
-          made up of five things most people ignore at least one of.
+          A slicer&apos;s filament cost is a useful start, but it does not cover
+          every cost of a finished print. Material, electricity, failed attempts,
+          machine wear and hands-on time answer different parts of the question.
         </p>
 
         <p>
-          The numbers below are the stable picture of what a real hobbyist
-          print actually costs. The breakdown walks through each component,
-          with the small numbers that add up, so you can stop guessing.
+          All prices, power figures, failure rates and printer lifetimes below
+          are illustrative assumptions, not current product quotes or measured
+          industry averages. Replace them with your purchase records, utility
+          rate and printing history. Calculations were reviewed September 5,
+          2026 UTC (September 4 Pacific).
         </p>
 
         <h2 className="text-xl font-semibold tracking-tight pt-4">
@@ -145,20 +148,22 @@ export default function GuidePage() {
         </ol>
 
         <h2 className="text-xl font-semibold tracking-tight pt-4">
-          1. Filament (the biggest cost, easy to calculate)
+          1. Filament
         </h2>
         <p>
-          Filament is sold by the kilogram. Prints use grams. The math:
-          convert grams to kg, multiply by price per kg, add a small waste
-          factor for priming and skirts.
+          Convert the spool price to a cost per kilogram, then multiply by the
+          grams consumed divided by 1,000. Add a waste allowance only for material
+          missing from the input. Final slicer totals may already include supports,
+          brims, flushing and other structures.
         </p>
         <p className="rounded-md bg-muted p-3 font-mono text-xs">
           cost = (grams / 1000) × price_per_kg × (1 + waste_factor)
         </p>
         <p>
-          Concrete example: a 3DBenchy at standard settings uses about 20
-          grams of PLA. At $20 per kg with 5% waste, that's $0.42. An
-          articulated dragon print at 300g on the same filament is $6.30.
+          Example: a 20 g model at $20/kg, with an assumed additional 5% of
+          material not already counted, costs $0.42. A 300 g model under the
+          same assumptions costs $6.30. These weights are examples, not promises
+          for a particular downloaded model.
           The{" "}
           <Link
             href="/tools/filament-cost-calculator"
@@ -169,48 +174,49 @@ export default function GuidePage() {
           handles this across the main material types.
         </p>
         <p>
-          One caveat that catches people: multi-color prints waste filament
-          on AMS purge. A two-color print with 40 color swaps at 8 grams per
-          swap adds 320 grams of purge on top of the actual part weight.
-          That's often more filament than the print itself.
+          For multi-color prints, use the actual sliced flushing and tower
+          totals instead of a fixed grams-per-swap assumption. The{" "}
+          <Link href="/guides/multi-color-printing-ams-worth-it" className="underline underline-offset-4">
+            AMS cost guide
+          </Link>{" "}
+          explains the categories and how to avoid counting redirected flushing twice.
         </p>
 
         <h2 className="text-xl font-semibold tracking-tight pt-4">
-          2. Electricity (almost nothing, most people get this wrong)
+          2. Electricity
         </h2>
         <p>
-          Hobbyists consistently overestimate electricity cost. A Bambu X1C
-          averages around 115 watts during a print. At the US average
-          electricity rate of $0.18 per kWh, a 12-hour print costs about 25
-          cents. An Ender 3 at the same duration runs a bit higher because
-          it's less efficient, roughly 27 cents.
+          Electricity cost is average watts ÷ 1,000 × hours × your price per kWh.
+          For example, a measured average of 115 W for 12 hours at an assumed
+          $0.18/kWh gives 1.38 kWh and $0.2484, or about $0.25. This is an
+          example, not a named printer benchmark or a national-average rate.
         </p>
         <p>
-          Electricity is small enough that it almost never changes a
-          purchase decision. The{" "}
+          Use measured average power for a representative job; a power-supply
+          rating is not the draw throughout a print. The{" "}
           <Link
             href="/tools/electricity-cost-calculator"
             className="underline underline-offset-4"
           >
             Electricity Cost Calculator
           </Link>{" "}
-          covers the full range of printer classes and regional rates.
+          lets you substitute your own wattage, duration and utility rate.
         </p>
 
         <h2 className="text-xl font-semibold tracking-tight pt-4">
-          3. Failure waste (small per print, real over time)
+          3. Failed attempts
         </h2>
         <p>
-          Even with a well-tuned printer, you'll lose prints. Community
-          consensus for hobbyist failure rates sits around 5 to 10%. When
-          something fails mid-print, the filament is gone, the time is gone,
-          and you still paid the electricity.
+          Record successful and failed attempts instead of assuming a universal
+          failure rate. A failure consumes some filament, electricity and machine
+          time; an early failure usually costs less than one near completion.
         </p>
         <p>
-          To amortize this across your print cost, figure out what fraction
-          of prints fail and scale up all other costs by that fraction. A 10%
-          failure rate means every successful print is effectively carrying
-          about 11% extra cost (since you need ~1.11 attempts on average).
+          The pricing calculator divides material + electricity + machine wear
+          by (1 − failure rate). This assumes each failed attempt costs a complete
+          print&apos;s production cost. At 10% failures, that is division by 0.9,
+          or about 11.1% extra production cost per success. Labor is added separately.
+          If failures happen early, use your actual lost material and time to refine the estimate.
           The{" "}
           <Link
             href="/tools/failure-rate-calculator"
@@ -218,37 +224,35 @@ export default function GuidePage() {
           >
             Failure Rate Calculator
           </Link>{" "}
-          tracks this and compares to benchmark bands.
+          tracks your observed rate and estimates discarded material from your
+          average grams actually consumed by a failed attempt.
         </p>
 
         <h2 className="text-xl font-semibold tracking-tight pt-4">
-          4. Printer wear (the controversial one)
+          4. Machine cost
         </h2>
         <p>
-          This is where arguments happen on forums. Some people treat it as
-          free (paid for the printer already, so ongoing cost is zero).
-          Others amortize aggressively (full printer cost spread over
-          expected lifetime hours).
+          Allocating the purchase price across useful printing hours helps you
+          include eventual replacement in a selling price. It is an accounting
+          assumption for your own setup, not a prediction of when a printer will fail.
         </p>
         <p>
-          The honest middle ground: a $700 Bambu P1S used for roughly 2000
-          hours before major parts need replacement amortizes to about
-          $0.35 per hour of print time. An 8-hour print carries about $2.80
-          of wear cost by this math. This covers typical wear parts: nozzles,
-          hotends, belts, beds. Include it if you're pricing work for sale.
-          Ignore it if you're printing for yourself and the printer is
-          already paid off.
+          Example: an assumed $700 printer spread over 2,000 useful hours gives
+          $0.35/hour, or $2.80 for an eight-hour print. These inputs deliberately
+          differ from the calculator&apos;s editable example defaults; neither is
+          a universal lifetime. This purchase-price allocation does not automatically
+          pay for replacement nozzles, plates or repairs, so budget those separately
+          where relevant without charging the same item twice.
         </p>
 
         <h2 className="text-xl font-semibold tracking-tight pt-4">
           5. Your time (the cost people really miss)
         </h2>
         <p>
-          Every print takes some human time even if the printer runs
-          unattended. Roughly 5 minutes to slice and send a file, another 5
-          to 10 minutes to remove the print, clean the plate, and check the
-          nozzle. If you value your time at $15 per hour, that's $1.25 to
-          $2.50 per print in setup and cleanup alone.
+          Record hands-on preparation and finishing time separately from machine
+          runtime. For example, five minutes preparing a job plus five to ten
+          minutes cleaning up is ten to fifteen minutes of labor. At an assumed
+          $15/hour, that costs $2.50 to $3.75.
         </p>
         <p>
           For prints you're selling, this needs to be in your price. For
@@ -258,24 +262,36 @@ export default function GuidePage() {
         <h2 className="text-xl font-semibold tracking-tight pt-4">
           Worked example: a 100g phone case
         </h2>
-        <p>Standard PLA, 8-hour print on a Bambu P1S:</p>
+        <p>
+          An illustrative 100 g useful part taking eight hours. Assume $20/kg
+          filament, 5% additional material not included in that 100 g, 95 W average
+          draw, $0.18/kWh, a $700 machine over 2,000 hours, and 15 minutes of labor
+          at $15/hour. The assumed 7% failure rate uses the full-production-cost model above.
+        </p>
         <ul className="list-disc pl-5 space-y-1 marker:text-primary">
           <li>Filament: $2.10 (100g × $20/kg × 1.05 waste)</li>
           <li>Electricity: $0.14 (95W × 8h at $0.18/kWh)</li>
-          <li>Failure waste amortized: $0.25 (7% typical failure rate)</li>
           <li>Printer wear: $2.80 (8h × $0.35/h)</li>
+          <li>Production subtotal: $5.0368 before failures</li>
+          <li>Failure allowance: $0.38 ($5.0368 ÷ 0.93 − $5.0368)</li>
           <li>Your time: $3.75 (15 min at $15/h)</li>
-          <li className="font-semibold">Total: about $9.05</li>
+          <li className="font-semibold">Total: $9.17 ($5.0368 ÷ 0.93 + $3.75, rounded)</li>
         </ul>
         <p>
-          If you're selling that phone case on Etsy, your price needs to
-          clear $15 to $20 for it to be worth making. Below that and you're
-          essentially subsidizing buyers with your time.
+          This $9.17 is the example&apos;s estimated cost before packaging,
+          selling fees, extra finishing supplies and profit. It does not imply
+          a market price. Use the{" "}
+          <Link href="/tools/print-pricing-calculator" className="underline underline-offset-4">
+            print pricing calculator
+          </Link>{" "}
+          with these inputs or your own costs, then account for any charges it does not include.
         </p>
         <p>
-          If it's a case for yourself and you already own the printer? The
-          honest out-of-pocket cost is closer to $2.50 (just filament and
-          electricity). Everything else is sunk.
+          For a successful attempt, filament plus electricity alone is $2.2368,
+          or $2.24. Spreading those two costs across successes with the same
+          assumed 7% full-cost failure rate gives about $2.41. Those figures
+          exclude your time and future machine expenses; they do not make those
+          expenses disappear.
         </p>
 
         <h2 className="text-xl font-semibold tracking-tight pt-4">
@@ -297,52 +313,35 @@ export default function GuidePage() {
         </h2>
         <ul className="list-disc pl-5 space-y-1 text-xs leading-6 marker:text-primary">
           <li>
-            US Energy Information Administration,{" "}
+            Prusa Research,{" "}
             <a
-              href="https://www.eia.gov/electricity/monthly/epm_table_grapher.php?t=epmt_5_6_a"
+              href="https://blog.prusa3d.com/3d-printing-price-calculator_38905/"
               className="underline"
               rel="noopener noreferrer"
               target="_blank"
             >
-              average retail price of electricity to ultimate customers
+              3D printing price calculator
             </a>{" "}
-            (residential rates by state)
+            (separate material, electricity, labor and machine-cost inputs).
           </li>
           <li>
             Bambu Lab,{" "}
             <a
-              href="https://wiki.bambulab.com/en/software/bambu-studio"
+              href="https://github.com/bambulab/BambuStudio/blob/master/resources/web/flush/WipingDialog.html"
               className="underline"
               rel="noopener noreferrer"
               target="_blank"
             >
-              Bambu Studio documentation
+              Bambu Studio flushing-volume interface
             </a>{" "}
-            (flush volume defaults, slicer behavior)
+            (volume units and multiplier behavior; not a universal grams-per-swap default).
           </li>
           <li>
-            Prusa Research,{" "}
-            <a
-              href="https://help.prusa3d.com/category/prusaslicer_204"
-              className="underline"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              PrusaSlicer knowledge base
-            </a>{" "}
-            (default print profiles, waste assumptions)
-          </li>
-          <li>
-            CNC Kitchen on YouTube,{" "}
-            <a
-              href="https://www.youtube.com/@CNCKitchen"
-              className="underline"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              3D printing material and process testing series
-            </a>{" "}
-            (real-world tensile and throughput data)
+            All worked numbers on this page are transparent examples. See our{" "}
+            <Link href="/methodology" className="underline underline-offset-4">
+              calculation methodology
+            </Link>{" "}
+            for assumptions and limits.
           </li>
         </ul>
       </div>

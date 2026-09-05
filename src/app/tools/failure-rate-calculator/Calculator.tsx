@@ -1,7 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useMemo } from "react";
+import { CalculatorSettings } from "@/components/shared/CalculatorSettings";
+import { CalculatorSummary } from "@/components/shared/CalculatorSummary";
+import { useCalculatorState } from "@/lib/useCalculatorState";
 
 import { FormulaBreakdown } from "@/components/shared/FormulaBreakdown";
 import { InputWithUnit } from "@/components/shared/InputWithUnit";
@@ -63,10 +65,10 @@ function parseStateFromParams(params: URLSearchParams): State {
 
 function encodeState(state: State): string {
   const p = new URLSearchParams();
-  if (state.successful !== "") p.set("s", String(state.successful));
-  if (state.failed !== "") p.set("f", String(state.failed));
-  if (state.avgGrams !== "") p.set("g", String(state.avgGrams));
-  if (state.pricePerKg !== "") p.set("p", String(state.pricePerKg));
+  p.set("s", String(state.successful));
+  p.set("f", String(state.failed));
+  p.set("g", String(state.avgGrams));
+  p.set("p", String(state.pricePerKg));
   p.set("c", state.currency);
   return p.toString();
 }
@@ -77,9 +79,10 @@ const CURRENCY_ITEMS = CURRENCIES.map((c) => ({
 }));
 
 const BENCHMARK_COLORS: Record<
-  "excellent" | "typical" | "investigate" | "serious",
+  "no-data" | "excellent" | "typical" | "investigate" | "serious",
   string
 > = {
+  "no-data": "text-muted-foreground",
   excellent: "text-emerald-500",
   typical: "text-primary",
   investigate: "text-amber-500",
@@ -87,17 +90,7 @@ const BENCHMARK_COLORS: Record<
 };
 
 export function Calculator() {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-
-  const [state, setState] = useState<State>(() =>
-    parseStateFromParams(new URLSearchParams(searchParams.toString())),
-  );
-
-  useEffect(() => {
-    router.replace(`?${encodeState(state)}`, { scroll: false });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state]);
+  const { state, setState, settings } = useCalculatorState(parseStateFromParams, encodeState, { c: "currency", p: "pricePerKg" });
 
   const successful = typeof state.successful === "number" ? state.successful : 0;
   const failed = typeof state.failed === "number" ? state.failed : 0;
@@ -105,7 +98,9 @@ export function Calculator() {
   const pricePerKg =
     typeof state.pricePerKg === "number" ? state.pricePerKg : 0;
 
-  const hasInput = successful + failed > 0;
+  const validInputs = successful + failed > 0 && state.successful !== "" && state.failed !== "" &&
+    state.avgGrams !== "" && state.pricePerKg !== "" && Number.isInteger(successful) && Number.isInteger(failed) &&
+    [successful, failed, avgGrams, pricePerKg].every((v) => Number.isFinite(v) && v >= 0);
 
   const result = useMemo(
     () =>
@@ -117,9 +112,11 @@ export function Calculator() {
       }),
     [successful, failed, avgGrams, pricePerKg],
   );
+  const hasInput = validInputs && Object.values(result).every((value) => typeof value !== "number" || Number.isFinite(value));
 
   return (
     <div className="grid gap-6 lg:grid-cols-[1.2fr_1fr]">
+      <CalculatorSummary label="Failure rate" value={hasInput ? `${result.failureRatePercent.toFixed(1)}%` : "Enter both print counts"} />
       <Card className="glass-card">
         <CardHeader>
           <CardTitle>Inputs</CardTitle>
@@ -127,6 +124,7 @@ export function Calculator() {
         <CardContent className="space-y-5">
           <InputWithUnit
             id="successful"
+            integer
             label="Successful prints"
             value={state.successful}
             onValueChange={(v) => setState((s) => ({ ...s, successful: v }))}
@@ -139,6 +137,7 @@ export function Calculator() {
 
           <InputWithUnit
             id="failed"
+            integer
             label="Failed prints"
             value={state.failed}
             onValueChange={(v) => setState((s) => ({ ...s, failed: v }))}
@@ -199,10 +198,11 @@ export function Calculator() {
               nothing is converted.
             </p>
           </div>
+          <CalculatorSettings {...settings} />
         </CardContent>
       </Card>
 
-      <div className="space-y-4">
+      <div id="calculator-results" tabIndex={-1} className="scroll-mt-40 space-y-4 lg:sticky lg:top-24 lg:self-start">
         <ResultDisplay
           prominent
           label="Failure rate"
@@ -221,7 +221,7 @@ export function Calculator() {
           <>
             <Card className="glass-card gap-2 p-5">
               <div className="text-xs uppercase tracking-wide text-muted-foreground">
-                Benchmark
+                Tracking guide
               </div>
               <div
                 className={cn(
@@ -232,8 +232,7 @@ export function Calculator() {
                 {result.benchmarkLabel}
               </div>
               <div className="text-xs text-muted-foreground">
-                Under 5% excellent, 5 to 10% typical, 10 to 20%
-                investigate, over 20% serious issue.
+                Illustrative bands: under 5%, 5 to 10%, 10 to 20%, and 20%+. Compare your own trend and the number of observations.
               </div>
             </Card>
 
@@ -261,7 +260,7 @@ export function Calculator() {
                   value: `${result.failureRatePercent.toFixed(1)}%`,
                 },
               ]}
-              note="Benchmark bands are community consensus, not scientific. Your mileage will vary with printer, filament brand, and what you're printing. Tracking the number over time is more useful than a single snapshot."
+              note="These bands are a suggested tracking aid, not an industry benchmark. Waste assumes every failed attempt used the entered average weight; early failures may use less. Track actual discarded grams for a better cost estimate."
             />
           </>
         )}

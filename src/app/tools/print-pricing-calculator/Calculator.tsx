@@ -1,7 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useMemo } from "react";
+import { CalculatorSettings } from "@/components/shared/CalculatorSettings";
+import { CalculatorSummary } from "@/components/shared/CalculatorSummary";
+import { useCalculatorState } from "@/lib/useCalculatorState";
 
 import { FormulaBreakdown } from "@/components/shared/FormulaBreakdown";
 import { InputWithUnit } from "@/components/shared/InputWithUnit";
@@ -32,7 +34,7 @@ type State = {
   printHours: number | "";
   printerPrice: number | "";
   printerLifetimeHours: number | "";
-  failureRatePercent: number; // 0..40
+  failureRatePercent: number; // 0..99
   laborHours: number | "";
   laborRate: number | "";
   markup: number; // 1..6
@@ -57,13 +59,12 @@ function parseStateFromParams(params: URLSearchParams): State {
     if (s === null) return fallback;
     if (s === "") return "";
     const n = Number(s);
-    return Number.isFinite(n) && n >= 0 ? n : fallback;
+    return Number.isFinite(n) ? n : "";
   };
-  const toClamped = (s: string | null, fallback: number, min: number, max: number): number => {
+  const toNumber = (s: string | null, fallback: number): number => {
     if (s === null) return fallback;
     const n = Number(s);
-    if (!Number.isFinite(n)) return fallback;
-    return Math.min(max, Math.max(min, n));
+    return Number.isFinite(n) && s !== "" ? n : -1;
   };
   const c = params.get("c") as CurrencyCode | null;
 
@@ -76,10 +77,10 @@ function parseStateFromParams(params: URLSearchParams): State {
       params.get("pl"),
       DEFAULT_STATE.printerLifetimeHours,
     ),
-    failureRatePercent: toClamped(params.get("f"), DEFAULT_STATE.failureRatePercent, 0, 40),
+    failureRatePercent: toNumber(params.get("f"), DEFAULT_STATE.failureRatePercent),
     laborHours: toNumOrEmpty(params.get("lh"), DEFAULT_STATE.laborHours),
     laborRate: toNumOrEmpty(params.get("lr"), DEFAULT_STATE.laborRate),
-    markup: toClamped(params.get("mk"), DEFAULT_STATE.markup, 1, 6),
+    markup: toNumber(params.get("mk"), DEFAULT_STATE.markup),
     currency:
       c && CURRENCIES.some((x) => x.code === c) ? c : DEFAULT_STATE.currency,
   };
@@ -87,16 +88,15 @@ function parseStateFromParams(params: URLSearchParams): State {
 
 function encodeState(state: State): string {
   const p = new URLSearchParams();
-  if (state.materialCost !== "") p.set("m", String(state.materialCost));
-  if (state.electricityCost !== "") p.set("e", String(state.electricityCost));
-  if (state.printHours !== "") p.set("h", String(state.printHours));
-  if (state.printerPrice !== "") p.set("pp", String(state.printerPrice));
-  if (state.printerLifetimeHours !== "")
-    p.set("pl", String(state.printerLifetimeHours));
+  p.set("m", String(state.materialCost));
+  p.set("e", String(state.electricityCost));
+  p.set("h", String(state.printHours));
+  p.set("pp", String(state.printerPrice));
+  p.set("pl", String(state.printerLifetimeHours));
   p.set("f", String(state.failureRatePercent));
-  if (state.laborHours !== "") p.set("lh", String(state.laborHours));
-  if (state.laborRate !== "") p.set("lr", String(state.laborRate));
-  p.set("mk", state.markup.toFixed(2));
+  p.set("lh", String(state.laborHours));
+  p.set("lr", String(state.laborRate));
+  p.set("mk", String(state.markup));
   p.set("c", state.currency);
   return p.toString();
 }
@@ -104,23 +104,14 @@ function encodeState(state: State): string {
 // -----------------------------------------------------------------------
 
 export function Calculator() {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-
-  const [state, setState] = useState<State>(() =>
-    parseStateFromParams(new URLSearchParams(searchParams.toString())),
-  );
-
-  // Push state to URL (replace, not push; don't spam history).
-  useEffect(() => {
-    const query = encodeState(state);
-    router.replace(`?${query}`, { scroll: false });
-    // router is stable; only re-sync when state changes
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state]);
+  const { state, setState, settings } = useCalculatorState(parseStateFromParams, encodeState, {
+    c: "currency", pp: "printerPrice", pl: "printerLifetimeHours",
+  });
 
   const num = (v: number | ""): number => (typeof v === "number" ? v : 0);
-  const hasInput = num(state.materialCost) > 0;
+  const validInputs = [state.materialCost, state.electricityCost, state.printHours, state.printerPrice, state.printerLifetimeHours, state.laborHours, state.laborRate]
+    .every((v) => v !== "" && Number.isFinite(v) && v >= 0) && num(state.printerLifetimeHours) > 0 &&
+    state.failureRatePercent >= 0 && state.failureRatePercent < 100 && state.markup >= 1 && state.markup <= 6;
 
   const result = useMemo(
     () =>
@@ -138,6 +129,7 @@ export function Calculator() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [state],
   );
+  const hasInput = validInputs && Object.values(result).every((value) => typeof value !== "number" || Number.isFinite(value));
 
   const currencySymbol =
     CURRENCIES.find((c) => c.code === state.currency)?.symbol ?? "$";
@@ -146,16 +138,13 @@ export function Calculator() {
 
   return (
     <div className="grid gap-6 lg:grid-cols-[1.2fr_1fr]">
+      <CalculatorSummary label="Suggested price" value={hasInput ? fmt(result.suggestedPrice) : "Enter costs"} />
       {/* ----- Inputs ----- */}
       <Card className="glass-card">
         <CardHeader>
           <CardTitle>Inputs</CardTitle>
         </CardHeader>
         <CardContent className="space-y-5">
-          <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-            Costs per print
-          </p>
-
           <InputWithUnit
             id="material"
             label={`Material cost (${currencySymbol})`}
@@ -167,6 +156,11 @@ export function Calculator() {
             hint="Filament for this print, purge included. Get it from the Filament Cost Calculator."
           />
 
+          <details className="space-y-4 rounded-lg border p-4">
+            <summary className="cursor-pointer text-sm font-medium">
+              Production assumptions
+              <span className="mt-1 block text-xs font-normal leading-5 text-muted-foreground">Power {state.electricityCost === "" ? "missing" : fmt(num(state.electricityCost))} · {state.printHours || 0} h · printer {state.printerPrice === "" ? "missing" : fmt(num(state.printerPrice))} / {state.printerLifetimeHours || 0} h · {state.failureRatePercent}% failures</span>
+            </summary>
           <InputWithUnit
             id="electricity"
             label={`Electricity cost (${currencySymbol})`}
@@ -177,7 +171,7 @@ export function Calculator() {
             min={0}
             step={0.05}
             placeholder="0.20"
-            hint="A 6 hour print usually runs 10 to 20 cents, a full day around 50. The Electricity Cost Calculator gives the exact number."
+            hint="Enter your measured or estimated cost for this job. The default is an editable example; actual cost depends on power use and your tariff."
           />
 
           <p className="pt-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">
@@ -204,7 +198,7 @@ export function Calculator() {
                 setState((s) => ({ ...s, printerLifetimeHours: v }))
               }
               unit="h"
-              min={0}
+              min={1}
               step={250}
               placeholder="5000"
             />
@@ -230,9 +224,10 @@ export function Calculator() {
               </span>
             </div>
             <Slider
+              aria-label="Failure rate"
               value={[state.failureRatePercent]}
               min={0}
-              max={40}
+              max={99}
               step={1}
               onValueChange={(vals) => {
                 const next = Array.isArray(vals) ? vals[0] : vals;
@@ -240,15 +235,14 @@ export function Calculator() {
               }}
             />
             <p className="text-xs text-muted-foreground">
-              Failed prints get amortized into every good one. 5 to 10% is a
-              typical hobbyist band. Track yours with the Failure Rate
-              Calculator.
+              Assumes each failed attempt uses the full production cost. Replace this example rate with your tracked failure rate.
             </p>
+            {(state.failureRatePercent < 0 || state.failureRatePercent >= 100) && <p className="text-xs text-destructive">Choose a failure rate from 0% to 99%. At 100%, no successful print can cover the costs.</p>}
           </div>
+          </details>
 
-          <p className="pt-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-            Your time
-          </p>
+          <details className="space-y-4 rounded-lg border p-4">
+            <summary className="cursor-pointer text-sm font-medium">Labor and markup<span className="mt-1 block text-xs font-normal leading-5 text-muted-foreground">{state.laborHours === "" ? "Missing time" : `${state.laborHours} h`} × {state.laborRate === "" ? "missing rate" : `${fmt(num(state.laborRate))}/h`} · {state.markup.toFixed(2)}× production cost</span></summary>
 
           <div className="grid gap-4 sm:grid-cols-2">
             <InputWithUnit
@@ -284,6 +278,7 @@ export function Calculator() {
               </span>
             </div>
             <Slider
+              aria-label="Markup"
               value={[state.markup]}
               min={1}
               max={6}
@@ -294,11 +289,11 @@ export function Calculator() {
               }}
             />
             <p className="text-xs text-muted-foreground">
-              2× for friends, 3× is the common Etsy hobbyist floor, 4 to 5× if
-              you run it like a business. Applied to production cost, not your
-              labor.
+              Your chosen pricing assumption, not a guaranteed market price. Applied to production cost; labor is added afterward. A 3× multiplier means 200% markup.
             </p>
+            {(state.markup < 1 || state.markup > 6) && <p className="text-xs text-destructive">Choose a multiplier from 1× to 6×.</p>}
           </div>
+          </details>
 
           <div className="space-y-2">
             <Label htmlFor="currency">Currency</Label>
@@ -328,19 +323,20 @@ export function Calculator() {
               nothing is converted.
             </p>
           </div>
+          <CalculatorSettings {...settings} />
         </CardContent>
       </Card>
 
       {/* ----- Results ----- */}
-      <div className="space-y-4">
+      <div id="calculator-results" tabIndex={-1} className="scroll-mt-40 space-y-4 lg:sticky lg:top-24 lg:self-start">
         <ResultDisplay
           prominent
-          label="Charge at least"
+          label="Suggested selling price"
           value={hasInput ? fmt(result.suggestedPrice) : "-"}
           sublabel={
             hasInput
               ? `${fmt(result.failureAdjustedCost)} cost × ${state.markup.toFixed(2).replace(/\.?0+$/, "")} markup + ${fmt(laborNum)} labor`
-              : "Enter your material cost to calculate."
+              : "Complete the cost inputs and check the assumptions to calculate."
           }
           copyValue={hasInput ? fmt(result.suggestedPrice) : undefined}
         />
@@ -349,19 +345,20 @@ export function Calculator() {
           <>
             <div className="grid grid-cols-2 gap-3">
               <ResultDisplay
-                label="Break-even price"
+                label="Break-even (entered costs)"
                 value={fmt(result.floorPrice)}
               />
               <ResultDisplay
-                label="Cost per print"
+                label="Production incl. failures"
                 value={fmt(result.failureAdjustedCost)}
+                sublabel="Labor is separate"
               />
               <ResultDisplay
-                label="Profit per sale"
+                label="Profit before other costs"
                 value={fmt(result.profit)}
               />
               <ResultDisplay
-                label="Your effective hourly"
+                label="Hourly before other costs"
                 value={
                   num(state.laborHours) > 0
                     ? fmt(result.effectiveHourlyRate)
@@ -384,7 +381,7 @@ export function Calculator() {
                 </span>
               </span>
               <span className="inline-flex items-center gap-1.5 rounded-full border bg-card/70 px-3 py-1 text-xs">
-                <span className="text-muted-foreground">Sell 10, earn</span>
+                <span className="text-muted-foreground">10 sales, before other costs</span>
                 <span className="font-mono font-medium tabular-nums text-foreground">
                   {fmt(result.profit * 10)}
                 </span>
@@ -411,7 +408,7 @@ export function Calculator() {
                   value: fmt(result.suggestedPrice),
                 },
               ]}
-              note="Markup covers profit plus the overhead this calculator can't see: marketplace fees, packaging, shipping supplies, failed experiments, and the spool shelf that keeps growing."
+              note="Markup is your chosen allowance. Check that the final price also covers marketplace fees, packaging, shipping and any other costs you have not entered."
             />
           </>
         )}

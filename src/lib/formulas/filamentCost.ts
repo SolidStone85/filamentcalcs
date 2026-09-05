@@ -14,6 +14,7 @@ export type FilamentCostResult = {
   cost: number;
   costPerGram: number;
   effectiveGrams: number; // grams including waste
+  completePrintsPerKg: number;
 };
 
 export function calculateFilamentCost({
@@ -25,7 +26,8 @@ export function calculateFilamentCost({
   const effectiveGrams = gramsUsed * (1 + wasteFactor);
   const cost = kg * pricePerKg * (1 + wasteFactor);
   const costPerGram = gramsUsed > 0 ? cost / gramsUsed : 0;
-  return { cost, costPerGram, effectiveGrams };
+  const completePrintsPerKg = effectiveGrams > 0 ? Math.floor(1000 / effectiveGrams) : 0;
+  return { cost, costPerGram, effectiveGrams, completePrintsPerKg };
 }
 
 // Worked example used in tests + design spec:

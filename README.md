@@ -1,36 +1,28 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# FilamentCalcs
 
-## Getting Started
+Nine free browser calculators for hobbyist 3D printing. Next.js App Router, TypeScript and Tailwind.
 
-First, run the development server:
+## Development and verification
 
-```bash
+Use Node.js24 or newer (the formula tests import TypeScript directly).
+
+```sh
+npm ci
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm test
+npm run build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The build runs TypeScript checks and prerenders all routes. It fetches the existing fonts from Google at build time. Before release, also check calculator inputs, sharing and mobile layout in the browser; pure formula tests cannot validate React state behavior.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Calculator contracts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Formulas live in `src/lib/formulas`. Add a reproducible regression case before changing arithmetic.
+- Keep existing shared URL keys compatible. A blank input must remain blank; never silently substitute a plausible answer for invalid input.
+- `useCalculatorState` keeps jobs in URLs. Only explicitly allowed settings may be saved on-device, and only after opt-in. Shared inputs take precedence.
+- Price and hardware presets are editable assumptions. Do not imply measured industry averages, manufacturer validation or firsthand printer testing without evidence.
+- AMS slicer mode counts non-overlapping model, flush, support, tower and other material once. Estimate mode accepts an explicit grams/mm³ average; it has no universal purge default.
+- Vercel Analytics event URLs have calculator query parameters removed. Shared URLs still contain inputs. Keep public privacy wording consistent.
+- AdSense is disabled. Relevant affiliate components remain below the tools, configured by the existing deployment environment.
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The site is deployed from the existing GitHub/Vercel project. Preserve production environment settings and existing public URLs.

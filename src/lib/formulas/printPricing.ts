@@ -6,7 +6,8 @@
 // price      = adjusted × markup + labor
 //
 // The failure adjustment divides instead of adding a percent because a
-// failed print costs a whole print. At a 10% failure rate, every 9 good
+// model assumes each failed attempt consumes a whole print's production cost.
+// At a 10% failure rate, every 9 good
 // prints have to pay for 1 dead one: production ÷ 0.9, not × 1.1.
 
 export type PrintPricingInput = {
@@ -15,7 +16,7 @@ export type PrintPricingInput = {
   printHours: number;
   printerPrice: number;
   printerLifetimeHours: number;
-  failureRatePercent: number; // 0..40 is the realistic band
+  failureRatePercent: number; // must be >= 0 and < 100
   laborHours: number;
   laborRate: number; // per hour
   markup: number; // multiplier applied to production cost, not labor
@@ -45,14 +46,16 @@ export function calculatePrintPricing({
   markup,
 }: PrintPricingInput): PrintPricingResult {
   const machineCost =
-    printerLifetimeHours > 0
+    Number.isFinite(printerLifetimeHours) && printerLifetimeHours > 0
       ? (printerPrice / printerLifetimeHours) * printHours
-      : 0;
+      : NaN;
   const productionCost = materialCost + electricityCost + machineCost;
 
-  // Clamp so a typo like 100% failure doesn't divide by zero.
+  // Invalid rates have no usable estimate; never silently substitute a rate.
   const failureFraction =
-    Math.min(Math.max(failureRatePercent, 0), 90) / 100;
+    Number.isFinite(failureRatePercent) && failureRatePercent >= 0 && failureRatePercent < 100
+      ? failureRatePercent / 100
+      : NaN;
   const failureAdjustedCost = productionCost / (1 - failureFraction);
 
   const laborCost = laborHours * laborRate;

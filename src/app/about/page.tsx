@@ -52,8 +52,8 @@ export default function AboutPage() {
           .
         </p>
         <p>
-          Every calculator here runs entirely in your browser. No account is
-          required, and no data is sent to a server. URLs include your inputs
+          Every calculation runs in your browser. No account is
+          required. URLs include your inputs
           so you can bookmark a result or share it in a Reddit thread or
           Discord channel.
         </p>
@@ -69,19 +69,14 @@ export default function AboutPage() {
           sponsorships or paid product reviews.
         </p>
         <p>
-          The angle of authority here is research, not personal print-farm
-          mileage. Every calculator is built from cross-referenced sources:
-          slicer documentation (Bambu Studio, PrusaSlicer, OrcaSlicer),
-          manufacturer datasheets, US EIA residential electricity rate data,
-          Eurostat European household rates, and published community testing
-          including CNC Kitchen&apos;s tensile and impact comparison series.
-          Where sources disagree, the calculator notes which way it leans and
-          why. Where confidence is low (print-time estimation being the
-          obvious example), the page says so out loud.
+          This is a research-based reference. We do not operate a print farm
+          or claim to have personally tested the printers in our guides.
+          Manufacturer specifications and slicer documentation are linked
+          where used. Presets are starting assumptions, and your measurements
+          are the better input for a particular printer or job.
         </p>
         <p>
-          Corrections from readers are read and integrated into the quarterly
-          review cycle. The fastest path to fix a wrong default or a stale
+          Reader reports help identify corrections. To report a wrong default or a stale
           price is the{" "}
           <Link href="/contact" className="underline underline-offset-4">
             contact page
@@ -109,20 +104,14 @@ export default function AboutPage() {
         </p>
 
         <h2 className="pt-4 text-lg font-semibold tracking-tight">
-          What makes this different from other calculator sites
+          What the calculators include
         </h2>
         <p>
-          Most online 3D printing calculators are either too simple (a
-          single field for grams and a single field for price-per-kg, with
-          no waste factor or material handling), or they are SEO content
-          farms with thin tools wrapped in keyword-stuffed copy.
+          The tools cover material cost, electricity, printer wear,
+          failed attempts, hands-on time and multi-color material use.
         </p>
         <p>
-          The aim here is the opposite: each calculator handles the
-          variables that actually affect the answer (waste factor by
-          material, failure rate amortization, AMS purge per swap), and
-          each page explains what the math is doing and where it falls
-          apart. The{" "}
+          Each tool explains its assumptions and limitations. The{" "}
           <Link href="/methodology" className="underline underline-offset-4">
             methodology page
           </Link>{" "}
@@ -133,12 +122,10 @@ export default function AboutPage() {
           Sources and method
         </h2>
         <p>
-          Formulas are based on community references including Prusa
-          documentation, the Bambu Lab community wiki, slicer source code
-          for default values, and well-known maker forum threads. Tensile
-          and impact strength data comes from public testing series like
-          CNC Kitchen on YouTube. Regional electricity rates use US EIA
-          data and Eurostat European household rates.
+          The methodology page links supporting references, including Prusa
+          documentation, Bambu Studio source code and material datasheets.
+          Reference prices, rates and material properties can vary. Use your
+          bill, purchase price or manufacturer&apos;s specification when available.
         </p>
         <p>
           Where estimates have wide error bars (print time being the main
@@ -152,12 +139,10 @@ export default function AboutPage() {
           How the site is maintained
         </h2>
         <p>
-          Every calculator is reviewed quarterly to refresh default
-          prices, add new printers as they become relevant, update
-          regional electricity rates, and incorporate any reader
-          corrections submitted via contact. Major calculator changes get
-          a note in the relevant page&apos;s &quot;How this works&quot;
-          section.
+          Calculator changes are checked with worked examples and automated
+          formula tests. Defaults are starting assumptions; use your own
+          measurements and prices for a specific job. Material changes and
+          source references are documented with the relevant tool or guide.
         </p>
         <p>
           New guides and calculator additions follow community demand. If
@@ -182,11 +167,12 @@ export default function AboutPage() {
           relevant to the topic.
         </p>
         <p>
-          We do not collect personal data beyond standard Google
-          Analytics page views. The calculators themselves run entirely
-          in your browser; nothing about your inputs ever leaves your
-          device. URLs include your inputs as parameters so you can
-          bookmark or share, but those URLs are never sent to our server.
+          Calculations run in your browser. Vercel Web Analytics provides
+          aggregate traffic information, with calculator query parameters
+          removed from analytics event URLs. Bookmarked and shared URLs
+          contain your inputs, and opening them makes a request to the site.
+          Some tools offer optional preferences saved on your device. Read
+          the <Link href="/privacy" className="text-primary underline underline-offset-4">privacy policy</Link> for details.
         </p>
 
         <h2 className="pt-4 text-lg font-semibold tracking-tight">
@@ -198,8 +184,8 @@ export default function AboutPage() {
           <Link href="/contact" className="underline underline-offset-4">
             contact page
           </Link>
-          . Feedback is read within a week and incorporated into the next
-          quarterly review where appropriate.
+          . Include the inputs, the result shown and what you expected so
+          the issue can be reproduced.
         </p>
       </div>
     </div>

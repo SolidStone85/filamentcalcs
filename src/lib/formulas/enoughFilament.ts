@@ -10,7 +10,7 @@
 export type EnoughFilamentInput = {
   remainingGrams: number;
   printGrams: number;
-  wastePercent: number; // priming, skirt, ooze; 5 is typical
+  wastePercent: number; // extra material not already in printGrams
   purgeGrams: number; // multi-color purge; 0 for single color
 };
 
@@ -35,7 +35,7 @@ export function calculateEnoughFilament({
   const spareGrams = remainingGrams - neededGrams;
 
   // Headroom: 8% of the job or 10 g, whichever is bigger. Below that,
-  // an ordinary estimate drift can eat the whole margin.
+  // estimate differences can eat the whole margin. This is a planning rule.
   const marginGrams = Math.max(10, neededGrams * 0.08);
 
   let verdict: EnoughFilamentVerdict;
@@ -51,12 +51,12 @@ export function calculateEnoughFilament({
     verdict = "close";
     verdictLabel = "Cutting it close";
     recommendation =
-      "It fits on paper, but slicer estimates drift and spool tails print worst. Swap to a fresher spool for anything you care about, or be ready for a mid-print runout swap.";
+      "The entered amounts fit, but the spare material is below this tool's planning margin. Check the tare and sliced total, or allow for a runout swap.";
   } else {
     verdict = "plenty";
     verdictLabel = "Yes, it fits";
     recommendation =
-      "Start it. Even if the slicer estimate drifts a few percent, you have room to spare.";
+      "Your estimated spare material exceeds this tool's planning margin. Check the spool tare and sliced total before printing; this estimate cannot guarantee against runout.";
   }
 
   return {

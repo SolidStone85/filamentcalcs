@@ -14,6 +14,7 @@ import { SITE } from "@/lib/tools";
 
 const SLUG = "multi-color-printing-ams-worth-it";
 const guide = getGuide(SLUG)!;
+const UPDATED_AT = "2026-09-05";
 
 export const metadata: Metadata = {
   title: guide.title,
@@ -25,37 +26,34 @@ export const metadata: Metadata = {
     url: `${SITE.url}/guides/${SLUG}`,
     type: "article",
     publishedTime: guide.publishedAt,
+    modifiedTime: UPDATED_AT,
   },
 };
 
 const FAQ: { q: string; a: string }[] = [
   {
-    q: "How many grams does Bambu AMS actually waste per color swap?",
-    a: "Default Bambu Studio settings flush around 8 grams per swap on an X1C or P1S. The A1 and A1 Mini tend toward 6 grams. Tuned profiles using the flush multiplier can drop to 4 to 5 grams, and aggressive defaults can push past 12 grams. The exact number is visible in Bambu Studio's flush data panel after slicing.",
+    q: "How many grams does AMS waste per color change?",
+    a: "There is no single manufacturer-wide grams-per-change value. Transition colors, material, printer profile and slicer settings affect flushing. Use the sliced plate's final filament breakdown. A flushing-volume matrix is measured in cubic millimeters, not grams; converting it requires material density and the actual number of each transition.",
   },
   {
-    q: "Is AMS worth it for a single-color print?",
-    a: "No. AMS adds zero value to single-color prints and costs around $350 on top of the printer. If you only print in one color 95% of the time, skip AMS and buy more filament variety. You can always swap colors between prints the old-fashioned way.",
+    q: "Does a high waste percentage mean a print is not worth making?",
+    a: "No universal percentage decides that. Compare the extra material and machine time with the value of the finished print and the effort of painting or assembling separate pieces. A small print can have a high waste share but a low extra dollar cost. For selling, include labor, failures and fees as well.",
   },
   {
-    q: "What's the break-even point where AMS stops making sense?",
-    a: "Purge waste above 50% of total filament usage is the typical break-even. At that point, the cost of the wasted material plus the slower print time starts outweighing the convenience. A 30 gram part with 40 color swaps at 8 grams per swap wastes 320 grams of purge (91% of total filament), which is almost never worth it. For that print, painting the single-color version is cheaper.",
+    q: "Will a purge bucket reduce the filament used?",
+    a: "A bucket collects discarded filament; it does not change the slicer's flushing requirement. A prime tower has a different job, helping prepare extrusion after a change. Follow the printer and slicer guidance instead of removing the tower just because a bucket is installed.",
   },
   {
-    q: "Can you reduce purge waste without buying a poop chute or waste bucket?",
-    a: "Yes, in slicer settings. Lower the flush multiplier (default 1.0, tuned users go 0.4 to 0.6). Use the flushing volumes matrix to set smaller purges for compatible color pairs (white to cream purges less than white to black). Group same-color features in your model to reduce swap count. These adjustments alone can cut purge by 30 to 50% on most prints.",
+    q: "Should I apply the flush multiplier to the final slicer grams?",
+    a: "No. Final sliced amounts already reflect the settings used to produce them. Enter those grams once. A multiplier belongs only in a rough estimate whose source baseline has not already had that multiplier applied.",
   },
   {
-    q: "Does multi-color slow the print down?",
-    a: "Yes, significantly. Each color swap on Bambu AMS adds roughly 30 to 45 seconds for purging, tool change, and wipe. A print with 40 swaps adds 20 to 30 minutes of pure swap time on top of the actual printing. For a 4-hour base print that becomes 4.5 hours. The time cost is real but rarely discussed.",
+    q: "How much extra time does multi-color printing take?",
+    a: "Slice the same plate in single-color and multi-color and compare the total times. Loading, unloading, flushing, wiping, the tower and printer-specific routines all contribute. A fixed seconds-per-change rule cannot reliably predict every printer and profile.",
   },
   {
-    q: "Is Prusa MMU or Mosaic Palette better than Bambu AMS for purge efficiency?",
-    a: "All multi-material systems waste filament on color transitions. MMU2S and MMU3 purge roughly 15 to 25 grams per swap, which is worse per swap than Bambu AMS. Mosaic Palette uses transitioning in-line and measures waste in millimeters of filament rather than grams, but total waste per swap ends up comparable. No current multi-material system is dramatically more efficient. The physics are similar across all of them.",
-  },
-  {
-    q: "Are there multi-color techniques that don't waste filament?",
-    a: "Yes. Paint the print after. IDEX printers (dual independent extruders) can print two colors with zero purge when used with proper slicing. Multi-body prints paused mid-print for a filament swap add zero purge but you have to babysit it. The tradeoff is convenience versus waste.",
+    q: "Are separate toolheads or manual color changes waste-free?",
+    a: "Separate nozzles can reduce the need to flush one material out of a shared nozzle, but priming, wiping and startup material may remain. Manual color changes can work for color bands at selected heights, but still need a clean transition and your attention. Compare the actual sliced jobs rather than assuming zero waste.",
   },
 ];
 
@@ -68,6 +66,7 @@ export default function GuidePage() {
         headline: guide.title,
         description: guide.description,
         datePublished: guide.publishedAt,
+        dateModified: UPDATED_AT,
         author: AUTHOR_JSONLD,
         publisher: { "@type": "Organization", name: SITE.name },
         mainEntityOfPage: { "@type": "WebPage", "@id": `${SITE.url}/guides/${SLUG}` },
@@ -85,19 +84,11 @@ export default function GuidePage() {
 
   return (
     <article className="mx-auto max-w-3xl px-4 py-10 lg:py-14">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <header className="space-y-3">
-        <p className="text-xs uppercase tracking-wide text-muted-foreground">
-          Guide · {guide.readMinutes} min read
-        </p>
-        <h1 className="text-3xl font-semibold tracking-tight lg:text-4xl">
-          <Highlight3D>{guide.title}</Highlight3D>
-        </h1>
-        <AuthorByline updatedLabel="Updated April 2026" />
+        <p className="text-xs uppercase tracking-wide text-muted-foreground">Guide · {guide.readMinutes} min read</p>
+        <h1 className="text-3xl font-semibold tracking-tight lg:text-4xl"><Highlight3D>{guide.title}</Highlight3D></h1>
+        <AuthorByline updatedLabel="Reviewed September 5, 2026 (UTC)" />
       </header>
 
       <figure className="my-8">
@@ -110,294 +101,125 @@ export default function GuidePage() {
           priority
         />
         <figcaption className="mt-2 text-xs text-muted-foreground">
-          Bambu Lab X1 Carbon with the AMS module on top, the system this
-          guide&apos;s purge math is built around. Photo via{" "}
-          <a
-            href="https://commons.wikimedia.org/wiki/File:Bambu_Lab_X1_Carbon_with_AMS_module_(cropped).jpg"
-            className="underline"
-            rel="noreferrer"
-          >
-            Wikimedia Commons
-          </a>
-          .
+          Bambu Lab X1 Carbon with an AMS module. Material use depends on the sliced job. Photo via{" "}
+          <a href="https://commons.wikimedia.org/wiki/File:Bambu_Lab_X1_Carbon_with_AMS_module_(cropped).jpg" className="underline" rel="noreferrer">Wikimedia Commons</a>.
         </figcaption>
       </figure>
 
       <AdSlot slot="top" className="my-8" />
-
       <AffiliatePicks pagePath={`/guides/${SLUG}`} className="my-8" />
 
       <div className="prose prose-sm dark:prose-invert max-w-none space-y-5 text-sm leading-7">
         <p>
-          Multi-color 3D printing is one of the most oversold features in the
-          hobby. Marketing shows you a vibrant 4-color print and a happy
-          owner. It doesn&apos;t show you the 320 grams of purge sitting in
-          the waste bucket next to a 30 gram part. That purge is your
-          filament. You paid for it. It went in the trash.
+          Multi-color printing can save painting and assembly work, but color changes can also use extra filament and machine time.
+          The useful question is how much extra your particular plate costs. Start with the slicer totals, then decide whether the result is worth that difference.
         </p>
         <p>
-          Bambu&apos;s AMS, Prusa&apos;s MMU, and Mosaic&apos;s Palette all
-          have the same fundamental problem: every color swap requires
-          flushing the previous color out of the hotend before the next one
-          comes through cleanly. The flushed material is waste. On prints
-          with many color changes, waste dominates.
-        </p>
-        <p>
-          This guide walks through the actual math, when multi-color is
-          worth it, when it isn&apos;t, and what to do about the waste.
+          This is a calculation guide based on the manufacturer and slicer documentation linked below.
+          The worked example is illustrative, not a measured printer test. Sources were reviewed September 5, 2026 UTC (September 4 Pacific).
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
-          How AMS actually works (the purge mechanic)
-        </h2>
+        <h2 className="text-xl font-semibold tracking-tight pt-4">Why a color change uses material</h2>
         <p>
-          When an AMS or similar system changes from color A to color B, the
-          existing color A sits inside the hotend. If the printer just
-          continued printing, the first centimeter of the next color would
-          be contaminated. So before the new color prints cleanly, the
-          system flushes material through the nozzle until the color is
-          pure.
+          In a shared-nozzle system, some of the old material remains in the hotend when the new filament arrives.
+          Flushing clears that transition. Different color directions need different amounts: a dark pigment can be harder to clear before printing a light color.
+          Prusa&apos;s <a href="https://help.prusa3d.com/article/purging-volumes-mmu_125097?product=mmu3" className="underline" rel="noreferrer">purging-volume explanation</a> shows this with example values in mm³. Those examples are not Bambu defaults.
         </p>
         <p>
-          On a Bambu AMS, that flush material goes onto a purge tower
-          (parallel structure printed alongside your model) or into a waste
-          bucket. Either way, the filament leaves the system and never ends
-          up in your actual part. It counts toward your spool usage and your
-          filament bill.
-        </p>
-        <p>
-          The default flush on a Bambu X1C or P1S is around 8 grams per
-          swap. That means every time the printer changes colors, 8 grams
-          of filament gets flushed to the purge tower. A 40-swap print
-          wastes 320 grams. That&apos;s a third of a kilogram, which at $20
-          per kg is $6.40 of filament for a single print.
-        </p>
-        <p>
-          The{" "}
-          <Link
-            href="/tools/ams-purge-waste-calculator"
-            className="underline underline-offset-4"
-          >
-            AMS Purge Waste Calculator
-          </Link>{" "}
-          computes this exactly based on your printer, swap count, part
-          weight, and filament price.
+          Flushing and a prime tower are separate entries to check. Some material is discarded, some may go into supports,
+          and supported slicer settings can redirect some into a useful object&apos;s infill. Where the material ends up matters when counting waste.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
-          The real math, concrete numbers
-        </h2>
-        <p>
-          Here&apos;s what multi-color actually costs compared to
-          single-color across common print types. All figures use
-          Bambu&apos;s default 8 grams per swap and $20 per kg PLA.
-        </p>
-        <ul className="list-disc pl-5 space-y-1 marker:text-primary">
-          <li>
-            <strong>Small keychain (15g part, 8 swaps):</strong> 64g purge,
-            $1.58 filament cost, purge is 81% of total material
-          </li>
-          <li>
-            <strong>Phone case (100g part, 20 swaps):</strong> 160g purge,
-            $5.20 filament cost, purge is 62% of total material
-          </li>
-          <li>
-            <strong>Decorative figurine (200g part, 40 swaps):</strong> 320g
-            purge, $10.40 filament cost, purge is 62% of total material
-          </li>
-          <li>
-            <strong>Full cosplay helmet (800g part, 15 swaps):</strong> 120g
-            purge, $18.40 filament cost, purge is only 13% of total material
-          </li>
-        </ul>
-        <p>
-          The pattern: <strong>small parts with many swaps are where AMS
-          economics break down</strong>. Large parts with few swaps, where
-          most of the filament actually goes into the model, are where AMS
-          makes sense.
-        </p>
-
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
-          When multi-color IS worth it
-        </h2>
-        <p>
-          AMS and similar systems are worth the purge waste in specific
-          cases:
-        </p>
-        <ul className="list-disc pl-5 space-y-1 marker:text-primary">
-          <li>
-            <strong>Large prints with limited swaps.</strong> A 500g statue
-            with 5 color regions wastes 40g on purge (8% overhead). That&apos;s
-            fine.
-          </li>
-          <li>
-            <strong>Functional multi-color that needs color
-            accuracy.</strong> Logos on signage, color-coded parts, color
-            gradients that can&apos;t be painted.
-          </li>
-          <li>
-            <strong>One-off prototypes where time matters more than
-            material.</strong> If you&apos;re iterating on a design for a
-            client and need it done in two hours, the purge waste is cheaper
-            than the time to paint.
-          </li>
-          <li>
-            <strong>Text or detail that can&apos;t be painted.</strong>{" "}
-            Fine-detail multi-color (tiny logos, embedded text) is almost
-            impossible to paint accurately.
-          </li>
-        </ul>
-
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
-          When multi-color is NOT worth it
-        </h2>
-        <ul className="list-disc pl-5 space-y-1 marker:text-primary">
-          <li>
-            <strong>Small parts with many color changes.</strong> If purge
-            exceeds 50% of total filament used, seriously consider painting
-            or printing single-color.
-          </li>
-          <li>
-            <strong>Prints for sale with thin margins.</strong> The purge
-            cost eats into your margin hard. A $12 Etsy print with $8 of
-            purge waste is not a business.
-          </li>
-          <li>
-            <strong>Models where color regions are large and
-            paintable.</strong> A simple 2-color figurine where both colors
-            are in large contiguous areas paints faster than it prints
-            multi-color.
-          </li>
-          <li>
-            <strong>When print time matters.</strong> Multi-color adds
-            roughly 30 to 45 seconds per swap. 40 swaps = 20 to 30 minutes
-            of pure waiting time. Often more than the actual additional
-            print time from the larger total filament volume.
-          </li>
-        </ul>
-
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
-          How to reduce purge waste (without buying hardware)
-        </h2>
-        <p>
-          Before accepting the default 8 grams per swap, try these in
-          Bambu Studio (or your slicer of choice):
-        </p>
-        <ol className="list-decimal pl-5 space-y-1 marker:text-primary">
-          <li>
-            <strong>Lower the flush multiplier</strong> in the print settings.
-            Default is 1.0. Dropping to 0.5 to 0.6 often works fine on most
-            color combinations. Bambu&apos;s auto-tuned profiles go
-            conservative for safety, not for efficiency.
-          </li>
-          <li>
-            <strong>Use the flushing volumes matrix.</strong> Not all color
-            transitions need the same purge. White to cream needs far less
-            than white to black. The matrix lets you set per-pair purge
-            values. Aggressive tuning cuts waste by 30 to 40%.
-          </li>
-          <li>
-            <strong>Reduce swap count in the model.</strong> Group
-            same-color features into contiguous layers. If your model has
-            red dots scattered randomly across 40 layers, that&apos;s 40
-            swaps. Redesign so all red dots are on 5 layers instead.
-          </li>
-          <li>
-            <strong>Print multiple objects per plate.</strong> AMS swaps
-            between plates, not between objects on the same plate. Printing
-            4 copies of a 2-color phone case on one plate uses roughly the
-            same purge as printing 1 copy.
-          </li>
-          <li>
-            <strong>Skip the purge tower, use the waste bucket.</strong>{" "}
-            The purge tower adds material and time to the print. The waste
-            bucket collects flushed filament with less overhead.
-          </li>
+        <h2 className="text-xl font-semibold tracking-tight pt-4">Use the final sliced plate totals</h2>
+        <ol className="list-decimal pl-5 space-y-2 marker:text-primary">
+          <li>Slice the exact models, colors and settings you intend to print. Read the material breakdown in the preview or statistics view; labels vary by slicer version.</li>
+          <li>Separate useful model material, supports, discarded flushing, tower material, and any additional startup or calibration material you have measured.</li>
+          <li>Count each gram once. If a total already includes supports or flushing, do not add that category again. Material flushed into useful infill remains model material; flushing into supports belongs in the support total.</li>
+          <li>Enter those amounts in the <Link href="/tools/ams-purge-waste-calculator" className="underline underline-offset-4">AMS Purge Waste Calculator</Link>. Do not apply another flush multiplier to final sliced grams.</li>
         </ol>
-
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
-          Worked example: two phone cases compared
-        </h2>
-        <p>Both prints are 100g PLA phone cases, Bambu P1S, PLA at $20/kg.</p>
         <p>
-          <strong>Case A: Single-color black phone case.</strong>
-        </p>
-        <ul className="list-disc pl-5 space-y-1 marker:text-primary">
-          <li>Filament: $2.10 (100g + 5% waste)</li>
-          <li>No purge, no AMS swaps</li>
-          <li>Print time: ~3h 15min</li>
-          <li>Total material cost: $2.10</li>
-        </ul>
-        <p>
-          <strong>Case B: Same shape, black case with white logo (30
-          swaps default).</strong>
-        </p>
-        <ul className="list-disc pl-5 space-y-1 marker:text-primary">
-          <li>Part filament: $2.10 (100g)</li>
-          <li>Purge: $5.04 (240g at 8g/swap)</li>
-          <li>Print time: ~3h 45min (30 swaps × 45sec extra)</li>
-          <li>Total material cost: $7.14</li>
-        </ul>
-        <p>
-          Adding the logo tripled the material cost and added 30 minutes to
-          the print. A sharpie outline would have added roughly 45 seconds
-          and $0 in materials.
+          In this calculator, discarded material means supports + discarded flushing + tower + other discarded material.
+          Total consumed is useful model material + discarded material. The waste share is discarded material divided by total consumed;
+          waste overhead is discarded material divided by useful model material. These are different percentages.
         </p>
         <p>
-          This is not an argument against AMS. It&apos;s an argument for
-          knowing what you&apos;re paying and deciding on purpose.
+          If your slicer gives only an aggregate total, do not invent a category breakdown. Use the total for a material-cost comparison,
+          or obtain the detailed breakdown before estimating waste. Slicer figures remain estimates; weighing the finished parts and collected waste can help check them.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
-          Frequently asked
-        </h2>
+        <h2 className="text-xl font-semibold tracking-tight pt-4">Worked example: the same useful part, two versions</h2>
+        <p>
+          These are hypothetical final totals for a 100 g useful part. All material costs $20/kg; no printer model, default purge amount or print speed is assumed.
+        </p>
+        <div className="overflow-x-auto rounded-lg border border-border">
+          <table className="w-full text-xs">
+            <thead className="bg-muted/50 text-left"><tr><th className="px-3 py-2">Material</th><th className="px-3 py-2">Single color</th><th className="px-3 py-2">Multi-color</th></tr></thead>
+            <tbody>
+              <tr className="border-t border-border"><th className="px-3 py-2 text-left font-medium">Useful model</th><td className="px-3 py-2">100 g</td><td className="px-3 py-2">100 g</td></tr>
+              <tr className="border-t border-border"><th className="px-3 py-2 text-left font-medium">Supports</th><td className="px-3 py-2">5 g</td><td className="px-3 py-2">5 g</td></tr>
+              <tr className="border-t border-border"><th className="px-3 py-2 text-left font-medium">Discarded flushing</th><td className="px-3 py-2">0 g</td><td className="px-3 py-2">20 g</td></tr>
+              <tr className="border-t border-border"><th className="px-3 py-2 text-left font-medium">Tower</th><td className="px-3 py-2">0 g</td><td className="px-3 py-2">8 g</td></tr>
+              <tr className="border-t border-border"><th className="px-3 py-2 text-left font-medium">Other startup waste</th><td className="px-3 py-2">2 g</td><td className="px-3 py-2">2 g</td></tr>
+              <tr className="border-t border-border"><th className="px-3 py-2 text-left font-medium">Total consumed</th><td className="px-3 py-2">107 g</td><td className="px-3 py-2">135 g</td></tr>
+              <tr className="border-t border-border"><th className="px-3 py-2 text-left font-medium">Material cost</th><td className="px-3 py-2">$2.14</td><td className="px-3 py-2">$2.70</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          The extra material costs $0.56: (135 − 107) ÷ 1,000 × $20. The multi-color version discards 35 g,
+          which is 25.9% of its total consumption and 35% overhead relative to the useful part.
+          Neither percentage alone tells you whether saving the painting work is worth $0.56 plus the extra print time.
+        </p>
+        <p>
+          If the colors have different prices, calculate each spool&apos;s consumed grams × its price per gram and add the costs.
+          A single-price calculator needs an average weighted by the amount consumed from each spool.
+          For a selling price, add machine time, labor and failures in the <Link href="/tools/print-pricing-calculator" className="underline underline-offset-4">print pricing calculator</Link>.
+        </p>
+
+        <h2 className="text-xl font-semibold tracking-tight pt-4">Estimate from swaps only when you lack sliced totals</h2>
+        <p>
+          A rough estimate needs your own average purge amount from a comparable profile and transition mix.
+          For a volume input, grams = swaps × average mm³ per swap × density in g/cm³ ÷ 1,000.
+          Add tower, supports and other discarded material separately. An average hides differences between transitions, so replace it with a fresh slice before committing to a long job.
+        </p>
+        <p>
+          Bambu Studio&apos;s <a href="https://github.com/bambulab/BambuStudio/blob/master/resources/web/flush/WipingDialog.html" className="underline" rel="noreferrer">flushing-volume interface</a> uses mm³ and applies a multiplier to the displayed matrix values.
+          If your baseline already includes that adjustment, use a multiplier of 1 in a separate estimate. There is no fixed 8 g-per-change default used in this guide.
+        </p>
+
+        <h2 className="text-xl font-semibold tracking-tight pt-4">Reduce waste by comparing two slices</h2>
+        <ul className="list-disc pl-5 space-y-2 marker:text-primary">
+          <li><strong>Change orientation or split the model.</strong> Color bands at a few heights, or separate colored pieces assembled afterward, may need fewer transitions. Check fit, strength and assembly effort too.</li>
+          <li><strong>Batch copies you actually need.</strong> With layer-by-layer printing, identical copies can share color changes within a layer. Compare waste per useful copy in the slicer; arranging a plate differently can change the result.</li>
+          <li><strong>Use a tested transition matrix.</strong> Adjust one color pair at a time and check for contamination. A lower flushing value that spoils the print does not save material.</li>
+          <li><strong>Use infill or support flushing where suitable.</strong> Mixed colors can show through light or translucent walls. OrcaSlicer&apos;s <a href="https://github.com/OrcaSlicer/OrcaSlicer/wiki/multimaterial_settings_flush_options" className="underline" rel="noreferrer">flush-options documentation</a> also specifies a prime-tower requirement for these options. Follow your own slicer&apos;s guidance.</li>
+        </ul>
+        <p>
+          Record the before-and-after consumed grams, total time and acceptable finished results. A claimed universal 30–50% saving,
+          or a fixed 50% waste cutoff, cannot replace that comparison. Include the actual compatible AMS hardware and accessories in the purchase budget;
+          storage and collection accessories serve different purposes from reducing purge.
+        </p>
+
+        <h2 className="text-xl font-semibold tracking-tight pt-4">Frequently asked</h2>
         <dl className="space-y-4">
           {FAQ.map((item) => (
             <div key={item.q} className="space-y-1">
               <dt className="font-medium">{item.q}</dt>
-              <dd className="text-sm leading-7 text-muted-foreground">
-                {item.a}
-              </dd>
+              <dd className="text-sm leading-7 text-muted-foreground">{item.a}</dd>
             </div>
           ))}
         </dl>
       </div>
 
       <AuthorBio />
-
       <RelatedContent pagePath={`/guides/${SLUG}`} className="mt-8" />
-
       <AdSlot slot="inline" className="my-10" />
-
       <nav className="mt-10 rounded-lg border p-5 text-sm">
-        <p className="mb-3 text-xs uppercase tracking-wide text-muted-foreground">
-          Calculators referenced in this guide
-        </p>
+        <p className="mb-3 text-xs uppercase tracking-wide text-muted-foreground">Calculators referenced in this guide</p>
         <ul className="space-y-2">
-          <li>
-            <Link
-              href="/tools/ams-purge-waste-calculator"
-              className="underline underline-offset-4"
-            >
-              AMS Purge Waste Calculator
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/tools/filament-cost-calculator"
-              className="underline underline-offset-4"
-            >
-              Filament Cost Calculator
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/tools/material-comparison"
-              className="underline underline-offset-4"
-            >
-              Material Comparison
-            </Link>
-          </li>
+          <li><Link href="/tools/ams-purge-waste-calculator" className="underline underline-offset-4">AMS Purge Waste Calculator</Link></li>
+          <li><Link href="/tools/filament-cost-calculator" className="underline underline-offset-4">Filament Cost Calculator</Link></li>
+          <li><Link href="/tools/material-comparison" className="underline underline-offset-4">Material Comparison</Link></li>
         </ul>
       </nav>
     </article>

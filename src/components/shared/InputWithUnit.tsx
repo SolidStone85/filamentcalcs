@@ -27,6 +27,7 @@ type Props = {
   placeholder?: string;
   hint?: string;
   className?: string;
+  integer?: boolean;
 };
 
 export function InputWithUnit({
@@ -43,8 +44,13 @@ export function InputWithUnit({
   placeholder,
   hint,
   className,
+  integer,
 }: Props) {
   const hasUnitSelector = unitOptions && unitOptions.length > 1 && onUnitChange;
+  const error = value === "" ? "" : !Number.isFinite(value) ? "Enter a finite number." :
+    min !== undefined && value < min ? `Enter ${min} or more.` :
+    max !== undefined && value > max ? `Enter ${max} or less.` :
+    integer && !Number.isInteger(value) ? "Enter a whole number of prints." : "";
 
   return (
     <div className={cn("space-y-2", className)}>
@@ -58,6 +64,8 @@ export function InputWithUnit({
           max={max}
           step={step}
           placeholder={placeholder}
+          aria-invalid={Boolean(error)}
+          aria-describedby={error ? `${id}-error` : hint ? `${id}-hint` : undefined}
           value={value === "" ? "" : value}
           onChange={(e) => {
             const raw = e.target.value;
@@ -65,7 +73,7 @@ export function InputWithUnit({
             const num = Number(raw);
             if (!Number.isNaN(num)) onValueChange(num);
           }}
-          className="font-mono text-lg tabular-nums md:text-base"
+          className="scroll-mt-40 font-mono text-lg tabular-nums md:text-base"
         />
         {hasUnitSelector ? (
           <Select
@@ -96,8 +104,9 @@ export function InputWithUnit({
         ) : null}
       </div>
       {hint && (
-        <p className="text-xs leading-5 text-muted-foreground">{hint}</p>
+        <p id={`${id}-hint`} className="text-xs leading-5 text-muted-foreground">{hint}</p>
       )}
+      {error && <p id={`${id}-error`} className="text-xs text-destructive">{error}</p>}
     </div>
   );
 }

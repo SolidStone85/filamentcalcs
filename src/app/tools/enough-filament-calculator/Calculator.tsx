@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useMemo } from "react";
+import { useCalculatorState } from "@/lib/useCalculatorState";
+import { CalculatorSummary } from "@/components/shared/CalculatorSummary";
 
 import { FormulaBreakdown } from "@/components/shared/FormulaBreakdown";
 import { InputWithUnit } from "@/components/shared/InputWithUnit";
@@ -41,45 +42,31 @@ function parseStateFromParams(params: URLSearchParams): State {
     remainingGrams: toNumOrEmpty(params.get("r")),
     printGrams: toNumOrEmpty(params.get("g")),
     wastePercent:
-      w === null || Number.isNaN(Number(w))
-        ? DEFAULT_STATE.wastePercent
-        : Math.min(15, Math.max(0, Number(w))),
+      w === null ? DEFAULT_STATE.wastePercent : Number.isFinite(Number(w)) && w !== "" ? Number(w) : -1,
     purgeGrams: toNumOrEmpty(params.get("pg")),
   };
 }
 
 function encodeState(state: State): string {
   const p = new URLSearchParams();
-  if (state.remainingGrams !== "") p.set("r", String(state.remainingGrams));
-  if (state.printGrams !== "") p.set("g", String(state.printGrams));
+  p.set("r", String(state.remainingGrams));
+  p.set("g", String(state.printGrams));
   p.set("w", String(state.wastePercent));
-  if (state.purgeGrams !== "") p.set("pg", String(state.purgeGrams));
+  p.set("pg", String(state.purgeGrams));
   return p.toString();
 }
 
 // -----------------------------------------------------------------------
 
 export function Calculator() {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-
-  const [state, setState] = useState<State>(() =>
-    parseStateFromParams(new URLSearchParams(searchParams.toString())),
-  );
-
-  // Push state to URL (replace, not push; don't spam history).
-  useEffect(() => {
-    const query = encodeState(state);
-    router.replace(`?${query}`, { scroll: false });
-    // router is stable; only re-sync when state changes
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state]);
+  const { state, setState } = useCalculatorState(parseStateFromParams, encodeState, {});
 
   const remainingNum =
     typeof state.remainingGrams === "number" ? state.remainingGrams : 0;
   const printNum = typeof state.printGrams === "number" ? state.printGrams : 0;
   const purgeNum = typeof state.purgeGrams === "number" ? state.purgeGrams : 0;
-  const hasInput = remainingNum > 0 && printNum > 0;
+  const validInputs = state.remainingGrams !== "" && remainingNum >= 0 && printNum > 0 && purgeNum >= 0 &&
+    [remainingNum, printNum, purgeNum].every(Number.isFinite) && state.wastePercent >= 0 && state.wastePercent <= 15;
 
   const result = useMemo(
     () =>
@@ -91,6 +78,7 @@ export function Calculator() {
       }),
     [remainingNum, printNum, state.wastePercent, purgeNum],
   );
+  const hasInput = validInputs && Object.values(result).every((value) => typeof value !== "number" || Number.isFinite(value));
 
   const tone =
     result.verdict === "plenty"
@@ -113,6 +101,7 @@ export function Calculator() {
 
   return (
     <div className="grid gap-6 lg:grid-cols-[1.2fr_1fr]">
+      <CalculatorSummary label="Will it finish?" value={hasInput ? shortAnswer : "Enter weights"} detail={hasInput ? spareLabel : undefined} />
       {/* ----- Inputs ----- */}
       <Card className="glass-card">
         <CardHeader>
@@ -141,7 +130,7 @@ export function Calculator() {
               >
                 Remaining Filament Calculator
               </a>
-              , then bring the number here.
+              , then choose its link to check a print with that result.
             </p>
           </div>
 
@@ -154,7 +143,7 @@ export function Calculator() {
             min={0}
             step={5}
             placeholder="260"
-            hint="The estimated filament weight your slicer shows for the whole job."
+            hint="Use the whole slicer total if available. If it includes purge and supports, leave additional purge at 0 to avoid counting it twice."
           />
 
           <div className="space-y-2">
@@ -165,6 +154,7 @@ export function Calculator() {
               </span>
             </div>
             <Slider
+              aria-label="Extra waste margin"
               value={[state.wastePercent]}
               min={0}
               max={15}
@@ -175,15 +165,15 @@ export function Calculator() {
               }}
             />
             <p className="text-xs text-muted-foreground">
-              Priming line, skirt, and ooze on top of the slicer estimate. 5%
-              covers most single-color prints.
+              An optional allowance above the weight entered. Start at 0% for a complete slicer total; add headroom only for material not included in that total.
             </p>
+            {(state.wastePercent < 0 || state.wastePercent > 15) && <p className="text-xs text-destructive">Choose an extra waste margin from 0% to 15%.</p>}
           </div>
 
           <div className="space-y-2">
             <InputWithUnit
               id="purge"
-              label="Purge waste (multi-color only)"
+              label="Additional purge not already included"
               value={state.purgeGrams}
               onValueChange={(v) => setState((s) => ({ ...s, purgeGrams: v }))}
               unit="g"
@@ -192,7 +182,7 @@ export function Calculator() {
               placeholder="0"
             />
             <p className="text-xs leading-5 text-muted-foreground">
-              Leave at 0 for single-color jobs. For AMS color swaps, get the
+              Leave at 0 when your slicer weight already includes it. For AMS color swaps, get the
               number from the{" "}
               <a
                 href="/tools/ams-purge-waste-calculator"
@@ -207,7 +197,7 @@ export function Calculator() {
       </Card>
 
       {/* ----- Results ----- */}
-      <div className="space-y-4">
+      <div id="calculator-results" tabIndex={-1} className="scroll-mt-40 space-y-4 lg:sticky lg:top-24 lg:self-start">
         <ResultDisplay
           prominent
           tone={hasInput ? tone : undefined}

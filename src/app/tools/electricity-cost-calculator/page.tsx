@@ -11,7 +11,7 @@ import { Calculator } from "./Calculator";
 
 const TITLE = "3D Printer Electricity Cost Calculator: cost per print, per month";
 const DESCRIPTION =
-  "Calculate what each 3D print actually costs to run. Free, instant, works for Bambu, Prusa, Ender, and custom builds. Regional electricity rates included.";
+  "Estimate a 3D print's electricity cost from average watts, print hours and your rate per kWh. Free, with editable printer and regional reference estimates.";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -30,23 +30,23 @@ export const metadata: Metadata = {
 const FAQ: { q: string; a: string }[] = [
   {
     q: "How much electricity does a 3D printer actually use?",
-    a: "Less than you probably think. A Bambu X1C averages around 115W during a print. An Ender 3 is closer to 125W. Over a 10 hour print at the US average rate of $0.18/kWh, you're looking at about 20 cents. Electricity is almost always a tiny fraction of filament cost.",
+    a: "It depends on the printer, material, temperatures and job duration. As an example, an average 100 W over ten hours uses 1 kWh. At an assumed $0.18/kWh that costs $0.18. Use a measured average for your job; the printer presets are reference estimates, not guaranteed measurements.",
   },
   {
     q: "Is idle draw included?",
-    a: "No. These numbers assume active printing. Most modern printers idle at 5 to 15W (screen, controller, fan), which adds up if you leave them on 24/7 but is negligible per print.",
+    a: "Idle time is not added automatically. The result covers only the watts and hours entered. To include time between prints, calculate measured idle watts times idle hours separately and add that cost, avoiding any period already counted in the print measurement.",
   },
   {
     q: "What about bed heating?",
-    a: "The wattage numbers in the printer presets are averages across a full print, including heated bed cycles. Bed heating is the biggest power draw (heaters pull 200 to 350W), but modern PID controllers cycle them on and off, so the average is much lower.",
+    a: "Heating and temperature maintenance change the power draw during a job. For a whole-job estimate, measure energy from startup through the end of the job and use its average power over the same duration. A rated maximum or a single reading during warmup is not that average. The presets do not model heating phases separately.",
   },
   {
-    q: "Why are regional averages so different?",
-    a: "Electricity markets vary. California and Hawaii average over $0.30/kWh. Louisiana and North Dakota are closer to $0.12. European rates are typically higher than the US. Your actual rate is printed on your utility bill, usually in the 'energy charge' or 'supply rate' line.",
+    q: "Which electricity rate should I enter?",
+    a: "Use the per-kWh usage charges that apply to your tariff and printing time, including applicable per-kWh delivery charges. Regional presets are editable reference estimates, not current quotes for your address. For time-of-use rates, calculate each period separately. Use one currency throughout; changing the currency display does not perform an exchange-rate conversion.",
   },
   {
     q: "Should I turn my printer off between prints?",
-    a: "For cost: barely matters. 10W idle for 12 hours is 0.12 kWh, or about 2 cents at US average rates. For hardware longevity: probably yes, especially hotbed and power supply. For convenience: leave it on, it's fine.",
+    a: "Measure the idle draw to see the cost for your schedule. For example, 10 W over twelve idle hours uses 0.12 kWh; at an assumed $0.18/kWh that is $0.0216, about two cents. More idle hours or a higher rate increase that amount. This cost calculation does not establish a printer-lifespan benefit.",
   },
 ];
 
@@ -86,9 +86,8 @@ export default function ElectricityCostPage() {
           <Highlight3D>Electricity Cost Calculator</Highlight3D>
         </h1>
         <p className="mt-2 text-muted-foreground">
-          Figure out what a 3D print actually costs to run. Enter your
-          printer, print duration, and local electricity rate. Most people
-          overestimate this by a factor of 5 or more.
+          Estimate electricity cost from average power, print time and your
+          rate per kWh.
         </p>
       </header>
 
@@ -105,16 +104,15 @@ export default function ElectricityCostPage() {
           How this works
         </h2>
         <p className="text-sm leading-6 text-muted-foreground">
-          A 3D printer is an electrical appliance. Its power draw, measured
-          in watts, multiplied by the hours it runs, gives you energy used
-          in watt-hours. Divide by 1000 for kilowatt-hours (kWh), then
-          multiply by your electricity rate.
+          Average power in watts × hours gives energy in watt-hours. Divide
+          by 1,000 to get kilowatt-hours, then multiply by the applicable price
+          per kWh. Use the same measurement period for average power and duration.
         </p>
         <p className="text-sm leading-6 text-muted-foreground">
-          For most hobbyists, electricity is an afterthought. A 24 hour
-          print on a Bambu X1C at the US average rate of $0.18/kWh costs
-          about 50 cents. Same print on filament at $25/kg uses around
-          $18 of material. Filament dominates.
+          All numbers in the examples below are illustrative assumptions.
+          Printer and regional presets help you start an estimate; they are not
+          measured guarantees or current tariffs. Replace them with your own
+          average draw and utility rate for a more useful result.
         </p>
       </section>
 
@@ -126,165 +124,118 @@ export default function ElectricityCostPage() {
           cost = (watts / 1000) × hours × rate_per_kWh
         </p>
         <p className="text-sm leading-6 text-muted-foreground">
-          Worked example. Bambu P1S averaging 110W during a 12 hour print
-          at $0.18/kWh:
+          Example: an assumed 110 W average over twelve hours at $0.18/kWh.
+          These are not measurements for a specific printer or a national-average rate.
         </p>
         <ul className="list-disc pl-5 text-sm leading-6 text-muted-foreground">
-          <li>Energy used: (110 / 1000) × 12 = 1.32 kWh</li>
-          <li>Cost: 1.32 × 0.18 = $0.24</li>
+          <li>Energy used: (110 ÷ 1,000) × 12 = 1.32 kWh</li>
+          <li>Cost: 1.32 × $0.18 = $0.2376, rounded to $0.24</li>
         </ul>
         <p className="text-sm leading-6 text-muted-foreground">
-          Twenty-four cents. That print also probably used $4 of filament,
-          so electricity is about 6% of the material cost. This ratio holds
-          almost universally for hobbyist printing.
+          Compare that result with the material cost of the same job. There
+          is no fixed relationship between electricity and filament cost:
+          print duration, material use and your tariff can all change it.
         </p>
       </section>
 
       <section className="mx-auto mt-10 max-w-3xl space-y-3">
         <h2 className="text-xl font-semibold tracking-tight">
-          Average power draw by printer
+          Choose a representative average wattage
         </h2>
         <p className="text-sm leading-6 text-muted-foreground">
-          These are average watt numbers across a full print, including the
-          high-draw heating cycles. Numbers are pulled from manufacturer
-          specs and community Kill-A-Watt measurements.
+          A plug-in energy meter can measure a complete job, including warmup
+          and temperature maintenance. If it reports total kWh, divide that by
+          the measured hours and multiply by 1,000 to get average watts.
+          Do not substitute the power-supply rating or a brief heating peak.
         </p>
         <div className="overflow-x-auto rounded-md border">
           <table className="w-full text-xs leading-6">
             <thead>
               <tr className="border-b bg-muted/50">
-                <th className="px-3 py-2 text-left font-medium">Printer</th>
-                <th className="px-3 py-2 text-left font-medium">Average draw</th>
-                <th className="px-3 py-2 text-left font-medium">Peak draw</th>
+                <th className="px-3 py-2 text-left font-medium">Assumed average draw</th>
+                <th className="px-3 py-2 text-left font-medium">Energy over 10 hours</th>
+                <th className="px-3 py-2 text-left font-medium">Cost at $0.18/kWh</th>
               </tr>
             </thead>
             <tbody>
               <tr className="border-b">
-                <td className="px-3 py-2">Bambu A1 mini</td>
-                <td className="px-3 py-2">85W</td>
-                <td className="px-3 py-2">350W</td>
+                <td className="px-3 py-2">50 W</td>
+                <td className="px-3 py-2">0.5 kWh</td>
+                <td className="px-3 py-2">$0.09</td>
               </tr>
               <tr className="border-b">
-                <td className="px-3 py-2">Bambu A1</td>
-                <td className="px-3 py-2">95W</td>
-                <td className="px-3 py-2">400W</td>
-              </tr>
-              <tr className="border-b">
-                <td className="px-3 py-2">Bambu P1S</td>
-                <td className="px-3 py-2">110W</td>
-                <td className="px-3 py-2">500W</td>
-              </tr>
-              <tr className="border-b">
-                <td className="px-3 py-2">Bambu X1 Carbon</td>
-                <td className="px-3 py-2">115W</td>
-                <td className="px-3 py-2">500W</td>
-              </tr>
-              <tr className="border-b">
-                <td className="px-3 py-2">Prusa MK4</td>
-                <td className="px-3 py-2">95W</td>
-                <td className="px-3 py-2">350W</td>
-              </tr>
-              <tr className="border-b">
-                <td className="px-3 py-2">Ender 3 V2</td>
-                <td className="px-3 py-2">125W</td>
-                <td className="px-3 py-2">350W</td>
-              </tr>
-              <tr className="border-b">
-                <td className="px-3 py-2">Voron 2.4 (350mm)</td>
-                <td className="px-3 py-2">180W</td>
-                <td className="px-3 py-2">700W</td>
+                <td className="px-3 py-2">100 W</td>
+                <td className="px-3 py-2">1 kWh</td>
+                <td className="px-3 py-2">$0.18</td>
               </tr>
               <tr>
-                <td className="px-3 py-2">Enclosed printer with chamber heater</td>
-                <td className="px-3 py-2">+50W</td>
-                <td className="px-3 py-2">+300W</td>
+                <td className="px-3 py-2">200 W</td>
+                <td className="px-3 py-2">2 kWh</td>
+                <td className="px-3 py-2">$0.36</td>
               </tr>
             </tbody>
           </table>
         </div>
         <p className="text-sm leading-6 text-muted-foreground">
-          Bigger beds and chamber heaters drive numbers up. ABS or ASA
-          prints with a 90C chamber can run 30 to 50% higher average draw
-          than the same printer doing PLA at 60C bed.
+          These rows show how the formula responds to different inputs, not
+          what a named printer should draw. Bed temperature, ambient conditions,
+          fans and chamber heating can change the average. Measure a representative
+          job again when your setup or material changes substantially.
         </p>
       </section>
 
       <section className="mx-auto mt-10 max-w-3xl space-y-3">
         <h2 className="text-xl font-semibold tracking-tight">
-          Electricity rates by region
+          Use the rate on your tariff
         </h2>
         <p className="text-sm leading-6 text-muted-foreground">
-          Where you live changes the math more than which printer you own.
-          Reference rates as of early 2026 (residential, all-in including
-          fixed charges):
+          Look for usage charges per kWh, including any applicable per-kWh
+          delivery charge. A fixed monthly connection fee does not increase
+          just because one more print runs, so it is not automatically part
+          of this marginal electricity-cost calculation.
         </p>
-        <ul className="list-disc pl-5 space-y-1 text-sm leading-6 text-muted-foreground">
-          <li>US national average: $0.18/kWh</li>
-          <li>Hawaii: $0.42/kWh (highest in US)</li>
-          <li>California: $0.32/kWh</li>
-          <li>Northeast US: $0.22 to $0.28/kWh</li>
-          <li>Texas, Pacific Northwest: $0.13 to $0.16/kWh</li>
-          <li>Louisiana, North Dakota: $0.11 to $0.13/kWh (lowest in US)</li>
-          <li>UK: ~£0.27/kWh</li>
-          <li>Germany: ~€0.40/kWh</li>
-          <li>Netherlands: ~€0.35/kWh</li>
-          <li>Australia: ~$0.30 AUD/kWh</li>
-        </ul>
         <p className="text-sm leading-6 text-muted-foreground">
-          Your real number is on your utility bill, usually labeled "energy
-          charge," "supply rate," or "delivery + supply" depending on
-          provider. Use that, not the calculator default.
+          If the rate changes by time of day, calculate the hours in each
+          period separately and add the costs. This calculator does not model
+          demand charges or tariff tiers. Keep the entered rate and displayed
+          currency consistent; the currency selector does not convert amounts.
         </p>
       </section>
 
       <section className="mx-auto mt-10 max-w-3xl space-y-3">
         <h2 className="text-xl font-semibold tracking-tight">
-          Per-month electricity cost for typical print volume
+          Example monthly print schedules
         </h2>
         <p className="text-sm leading-6 text-muted-foreground">
-          A few common scenarios at $0.18/kWh, Bambu P1S (110W average):
+          Assume a constant 110 W printing average and $0.18/kWh for all
+          printing hours. Idle time and separate accessories are excluded.
         </p>
         <ul className="list-disc pl-5 space-y-1 text-sm leading-6 text-muted-foreground">
-          <li>Light: 20 hours/month = 0.40 kWh = $0.07</li>
-          <li>Moderate: 60 hours/month = 6.6 kWh = $1.19</li>
-          <li>Heavy: 200 hours/month = 22 kWh = $3.96</li>
-          <li>Print farm (1 printer running 24/7): 720 hours = 79.2 kWh = $14.26</li>
+          <li>20 hours/month = 2.2 kWh = $0.40</li>
+          <li>60 hours/month = 6.6 kWh = $1.19</li>
+          <li>200 hours/month = 22 kWh = $3.96</li>
+          <li>720 hours (continuous printing for 30 days) = 79.2 kWh = $14.26</li>
         </ul>
         <p className="text-sm leading-6 text-muted-foreground">
-          Even printing constantly, a single hobbyist printer adds about $14
-          per month to your bill in average-rate areas. In Hawaii or
-          Germany, that same usage is closer to $30. Still small compared to
-          filament cost over the same period.
+          These are arithmetic scenarios, not typical household bills or a
+          prediction of printer uptime. Use the number of hours you actually
+          expect to print. For several machines, calculate each machine&apos;s
+          average draw and schedule, then add the results.
         </p>
       </section>
 
       <section className="mx-auto mt-10 max-w-3xl space-y-3">
         <h2 className="text-xl font-semibold tracking-tight">
-          When electricity actually starts to matter
+          Account for the whole setup
         </h2>
-        <ul className="list-disc pl-5 space-y-1 text-sm leading-6 text-muted-foreground">
-          <li>
-            <span className="font-medium text-foreground">Print farms.</span>{" "}
-            5+ printers running 24/7 turns electricity into a real line
-            item. A 6-printer farm at typical loads can cost $80 to $120/month
-            in average-rate areas.
-          </li>
-          <li>
-            <span className="font-medium text-foreground">
-              Production with engineering filaments.
-            </span>{" "}
-            ABS and PA-CF need chamber heating that can push average draw to
-            200W+. At extreme rates this stops being negligible.
-          </li>
-          <li>
-            <span className="font-medium text-foreground">Hawaii and similar.</span>{" "}
-            At $0.42/kWh, a 24-hour print on a Bambu X1C is $1.16, which is
-            getting into "noticeable on top of filament" territory.
-          </li>
-        </ul>
         <p className="text-sm leading-6 text-muted-foreground">
-          For a single hobbyist printer at average rates, electricity will
-          basically never change a decision. Don&apos;t lose sleep over it.
+          A separately powered dryer, extraction fan or chamber heater can
+          add energy use. Include it in the measurement or calculate it
+          separately, but do not count it twice. For a print&apos;s complete
+          cost, add material, machine wear, failures and hands-on time in the{" "}
+          <a href="/tools/print-pricing-calculator" className="underline underline-offset-4">
+            print pricing calculator
+          </a>.
         </p>
       </section>
 

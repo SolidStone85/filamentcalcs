@@ -1,7 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useMemo } from "react";
+import Link from "next/link";
+import { CalculatorSettings } from "@/components/shared/CalculatorSettings";
+import { CalculatorSummary } from "@/components/shared/CalculatorSummary";
+import { useCalculatorState } from "@/lib/useCalculatorState";
 
 import { FormulaBreakdown } from "@/components/shared/FormulaBreakdown";
 import { InputWithUnit } from "@/components/shared/InputWithUnit";
@@ -35,6 +38,9 @@ type State = {
   wasteFactor: number; // 0..0.25
   currency: CurrencyCode;
   materialId: MaterialPreset["id"];
+  priceMode: "spool" | "kg";
+  spoolPrice: number | "";
+  spoolWeight: number | "";
 };
 
 const DEFAULT_STATE: State = {
@@ -43,6 +49,9 @@ const DEFAULT_STATE: State = {
   wasteFactor: 0.05,
   currency: "USD",
   materialId: "pla",
+  priceMode: "spool",
+  spoolPrice: 20,
+  spoolWeight: 1000,
 };
 
 function parseStateFromParams(params: URLSearchParams): State {
@@ -60,11 +69,12 @@ function parseStateFromParams(params: URLSearchParams): State {
 
   return {
     grams: toNumOrEmpty(g),
+    priceMode: params.get("pm") === "kg" || (!params.has("pm") && params.has("p")) ? "kg" : "spool",
+    spoolPrice: params.has("sp") ? toNumOrEmpty(params.get("sp")) : DEFAULT_STATE.spoolPrice,
+    spoolWeight: params.has("sw") ? toNumOrEmpty(params.get("sw")) : DEFAULT_STATE.spoolWeight,
     pricePerKg: p === null ? DEFAULT_STATE.pricePerKg : toNumOrEmpty(p),
     wasteFactor:
-      w === null || Number.isNaN(Number(w))
-        ? DEFAULT_STATE.wasteFactor
-        : Math.min(0.25, Math.max(0, Number(w))),
+      w === null ? DEFAULT_STATE.wasteFactor : Number.isFinite(Number(w)) && w !== "" ? Number(w) : -1,
     currency:
       c && CURRENCIES.some((x) => x.code === c) ? c : DEFAULT_STATE.currency,
     materialId:
@@ -76,11 +86,16 @@ function parseStateFromParams(params: URLSearchParams): State {
 
 function encodeState(state: State): string {
   const p = new URLSearchParams();
-  if (state.grams !== "") p.set("g", String(state.grams));
-  if (state.pricePerKg !== "") p.set("p", String(state.pricePerKg));
-  p.set("w", state.wasteFactor.toFixed(3));
+  p.set("g", String(state.grams));
+  const price = state.priceMode === "spool" && typeof state.spoolPrice === "number" && typeof state.spoolWeight === "number" && state.spoolWeight > 0
+    ? state.spoolPrice * 1000 / state.spoolWeight : state.pricePerKg;
+  p.set("p", String(price));
+  p.set("w", String(state.wasteFactor));
   p.set("c", state.currency);
   p.set("m", state.materialId);
+  p.set("pm", state.priceMode);
+  p.set("sp", String(state.spoolPrice));
+  p.set("sw", String(state.spoolWeight));
   return p.toString();
 }
 
@@ -97,20 +112,9 @@ const CURRENCY_ITEMS = CURRENCIES.map((c) => ({
 }));
 
 export function Calculator() {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-
-  const [state, setState] = useState<State>(() =>
-    parseStateFromParams(new URLSearchParams(searchParams.toString())),
-  );
-
-  // Push state to URL (replace, not push; don't spam history).
-  useEffect(() => {
-    const query = encodeState(state);
-    router.replace(`?${query}`, { scroll: false });
-    // router is stable; only re-sync when state changes
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state]);
+  const { state, setState, settings } = useCalculatorState(parseStateFromParams, encodeState, {
+    c: "currency", p: "filamentPricePerKg", pm: "priceMode", sp: "spoolPrice", sw: "pricedSpoolWeight",
+  }, [["p", "pm", "sp", "sw"]]);
 
   // When material preset changes, apply its defaults unless "custom".
   function applyMaterial(id: MaterialPreset["id"]) {
@@ -121,14 +125,19 @@ export function Calculator() {
       materialId: id,
       ...(id === "custom"
         ? {}
-        : { pricePerKg: preset.pricePerKg, wasteFactor: preset.wasteFactor }),
+        : { pricePerKg: preset.pricePerKg, priceMode: "kg", wasteFactor: preset.wasteFactor }),
     }));
   }
 
   const gramsNum = typeof state.grams === "number" ? state.grams : 0;
-  const priceNum =
-    typeof state.pricePerKg === "number" ? state.pricePerKg : 0;
-  const hasInput = gramsNum > 0 && priceNum > 0;
+  const priceNum = state.priceMode === "spool"
+    ? typeof state.spoolPrice === "number" && typeof state.spoolWeight === "number" && state.spoolWeight > 0
+      ? state.spoolPrice * 1000 / state.spoolWeight : 0
+    : typeof state.pricePerKg === "number" ? state.pricePerKg : 0;
+  const validPrice = state.priceMode === "spool"
+    ? state.spoolPrice !== "" && state.spoolPrice >= 0 && state.spoolWeight !== "" && state.spoolWeight > 0
+    : state.pricePerKg !== "" && state.pricePerKg >= 0;
+  const validInputs = gramsNum > 0 && validPrice && Number.isFinite(priceNum) && Number.isFinite(gramsNum) && state.wasteFactor >= 0 && state.wasteFactor <= 0.25;
 
   const result = useMemo(
     () =>
@@ -139,18 +148,52 @@ export function Calculator() {
       }),
     [gramsNum, priceNum, state.wasteFactor],
   );
+  const hasInput = validInputs && Object.values(result).every((value) => typeof value !== "number" || Number.isFinite(value));
 
   const currencySymbol =
     CURRENCIES.find((c) => c.code === state.currency)?.symbol ?? "$";
 
   return (
     <div className="grid gap-6 lg:grid-cols-[1.2fr_1fr]">
+      <CalculatorSummary label="Material cost" value={hasInput ? formatCurrency(result.cost, state.currency) : "Enter print weight"} />
       {/* ----- Inputs ----- */}
       <Card className="glass-card">
         <CardHeader>
           <CardTitle>Inputs</CardTitle>
         </CardHeader>
         <CardContent className="space-y-5">
+          <InputWithUnit
+            id="grams"
+            label="Print weight"
+            value={state.grams}
+            onValueChange={(v) => setState((s) => ({ ...s, grams: v }))}
+            unit="g"
+            min={0}
+            step={1}
+            placeholder="100"
+            hint="Use model weight, or the whole slicer total. If the total already includes supports and purge, set extra waste to 0%."
+          />
+
+          <fieldset className="space-y-3">
+            <legend className="mb-2 text-sm font-medium">Filament price</legend>
+            <div className="flex flex-wrap gap-4 text-sm">
+              <label className="flex items-center gap-2"><input type="radio" name="price-mode" checked={state.priceMode === "spool"} onChange={() => setState((s) => ({ ...s, priceMode: "spool" }))} className="accent-primary" />Spool price</label>
+              <label className="flex items-center gap-2"><input type="radio" name="price-mode" checked={state.priceMode === "kg"} onChange={() => setState((s) => ({ ...s, priceMode: "kg", pricePerKg: validPrice ? priceNum : "" }))} className="accent-primary" />Price per kg</label>
+            </div>
+            {state.priceMode === "spool" ? <>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <InputWithUnit id="spool-price" label={`Price paid (${currencySymbol})`} value={state.spoolPrice} onValueChange={(v) => setState((s) => ({ ...s, spoolPrice: v, materialId: "custom" }))} min={0} step={0.01} />
+                <InputWithUnit id="spool-weight" label="Filament in new spool" value={state.spoolWeight} onValueChange={(v) => setState((s) => ({ ...s, spoolWeight: v, materialId: "custom" }))} unit="g" min={1} step={1} hint="Net filament weight, without the spool." />
+              </div>
+              <div className="flex flex-wrap gap-2" aria-label="Common spool weights">
+                {[250, 500, 750, 1000].map((weight) => <button key={weight} type="button" aria-pressed={state.spoolWeight === weight} onClick={() => setState((s) => ({ ...s, spoolWeight: weight }))} className="rounded-md border px-3 py-2 text-xs hover:bg-accent aria-pressed:border-primary aria-pressed:bg-accent">{weight.toLocaleString()} g</button>)}
+              </div>
+              {validPrice && <p className="text-xs text-muted-foreground">Equivalent to {formatCurrency(priceNum, state.currency, { maximumFractionDigits: 4 })}/kg. Calculations use the unrounded value.</p>}
+            </> : <InputWithUnit id="price" label={`Price per kg (${currencySymbol})`} value={state.pricePerKg} onValueChange={(v) => setState((s) => ({ ...s, pricePerKg: v, materialId: "custom" }))} min={0} step={0.01} placeholder="20" />}
+          </fieldset>
+
+          <details className="space-y-3 rounded-lg border p-3">
+            <summary className="cursor-pointer text-sm font-medium">Material price presets (optional)</summary>
           <div className="space-y-2">
             <Label htmlFor="material">Material</Label>
             <Select
@@ -177,48 +220,20 @@ export function Calculator() {
               </SelectContent>
             </Select>
             <p className="text-xs text-muted-foreground">
-              Picks typical price and waste for the material. Pick Custom to
-              set your own.
+              Illustrative price and waste assumptions, not current market prices. Your actual spool price is more useful.
             </p>
           </div>
-
-          <InputWithUnit
-            id="grams"
-            label="Filament used"
-            value={state.grams}
-            onValueChange={(v) => setState((s) => ({ ...s, grams: v }))}
-            unit="g"
-            min={0}
-            step={1}
-            placeholder="500"
-            hint="Copy this from your slicer's estimated weight."
-          />
-
-          <InputWithUnit
-            id="price"
-            label={`Price per kg (${currencySymbol})`}
-            value={state.pricePerKg}
-            onValueChange={(v) =>
-              setState((s) => ({
-                ...s,
-                pricePerKg: v,
-                materialId: "custom",
-              }))
-            }
-            min={0}
-            step={0.5}
-            placeholder="20"
-            hint="What you paid for the spool, divided by its weight in kg."
-          />
+          </details>
 
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label>Waste factor</Label>
+              <Label>Extra waste allowance</Label>
               <span className="font-mono text-sm tabular-nums text-muted-foreground">
                 {Math.round(state.wasteFactor * 100)}%
               </span>
             </div>
             <Slider
+              aria-label="Extra waste allowance"
               value={[state.wasteFactor * 100]}
               min={0}
               max={25}
@@ -233,9 +248,9 @@ export function Calculator() {
               }}
             />
             <p className="text-xs text-muted-foreground">
-              Accounts for purges, skirts, and small failures. 5% is typical
-              for PLA, higher for ABS/TPU.
+              An editable allowance above the weight entered. Set to 0% if everything is already in your slicer total; do not count supports or purge twice.
             </p>
+            {(state.wasteFactor < 0 || state.wasteFactor > 0.25) && <p className="text-xs text-destructive">Choose an extra waste allowance from 0% to 25%.</p>}
           </div>
 
           <div className="space-y-2">
@@ -263,11 +278,12 @@ export function Calculator() {
               nothing is converted.
             </p>
           </div>
+          <CalculatorSettings {...settings} />
         </CardContent>
       </Card>
 
       {/* ----- Results ----- */}
-      <div className="space-y-4">
+      <div id="calculator-results" tabIndex={-1} className="scroll-mt-40 space-y-4 lg:sticky lg:top-24 lg:self-start">
         <ResultDisplay
           prominent
           label="Total cost for this print"
@@ -305,9 +321,9 @@ export function Calculator() {
 
             <div className="flex flex-wrap gap-2">
               <span className="inline-flex items-center gap-1.5 rounded-full border bg-card/70 px-3 py-1 text-xs">
-                <span className="text-muted-foreground">Prints per kg</span>
+                <span className="text-muted-foreground">Complete prints per kg (with waste)</span>
                 <span className="font-mono font-medium tabular-nums text-foreground">
-                  {Math.max(1, Math.floor(1000 / gramsNum)).toLocaleString()}
+                  {result.completePrintsPerKg.toLocaleString()}
                 </span>
               </span>
               <span className="inline-flex items-center gap-1.5 rounded-full border bg-card/70 px-3 py-1 text-xs">
@@ -316,15 +332,9 @@ export function Calculator() {
                   {formatCurrency(result.cost * 10, state.currency)}
                 </span>
               </span>
-              {result.cost >= 1 && (
-                <span className="inline-flex items-center gap-1.5 rounded-full border bg-card/70 px-3 py-1 text-xs">
-                  <span className="text-muted-foreground">≈ coffees ($5)</span>
-                  <span className="font-mono font-medium tabular-nums text-foreground">
-                    {(result.cost / 5).toFixed(1)}
-                  </span>
-                </span>
-              )}
             </div>
+
+            <Link href={`/tools/print-pricing-calculator?${new URLSearchParams({ m: String(result.cost), c: state.currency })}`} className="flex min-h-11 items-center justify-center rounded-lg bg-primary px-4 py-3 text-center text-sm font-medium text-primary-foreground hover:opacity-90">Use this in print pricing</Link>
 
             <FormulaBreakdown
               formula="cost = (grams ÷ 1000) × price_per_kg × (1 + waste_factor)"

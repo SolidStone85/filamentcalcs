@@ -1,7 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useMemo } from "react";
+import { CalculatorSettings } from "@/components/shared/CalculatorSettings";
+import { CalculatorSummary } from "@/components/shared/CalculatorSummary";
+import { useCalculatorState } from "@/lib/useCalculatorState";
 
 import { FormulaBreakdown } from "@/components/shared/FormulaBreakdown";
 import { InputWithUnit } from "@/components/shared/InputWithUnit";
@@ -75,19 +77,19 @@ function parseStateFromParams(params: URLSearchParams): State {
         ? DEFAULT_STATE.customRate
         : toNumOrEmpty(params.get("rt")),
     currency:
-      c && CURRENCIES.some((x) => x.code === c) ? c : DEFAULT_STATE.currency,
+      c && CURRENCIES.some((x) => x.code === c) ? c : getElectricityRatePreset(rateId ?? DEFAULT_STATE.rateId)?.currency ?? DEFAULT_STATE.currency,
   };
 }
 
 function encodeState(state: State): string {
   const p = new URLSearchParams();
   p.set("p", state.printerId);
-  if (state.printerId === "custom" && state.customWatts !== "") {
+  if (state.printerId === "custom") {
     p.set("w", String(state.customWatts));
   }
-  if (state.hours !== "") p.set("h", String(state.hours));
+  p.set("h", String(state.hours));
   p.set("r", state.rateId);
-  if (state.rateId === "custom" && state.customRate !== "") {
+  if (state.rateId === "custom") {
     p.set("rt", String(state.customRate));
   }
   p.set("c", state.currency);
@@ -110,17 +112,9 @@ const CURRENCY_ITEMS = CURRENCIES.map((c) => ({
 }));
 
 export function Calculator() {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-
-  const [state, setState] = useState<State>(() =>
-    parseStateFromParams(new URLSearchParams(searchParams.toString())),
-  );
-
-  useEffect(() => {
-    router.replace(`?${encodeState(state)}`, { scroll: false });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state]);
+  const { state, setState, settings } = useCalculatorState(parseStateFromParams, encodeState, {
+    c: "currency", p: "printerId", w: "watts", r: "electricityRateId", rt: "electricityRate",
+  });
 
   const printerPreset = getPrinterPreset(state.printerId);
   const watts =
@@ -138,18 +132,9 @@ export function Calculator() {
         : 0
       : ratePreset?.ratePerKwh ?? 0;
 
-  // Apply currency from rate preset unless user overrode it
-  useEffect(() => {
-    if (state.rateId !== "custom" && ratePreset) {
-      if (state.currency !== ratePreset.currency) {
-        setState((s) => ({ ...s, currency: ratePreset.currency }));
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.rateId]);
-
   const hoursNum = typeof state.hours === "number" ? state.hours : 0;
-  const hasInput = hoursNum > 0 && watts > 0 && rate > 0;
+  const validInputs = hoursNum > 0 && watts >= 0 && rate >= 0 && [hoursNum, watts, rate].every(Number.isFinite) &&
+    (state.printerId !== "custom" || state.customWatts !== "") && (state.rateId !== "custom" || state.customRate !== "");
 
   const result = useMemo(
     () =>
@@ -160,9 +145,11 @@ export function Calculator() {
       }),
     [watts, hoursNum, rate],
   );
+  const hasInput = validInputs && Object.values(result).every((value) => typeof value !== "number" || Number.isFinite(value));
 
   return (
     <div className="grid gap-6 lg:grid-cols-[1.2fr_1fr]">
+      <CalculatorSummary label="Electricity cost" value={hasInput ? formatCurrency(result.cost, state.currency) : "Enter print time"} />
       <Card className="glass-card">
         <CardHeader>
           <CardTitle>Inputs</CardTitle>
@@ -229,7 +216,7 @@ export function Calculator() {
               value={state.rateId}
               items={RATE_ITEMS}
               onValueChange={(v) => {
-                if (v !== null) setState((s) => ({ ...s, rateId: v }));
+                if (v !== null) setState((s) => ({ ...s, rateId: v, currency: getElectricityRatePreset(v)?.currency ?? s.currency }));
               }}
             >
               <SelectTrigger id="rate" className="w-full">
@@ -249,8 +236,7 @@ export function Calculator() {
               </SelectContent>
             </Select>
             <p className="text-xs text-muted-foreground">
-              Your actual rate is on your utility bill. Regional averages
-              are fine for a ballpark.
+              Presets are rough examples, not live tariffs. Use the per-kWh rate from your utility bill for your own estimate.
             </p>
           </div>
 
@@ -295,10 +281,11 @@ export function Calculator() {
               nothing is converted.
             </p>
           </div>
+          <CalculatorSettings {...settings} />
         </CardContent>
       </Card>
 
-      <div className="space-y-4">
+      <div id="calculator-results" tabIndex={-1} className="scroll-mt-40 space-y-4 lg:sticky lg:top-24 lg:self-start">
         <ResultDisplay
           prominent
           label="Electricity cost for this print"
@@ -352,7 +339,7 @@ export function Calculator() {
                   value: formatCurrency(result.cost, state.currency),
                 },
               ]}
-              note="Most hobbyists are surprised how small this number is. A 12 hour print on a Bambu X1C at the US average rate costs under 25 cents. Filament dominates total print cost by a wide margin."
+              note="Use average power measured over a print and the rate on your electricity bill. A printer's rated maximum power is usually different from its average consumption."
             />
           </>
         )}

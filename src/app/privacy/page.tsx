@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-
+import Link from "next/link";
 import { SITE } from "@/lib/tools";
 
 export const metadata: Metadata = {
@@ -12,98 +12,29 @@ export default function PrivacyPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-12 lg:py-16">
       <h1 className="text-3xl font-semibold tracking-tight">Privacy Policy</h1>
-      <p className="mt-2 text-xs text-muted-foreground">
-        Last updated: April 23, 2026
-      </p>
-
-      <div className="mt-8 space-y-6 text-sm leading-6 text-muted-foreground">
-        <section className="space-y-2">
-          <h2 className="text-lg font-medium text-foreground">Overview</h2>
-          <p>
-            {SITE.name}.com is an independent 3D printing calculator site. This
-            policy explains what data is collected when you visit, and how
-            it&apos;s used.
-          </p>
+      <p className="mt-2 text-sm text-muted-foreground">Updated September 5, 2026</p>
+      <div className="mt-8 space-y-8 text-sm leading-7 text-muted-foreground">
+        <section>
+          <h2 className="text-lg font-medium text-foreground">Calculator inputs and shared links</h2>
+          <p className="mt-2">Calculations run in your browser. There is no calculator account or server-side library of your saved jobs. Inputs are included in the page URL so you can bookmark a calculation or share its result.</p>
+          <p className="mt-2">Those URLs can appear in browser history and in requests when you open, reload or navigate to a calculation. A link you share contains the values you entered. Avoid putting confidential information into shared calculations.</p>
         </section>
-
-        <section className="space-y-2">
-          <h2 className="text-lg font-medium text-foreground">
-            Data you enter into calculators
-          </h2>
-          <p>
-            All calculations run in your browser. Inputs you type into the
-            calculators are never sent to our servers. Inputs are reflected
-            in the URL (as query parameters) so you can bookmark or share
-            results. That URL lives only in your browser until you choose
-            to share it.
-          </p>
+        <section>
+          <h2 className="text-lg font-medium text-foreground">Settings on your device</h2>
+          <p className="mt-2">If you choose Remember my settings, supported tools save preferences such as currency and spool pricing in this browser&apos;s local storage. The controls describe what is saved and let you clear it. These preferences do not sync between devices. Your theme preference may also be saved locally.</p>
         </section>
-
-        <section className="space-y-2">
-          <h2 className="text-lg font-medium text-foreground">Analytics</h2>
-          <p>
-            We use Google Analytics 4 to understand which pages are popular
-            and how people find the site. Google Analytics uses cookies and
-            collects data including your approximate location, device type,
-            browser, referrer URL, and pages visited. IP addresses are
-            anonymized where required by regional law.
-          </p>
-          <p>
-            You can opt out of Google Analytics by installing the{" "}
-            <a
-              href="https://tools.google.com/dlpage/gaoptout"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline underline-offset-4"
-            >
-              Google Analytics Opt-Out Browser Add-on
-            </a>
-            .
-          </p>
+        <section>
+          <h2 className="text-lg font-medium text-foreground">Site analytics and hosting</h2>
+          <p className="mt-2">We use Vercel Web Analytics for aggregate information about page visits, referrers, device types and approximate regions. We remove query parameters and URL fragments from analytics event URLs so those URLs do not include calculator inputs. We do not send calculator field values as custom analytics events.</p>
+          <p className="mt-2">Vercel describes its analytics as using no third-party analytics cookies. Hosting infrastructure also processes requests to deliver and protect the site. See <a href="https://vercel.com/docs/analytics/privacy-policy" className="text-primary underline underline-offset-4" target="_blank" rel="noopener noreferrer">Vercel&apos;s analytics privacy information</a> for details.</p>
         </section>
-
-        <section className="space-y-2">
-          <h2 className="text-lg font-medium text-foreground">Advertising</h2>
-          <p>
-            Third-party vendors, including Google, use cookies to serve ads
-            based on your prior visits to this site and other sites. Google&apos;s
-            use of advertising cookies enables it and its partners to serve
-            ads to you based on your visit to our site and/or other sites on
-            the internet.
-          </p>
-          <p>
-            You may opt out of personalized advertising by visiting{" "}
-            <a
-              href="https://www.google.com/settings/ads"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline underline-offset-4"
-            >
-              Google Ads Settings
-            </a>
-            . You can also opt out of third-party vendors&apos; use of cookies
-            for personalized advertising at{" "}
-            <a
-              href="https://www.aboutads.info"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline underline-offset-4"
-            >
-              aboutads.info
-            </a>
-            .
-          </p>
+        <section>
+          <h2 className="text-lg font-medium text-foreground">Amazon affiliate links</h2>
+          <p className="mt-2">Some pages link to relevant products on Amazon. As an Amazon Associate I earn from qualifying purchases. Following a product link takes you to Amazon, where its own privacy and cookie policies apply. We do not process purchases or payment details on this site.</p>
         </section>
-
-        <section className="space-y-2">
+        <section>
           <h2 className="text-lg font-medium text-foreground">Contact</h2>
-          <p>
-            Questions about this privacy policy can be sent through the{" "}
-            <a href="/contact" className="underline underline-offset-4">
-              contact page
-            </a>
-            .
-          </p>
+          <p className="mt-2">For questions or corrections, use the <Link href="/contact" className="text-primary underline underline-offset-4">contact page</Link>. Information you choose to send by email is used to respond to your message.</p>
         </section>
       </div>
     </div>

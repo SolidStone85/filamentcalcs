@@ -4,11 +4,8 @@
 // wasted_grams = failed * avg_grams_per_print
 // wasted_cost = (wasted_grams / 1000) * price_per_kg
 //
-// Benchmark bands (community consensus, not scientific):
-//   under 5%: excellent, well-tuned printer
-//   5 to 10%: typical hobbyist
-//   10 to 20%: something's wrong, diagnose
-//   over 20%: investigate seriously (bed adhesion, extruder, filament moisture)
+// Display bands are descriptive buckets, not measured industry benchmarks.
+// avgGramsPerPrint means average material actually consumed by a failed attempt.
 
 export type FailureRateInput = {
   successfulPrints: number;
@@ -22,7 +19,7 @@ export type FailureRateResult = {
   totalPrints: number;
   wastedGrams: number;
   wastedCost: number;
-  benchmark: "excellent" | "typical" | "investigate" | "serious";
+  benchmark: "no-data" | "excellent" | "typical" | "investigate" | "serious";
   benchmarkLabel: string;
 };
 
@@ -40,20 +37,23 @@ export function calculateFailureRate({
 
   let benchmark: FailureRateResult["benchmark"];
   let benchmarkLabel: string;
-  if (failureRatePercent < 5) {
+  if (totalPrints === 0) {
+    benchmark = "no-data";
+    benchmarkLabel = "No attempts recorded.";
+  } else if (failureRatePercent < 5) {
     benchmark = "excellent";
-    benchmarkLabel = "Excellent. Your printer is well-tuned.";
+    benchmarkLabel = "Under 5% of recorded attempts failed.";
   } else if (failureRatePercent < 10) {
     benchmark = "typical";
-    benchmarkLabel = "Typical hobbyist range. Room to improve with tuning.";
+    benchmarkLabel = "5% to under 10% of recorded attempts failed.";
   } else if (failureRatePercent < 20) {
     benchmark = "investigate";
     benchmarkLabel =
-      "Above average. Worth investigating bed adhesion and filament moisture.";
+      "10% to under 20% of recorded attempts failed.";
   } else {
     benchmark = "serious";
     benchmarkLabel =
-      "Investigate seriously. Likely a mechanical or calibration issue.";
+      "20% or more of recorded attempts failed.";
   }
 
   return {

@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useCalculatorState } from "@/lib/useCalculatorState";
 import { Check, X } from "lucide-react";
 
 import { ShareButton } from "@/components/shared/ShareButton";
@@ -63,17 +62,7 @@ function DifficultyBadge({ difficulty }: { difficulty: MaterialFull["difficulty"
 }
 
 export function Calculator() {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-
-  const [selected, setSelected] = useState<string[]>(() =>
-    parseSelected(new URLSearchParams(searchParams.toString())),
-  );
-
-  useEffect(() => {
-    router.replace(`?${encodeSelected(selected)}`, { scroll: false });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selected]);
+  const { state: selected, setState: setSelected } = useCalculatorState(parseSelected, encodeSelected, {});
 
   function toggle(id: string) {
     setSelected((s) => {

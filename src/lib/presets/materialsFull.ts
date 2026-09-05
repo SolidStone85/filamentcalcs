@@ -14,7 +14,7 @@ export type MaterialFull = {
   strengthRating: 1 | 2 | 3 | 4 | 5;
   flexRating: 1 | 2 | 3 | 4 | 5;
   outdoorOk: boolean;
-  foodSafe: "No" | "Contact-safe (certified)" | "Depends on brand";
+  foodSafe: "No" | "Check product certification" | "Depends on brand";
   tagline: string;
   bestFor: string[];
   avoidFor: string[];
@@ -50,9 +50,9 @@ export const MATERIALS_FULL: MaterialFull[] = [
     strengthRating: 4,
     flexRating: 2,
     outdoorOk: true,
-    foodSafe: "Contact-safe (certified)",
+    foodSafe: "Check product certification",
     tagline: "Stronger than PLA, survives outdoors, stringier.",
-    bestFor: ["Outdoor parts", "Functional parts", "Food-contact (certified brands)", "Water bottles"],
+    bestFor: ["Outdoor parts", "Functional parts"],
     avoidFor: ["Fine detail", "Beginners (stringing)", "Parts that slide or snap together"],
   },
   {
@@ -66,9 +66,9 @@ export const MATERIALS_FULL: MaterialFull[] = [
     difficulty: "Hard",
     strengthRating: 4,
     flexRating: 3,
-    outdoorOk: true,
+    outdoorOk: false,
     foodSafe: "No",
-    tagline: "High heat resistance, fumes, needs enclosure.",
+    tagline: "High heat resistance, needs enclosure. Protect from UV outdoors.",
     bestFor: ["Automotive interior parts", "High-heat environments", "Post-processing (acetone smoothing)"],
     avoidFor: ["Open printers (warping)", "Small rooms (fumes)", "Beginners"],
   },

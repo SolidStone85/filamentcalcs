@@ -55,7 +55,7 @@ export const TOOLS: Tool[] = [
     title: "Failure Rate Calculator",
     shortTitle: "Failure Rate",
     description:
-      "Track your real-world failure rate and compare it to hobbyist benchmarks.",
+      "Calculate your failure rate and the production cost carried by successful prints.",
     available: true,
   },
   {
@@ -63,7 +63,7 @@ export const TOOLS: Tool[] = [
     title: "AMS Purge Waste Calculator",
     shortTitle: "AMS Purge Waste",
     description:
-      "How much filament your Bambu AMS is actually wasting on color swaps. The calculator nobody else built.",
+      "Separate useful material from purge, supports and tower consumption in a multi-color print.",
     available: true,
   },
   {
@@ -71,7 +71,7 @@ export const TOOLS: Tool[] = [
     title: "Remaining Filament Calculator",
     shortTitle: "Remaining Spool",
     description:
-      "Weigh your spool on a scale and see exactly how much filament is left. Empty-spool weight presets included for Bambu, Polymaker, eSun, and more.",
+      "Subtract the empty spool weight to estimate the filament left. Use a preset or your own measured weight.",
     available: true,
   },
   {

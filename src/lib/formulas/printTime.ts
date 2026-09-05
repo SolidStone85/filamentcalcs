@@ -21,12 +21,13 @@ export function calculatePrintTime({
   gramsUsed,
   throughputGramsPerHour,
 }: PrintTimeInput): PrintTimeResult {
-  if (throughputGramsPerHour <= 0) {
-    return { hours: 0, hoursInt: 0, minutes: 0, formatted: "0h 0m" };
+  if (!Number.isFinite(throughputGramsPerHour) || throughputGramsPerHour <= 0 || !Number.isFinite(gramsUsed) || gramsUsed < 0) {
+    return { hours: NaN, hoursInt: NaN, minutes: NaN, formatted: "Unavailable" };
   }
   const hours = gramsUsed / throughputGramsPerHour;
-  const hoursInt = Math.floor(hours);
-  const minutes = Math.round((hours - hoursInt) * 60);
+  const totalMinutes = Math.round(hours * 60);
+  const hoursInt = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
   return {
     hours,
     hoursInt,

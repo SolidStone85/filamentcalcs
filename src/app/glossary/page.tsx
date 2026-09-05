@@ -101,13 +101,13 @@ const TERMS: Term[] = [
   {
     term: "First layer",
     definition:
-      "The first printed layer that sticks to the build plate. Critical for the success of every print. Slightly thicker, slower, and slightly hotter than other layers. Bad first layers cause about 40% of all print failures.",
+      "The first printed layer that sticks to the build plate. Its adhesion and shape affect the rest of the print. Slicer profiles often use different speed, height and temperature settings for this layer; check the profile for your material and printer.",
     related: ["Bed adhesion", "Print failure"],
   },
   {
     term: "Flush volume",
     definition:
-      "On Bambu AMS prints, the amount of filament purged from the hotend during a color change. Default is around 8 grams per swap. The flush volume multiplier in Bambu Studio (default 1.0x) can be tuned down for compatible color pairs.",
+      "The volume purged during a filament transition. Bambu Studio sets flushing volumes in cubic millimeters for ordered filament pairs. Grams depend on material density and the transitions in the plate. There is no universal grams-per-swap value; use the sliced material breakdown and test any reduction.",
     related: ["AMS", "Purge"],
   },
   {
@@ -333,7 +333,7 @@ export default function GlossaryPage() {
           <Link href="/contact" className="underline underline-offset-4">
             contact page
           </Link>
-          . Glossary is reviewed quarterly along with the calculators.
+          . Corrections are welcome through the contact page.
         </p>
       </section>
     </article>

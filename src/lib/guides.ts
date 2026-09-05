@@ -71,12 +71,12 @@ export const GUIDES: Guide[] = [
   },
   {
     slug: "best-3d-printer-under-300",
-    title: "Best 3D printer under $300 in 2026: honest buyer's guide",
-    shortTitle: "Best printer under $300",
+    title: "3D printers under $300: a practical 2026 buying guide",
+    shortTitle: "Printers on a $300 budget",
     description:
-      "Bambu A1 mini vs A1 vs Ender 3 V3 KE vs Neptune 4 Plus, compared honestly: real prices, build volume, multi-color support, and which one fits how you'll actually print.",
+      "Compare the A1 mini, A1, Ender-3 V3 KE and Neptune 4 Plus by build size and budget, with dated US prices, manufacturer sources and clear tradeoffs.",
     publishedAt: "2026-04-29",
-    readMinutes: 9,
+    readMinutes: 6,
     relatedToolSlugs: [
       "filament-cost-calculator",
       "print-time-estimator",
@@ -88,9 +88,9 @@ export const GUIDES: Guide[] = [
     title: "Is multi-color 3D printing actually worth it? The real math on AMS purge waste",
     shortTitle: "Multi-color AMS economics",
     description:
-      "Bambu AMS can waste more filament on purge than the actual part weighs. When multi-color is worth it, when it isn't, and how to cut the waste.",
+      "Use slicer totals to compare multi-color material costs, avoid counting purge twice, and weigh the extra filament and print time against the result you want.",
     publishedAt: "2026-04-24",
-    readMinutes: 8,
+    readMinutes: 6,
     relatedToolSlugs: [
       "ams-purge-waste-calculator",
       "filament-cost-calculator",

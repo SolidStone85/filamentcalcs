@@ -1,7 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useMemo } from "react";
+import { CalculatorSettings } from "@/components/shared/CalculatorSettings";
+import { CalculatorSummary } from "@/components/shared/CalculatorSummary";
+import { useCalculatorState } from "@/lib/useCalculatorState";
 
 import { FormulaBreakdown } from "@/components/shared/FormulaBreakdown";
 import { InputWithUnit } from "@/components/shared/InputWithUnit";
@@ -58,9 +60,9 @@ function parseStateFromParams(params: URLSearchParams): State {
 
 function encodeState(state: State): string {
   const p = new URLSearchParams();
-  if (state.grams !== "") p.set("g", String(state.grams));
+  p.set("g", String(state.grams));
   p.set("p", state.printerId);
-  if (state.printerId === "custom" && state.customThroughput !== "") {
+  if (state.printerId === "custom") {
     p.set("t", String(state.customThroughput));
   }
   return p.toString();
@@ -72,18 +74,7 @@ const PRINTER_ITEMS = PRINTER_PRESETS.map((p) => ({
 }));
 
 export function Calculator() {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-
-  const [state, setState] = useState<State>(() =>
-    parseStateFromParams(new URLSearchParams(searchParams.toString())),
-  );
-
-  useEffect(() => {
-    const query = encodeState(state);
-    router.replace(`?${query}`, { scroll: false });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state]);
+  const { state, setState, settings } = useCalculatorState(parseStateFromParams, encodeState, { p: "printerId", t: "throughput" });
 
   const preset = getPrinterPreset(state.printerId);
   const throughput =
@@ -94,7 +85,7 @@ export function Calculator() {
       : preset?.throughputGramsPerHour ?? 0;
 
   const gramsNum = typeof state.grams === "number" ? state.grams : 0;
-  const hasInput = gramsNum > 0 && throughput > 0;
+  const validInputs = gramsNum > 0 && throughput > 0 && [gramsNum, throughput].every(Number.isFinite);
 
   const result = useMemo(
     () =>
@@ -104,9 +95,11 @@ export function Calculator() {
       }),
     [gramsNum, throughput],
   );
+  const hasInput = validInputs && Object.values(result).every((value) => typeof value !== "number" || Number.isFinite(value));
 
   return (
     <div className="grid gap-6 lg:grid-cols-[1.2fr_1fr]">
+      <CalculatorSummary label="Estimated print time" value={hasInput ? result.formatted : "Enter weight"} />
       <Card className="glass-card">
         <CardHeader>
           <CardTitle>Inputs</CardTitle>
@@ -150,7 +143,7 @@ export function Calculator() {
             value={state.grams}
             onValueChange={(v) => setState((s) => ({ ...s, grams: v }))}
             unit="g"
-            min={0}
+            min={0.01}
             step={1}
             placeholder="500"
             hint="Copy from your slicer's filament weight estimate."
@@ -165,16 +158,17 @@ export function Calculator() {
                 setState((s) => ({ ...s, customThroughput: v }))
               }
               unit="g/hr"
-              min={1}
+              min={0.01}
               step={1}
               placeholder="20"
               hint="Check your last few slicer estimates: divide grams by hours."
             />
           )}
+          <CalculatorSettings {...settings} />
         </CardContent>
       </Card>
 
-      <div className="space-y-4">
+      <div id="calculator-results" tabIndex={-1} className="scroll-mt-40 space-y-4 lg:sticky lg:top-24 lg:self-start">
         <ResultDisplay
           prominent
           label="Estimated print time"

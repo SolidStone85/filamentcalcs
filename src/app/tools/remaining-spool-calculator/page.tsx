@@ -39,7 +39,7 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "What if the calculator says I have more filament than the original spool weight?",
-    a: "That means your empty spool weight is set too low. Either pick a different preset that matches your spool, or weigh an actual empty spool to get the real number.",
+    a: "Check the current loaded weight, the matching empty-spool tare and the original net filament amount. A low tare, a high scale reading or an original-fill entry that is too small can each produce this result. The warning alone does not identify which input needs correcting.",
   },
   {
     q: "Will this work for non-1kg spools?",
@@ -254,9 +254,10 @@ export default function RemainingSpoolCalculatorPage() {
             <span className="font-medium text-foreground">
               Calculator says you have more than the original weight.
             </span>{" "}
-            Empty spool weight is too low. Either you picked the wrong
-            preset, or the spool is heavier than the average for that
-            brand. Switch to "Custom" and enter the actual weight.
+            Check all three inputs: current loaded weight, empty-spool tare
+            and original net filament amount. The warning can result from
+            more than one input; do not change a measured tare just to make
+            the percentage fit.
           </li>
           <li>
             <span className="font-medium text-foreground">

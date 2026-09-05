@@ -48,7 +48,6 @@ export function calculateRemainingSpool(
     percentRemaining,
     valueRemaining,
     belowEmpty:
-      input.currentTotalWeightGrams > 0 &&
       input.currentTotalWeightGrams < input.emptySpoolWeightGrams,
     overFull:
       input.originalFilamentWeightGrams > 0 &&

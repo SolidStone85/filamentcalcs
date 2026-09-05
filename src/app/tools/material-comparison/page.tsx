@@ -49,7 +49,7 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "What about food contact?",
-    a: "No 3D print is fully food safe because layer lines trap bacteria. 'Contact-safe' certifications on some PLA and PETG only apply to the raw filament, not the finished print. For food surfaces, use food-safe epoxy coating or pick a different manufacturing method.",
+    a: "A generic filament type does not establish food-contact suitability. Check the exact product's certification and its stated conditions, including whether it covers your finished printing process and intended use. This comparison does not certify printed items or recommend a coating as proof of suitability.",
   },
 ];
 
@@ -265,7 +265,7 @@ export default function MaterialComparisonPage() {
                 <td className="px-3 py-2">Medium</td>
                 <td className="px-3 py-2">Good</td>
                 <td className="px-3 py-2">Slight</td>
-                <td className="px-3 py-2">Poor (UV)</td>
+                <td className="px-3 py-2">Limited; protect from UV</td>
               </tr>
               <tr className="border-b">
                 <td className="px-3 py-2">ASA</td>
@@ -318,7 +318,7 @@ export default function MaterialComparisonPage() {
           </li>
           <li>
             <span className="font-medium text-foreground">PETG:</span>{" "}
-            outdoor parts (planters, garden brackets), water bottles,
+            outdoor parts (planters, garden brackets),
             replacement clips on appliances, parts that get bumped, anything
             in a car interior or attic.
           </li>

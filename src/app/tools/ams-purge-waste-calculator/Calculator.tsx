@@ -1,401 +1,106 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 
+import { CalculatorSettings } from "@/components/shared/CalculatorSettings";
+import { CalculatorSummary } from "@/components/shared/CalculatorSummary";
 import { FormulaBreakdown } from "@/components/shared/FormulaBreakdown";
 import { InputWithUnit } from "@/components/shared/InputWithUnit";
 import { ResultDisplay } from "@/components/shared/ResultDisplay";
 import { ShareButton } from "@/components/shared/ShareButton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Slider } from "@/components/ui/slider";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { CURRENCIES, formatCurrency, type CurrencyCode } from "@/lib/currency";
-import { calculateAmsPurgeWaste } from "@/lib/formulas/amsPurgeWaste";
-import { cn } from "@/lib/utils";
+import { calculateSlicerMaterial, estimateFlushingGrams } from "@/lib/formulas/amsPurgeWaste";
+import { useCalculatorState } from "@/lib/useCalculatorState";
+import { encodeAmsState, getAmsInputStatus, parseAmsState, type AmsState } from "./state";
 
-// AMS profile presets. Purge grams per swap vary by printer + slicer settings.
-// These are community-consensus defaults.
-const AMS_PROFILES: {
-  id: string;
-  label: string;
-  purgePerSwap: number;
-}[] = [
-  { id: "bambu-x1c-default", label: "Bambu X1C / P1S (default)", purgePerSwap: 8 },
-  { id: "bambu-a1", label: "Bambu A1 / A1 Mini", purgePerSwap: 6 },
-  { id: "bambu-light", label: "Bambu light purge (tuned)", purgePerSwap: 5 },
-  { id: "bambu-heavy", label: "Bambu heavy purge (default settings)", purgePerSwap: 12 },
-  { id: "custom", label: "Custom", purgePerSwap: 8 },
-];
-
-type State = {
-  profileId: string;
-  colorSwaps: number | "";
-  purgePerSwap: number;
-  actualPrintGrams: number | "";
-  pricePerKg: number | "";
-  currency: CurrencyCode;
-};
-
-const DEFAULT_STATE: State = {
-  profileId: "bambu-x1c-default",
-  colorSwaps: "",
-  purgePerSwap: 8,
-  actualPrintGrams: "",
-  pricePerKg: 20,
-  currency: "USD",
-};
-
-function parseStateFromParams(params: URLSearchParams): State {
-  const toNumOrEmpty = (s: string | null): number | "" => {
-    if (s === null || s === "") return "";
-    const n = Number(s);
-    return Number.isFinite(n) ? n : "";
-  };
-  const pid = params.get("p");
-  const c = params.get("c") as CurrencyCode | null;
-  return {
-    profileId:
-      pid && AMS_PROFILES.some((p) => p.id === pid) ? pid : DEFAULT_STATE.profileId,
-    colorSwaps: toNumOrEmpty(params.get("s")),
-    purgePerSwap:
-      params.get("pg") === null
-        ? DEFAULT_STATE.purgePerSwap
-        : Math.max(2, Math.min(30, Number(params.get("pg")) || 8)),
-    actualPrintGrams: toNumOrEmpty(params.get("g")),
-    pricePerKg:
-      params.get("pp") === null
-        ? DEFAULT_STATE.pricePerKg
-        : toNumOrEmpty(params.get("pp")),
-    currency:
-      c && CURRENCIES.some((x) => x.code === c) ? c : DEFAULT_STATE.currency,
-  };
-}
-
-function encodeState(state: State): string {
-  const p = new URLSearchParams();
-  p.set("p", state.profileId);
-  if (state.colorSwaps !== "") p.set("s", String(state.colorSwaps));
-  p.set("pg", String(state.purgePerSwap));
-  if (state.actualPrintGrams !== "") p.set("g", String(state.actualPrintGrams));
-  if (state.pricePerKg !== "") p.set("pp", String(state.pricePerKg));
-  p.set("c", state.currency);
-  return p.toString();
-}
-
-const PROFILE_ITEMS = AMS_PROFILES.map((p) => ({
-  value: p.id,
-  label: p.label,
-}));
-
-const CURRENCY_ITEMS = CURRENCIES.map((c) => ({
-  value: c.code,
-  label: `${c.symbol} ${c.code}`,
-}));
-
-function verdictForPercent(percent: number): {
-  label: string;
-  color: string;
-  advice: string;
-} {
-  if (percent < 15) {
-    return {
-      label: "Reasonable",
-      color: "text-emerald-500",
-      advice: "Purge waste is in the normal range for multi-color prints.",
-    };
-  }
-  if (percent < 30) {
-    return {
-      label: "Noticeable",
-      color: "text-primary",
-      advice: "Purge is a real cost here. Worth double-checking swap count.",
-    };
-  }
-  if (percent < 50) {
-    return {
-      label: "High",
-      color: "text-amber-500",
-      advice:
-        "You are wasting more than a quarter of your filament on purge. Consider reducing colors or swap count.",
-    };
-  }
-  return {
-    label: "Extreme",
-    color: "text-destructive",
-    advice:
-      "Over half of your filament is going to purge. For this print, multi-color is costing more than the print itself.",
-  };
-}
+const CURRENCY_ITEMS = CURRENCIES.map((c) => ({ value: c.code, label: `${c.symbol} ${c.code}` }));
+const MODES = [{ value: "slicer", label: "Slicer totals (recommended)" }, { value: "estimate", label: "Custom estimate" }];
+const UNITS = [{ value: "g", label: "g / swap" }, { value: "mm3", label: "mm³ / swap" }];
+const parseState = (params: URLSearchParams) => parseAmsState(params, CURRENCIES.map((c) => c.code));
 
 export function Calculator() {
-  const searchParams = useSearchParams();
-  const router = useRouter();
+  const { state, setState, settings } = useCalculatorState(parseState, encodeAmsState, { c: "currency", pp: "pricePerKg" });
 
-  const [state, setState] = useState<State>(() =>
-    parseStateFromParams(new URLSearchParams(searchParams.toString())),
-  );
-
-  useEffect(() => {
-    router.replace(`?${encodeState(state)}`, { scroll: false });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state]);
-
-  function applyProfile(id: string) {
-    const profile = AMS_PROFILES.find((p) => p.id === id);
-    if (!profile) return;
-    setState((s) => ({
-      ...s,
-      profileId: id,
-      ...(id === "custom" ? {} : { purgePerSwap: profile.purgePerSwap }),
-    }));
+  function setAmount(field: keyof AmsState, value: number | "") {
+    setState((s) => ({ ...s, [field]: value, ...(field === "purgePerSwap" ? { legacyEstimate: false } : {}) }));
   }
 
-  const swaps = typeof state.colorSwaps === "number" ? state.colorSwaps : 0;
-  const grams =
-    typeof state.actualPrintGrams === "number" ? state.actualPrintGrams : 0;
-  const price = typeof state.pricePerKg === "number" ? state.pricePerKg : 0;
-  const hasInput = swaps > 0 && grams > 0 && price > 0;
-
-  const result = useMemo(
-    () =>
-      calculateAmsPurgeWaste({
-        colorSwaps: swaps,
-        purgePerSwapGrams: state.purgePerSwap,
-        actualPrintGrams: grams,
-        pricePerKg: price,
-      }),
-    [swaps, state.purgePerSwap, grams, price],
-  );
-
-  const verdict = verdictForPercent(result.purgeWastePercent);
+  const estimate = state.mode === "estimate";
+  const { ready, hasInvalidInput } = getAmsInputStatus(state);
+  const flushingGrams = estimate ? estimateFlushingGrams({
+    colorSwaps: Number(state.colorSwaps), purgePerSwap: Number(state.purgePerSwap),
+    unit: state.unit, densityGramsPerCm3: Number(state.density), flushMultiplier: Number(state.multiplier),
+  }) : Number(state.flushingGrams);
+  const result = calculateSlicerMaterial({ modelGrams: Number(state.modelGrams), supportGrams: Number(state.supportGrams),
+    flushingGrams, towerGrams: Number(state.towerGrams), extraGrams: Number(state.extraGrams), pricePerKg: Number(state.pricePerKg) });
+  const hasResult = ready && Object.values(result).every(Number.isFinite);
+  const error = hasInvalidInput || (ready && !hasResult);
+  const money = (amount: number) => formatCurrency(amount, state.currency);
+  const resultText = hasResult ? money(result.totalFilamentCost) : error ? "Check inputs" : "Enter amounts";
 
   return (
     <div className="grid gap-6 lg:grid-cols-[1.2fr_1fr]">
+      <CalculatorSummary label={estimate ? "Estimated material cost" : "Material cost from your totals"} value={resultText} detail={hasResult ? `${result.totalFilamentGrams.toFixed(2)} g consumed` : undefined} />
       <Card className="glass-card">
-        <CardHeader>
-          <CardTitle>Inputs</CardTitle>
-        </CardHeader>
+        <CardHeader><CardTitle>Material used for this print</CardTitle></CardHeader>
         <CardContent className="space-y-5">
           <div className="space-y-2">
-            <Label htmlFor="profile">AMS profile</Label>
-            <Select
-              value={state.profileId}
-              items={PROFILE_ITEMS}
-              onValueChange={(v) => {
-                if (v !== null) applyProfile(v);
-              }}
-            >
-              <SelectTrigger id="profile" className="w-full">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {AMS_PROFILES.map((p) => (
-                  <SelectItem key={p.id} value={p.id}>
-                    {p.label}
-                    {p.id !== "custom" && (
-                      <span className="ml-2 text-xs text-muted-foreground">
-                        {p.purgePerSwap}g per swap
-                      </span>
-                    )}
-                  </SelectItem>
-                ))}
-              </SelectContent>
+            <Label htmlFor="ams-mode">Input method</Label>
+            <Select value={state.mode} items={MODES} onValueChange={(v) => { if (v) setState((s) => ({ ...s, mode: v as AmsState["mode"], legacyEstimate: false })); }}>
+              <SelectTrigger id="ams-mode" className="w-full"><SelectValue /></SelectTrigger>
+              <SelectContent>{MODES.map((m) => <SelectItem key={m.value} value={m.value}>{m.label}</SelectItem>)}</SelectContent>
             </Select>
-            <p className="text-xs text-muted-foreground">
-              Pick your printer and typical purge settings. Custom lets you set
-              the exact grams-per-swap yourself.
-            </p>
+            <p className="text-xs leading-5 text-muted-foreground">{estimate
+              ? "Supply your own average for this print. Color direction, material and printer settings change the amount needed."
+              : "Slice the plate first, then enter its separate material totals in grams. Leave unused categories at zero."}</p>
           </div>
-
-          <InputWithUnit
-            id="swaps"
-            label="Number of color swaps"
-            value={state.colorSwaps}
-            onValueChange={(v) =>
-              setState((s) => ({ ...s, colorSwaps: v }))
-            }
-            unit="swaps"
-            min={0}
-            step={1}
-            placeholder="40"
-            hint="Look at your slicer's multi-color preview or swap counter. Bambu Studio shows this under 'flush data.'"
-          />
-
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <Label>Purge per swap</Label>
-              <span className="font-mono text-sm tabular-nums text-muted-foreground">
-                {state.purgePerSwap} g
-              </span>
+          {state.legacyEstimate && <p role="status" className="rounded-lg border border-amber-500/40 bg-amber-500/10 p-3 text-sm">Legacy estimate: this saved link uses the previous calculator&apos;s grams-per-swap assumptions. These are not verified manufacturer defaults. Check the average below or switch to slicer totals.</p>}
+          <InputWithUnit id="ams-model" label="Useful model material" value={state.modelGrams} onValueChange={(v) => setAmount("modelGrams", v)} unit="g" min={0} step={0.01} placeholder="92" hint="All useful models on the plate, including material flushed into their infill. Exclude the discarded categories below." />
+          {!estimate ? <InputWithUnit id="ams-flush" label="Discarded flushing material" value={state.flushingGrams} onValueChange={(v) => setAmount("flushingGrams", v)} unit="g" min={0} step={0.01} placeholder="20" hint="Flushing sent to waste. Do not include material already counted inside useful models or supports. Do not paste mm³ here." /> : <>
+            <InputWithUnit id="ams-swaps" label="Number of color swaps" value={state.colorSwaps} onValueChange={(v) => setAmount("colorSwaps", v)} unit="swaps" min={0} step={1} placeholder="40" />
+            <InputWithUnit id="ams-average" label="Average discarded flush per swap" value={state.purgePerSwap} onValueChange={(v) => setAmount("purgePerSwap", v)} unit={state.unit} unitOptions={UNITS} onUnitChange={(v) => setState((s) => ({ ...s, unit: v as AmsState["unit"], purgePerSwap: "", legacyEstimate: false }))} min={0} step={0.01} hint="Enter a measured average or an average for your actual transitions. A single matrix cell may not represent the whole print." />
+            {state.unit === "mm3" && <InputWithUnit id="ams-density" label="Filament density" value={state.density} onValueChange={(v) => setAmount("density", v)} unit="g/cm³" min={0.01} step={0.01} hint="1.24 is a Bambu PLA Basic example. Replace it with your material datasheet value; mixed materials need a suitable weighted average." />}
+            <InputWithUnit id="ams-multiplier" label="Multiplier for an unadjusted baseline" value={state.multiplier} onValueChange={(v) => setAmount("multiplier", v)} unit="×" min={0} step={0.05} hint="Keep at 1 if the value already includes your slicer multiplier. Lower settings need a test print for color bleed and material compatibility." />
+          </>}
+          <details className="rounded-lg border p-4">
+            <summary className="cursor-pointer text-sm font-medium">Supports, tower and other discarded material</summary>
+            <div className="mt-4 space-y-4">
+              <InputWithUnit id="ams-support" label="Discarded supports" value={state.supportGrams} onValueChange={(v) => setAmount("supportGrams", v)} unit="g" min={0} step={0.01} hint="Include flushing into these supports here, rather than in the flushing field." />
+              <InputWithUnit id="ams-tower" label="Discarded prime / wipe tower" value={state.towerGrams} onValueChange={(v) => setAmount("towerGrams", v)} unit="g" min={0} step={0.01} hint="If the tower total includes purging, count that material only here." />
+              <InputWithUnit id="ams-extra" label="Other discarded material" value={state.extraGrams} onValueChange={(v) => setAmount("extraGrams", v)} unit="g" min={0} step={0.01} hint="Startup purges, calibration lines, brims or other waste only if not included above. Zero means excluded." />
             </div>
-            <Slider
-              value={[state.purgePerSwap]}
-              min={2}
-              max={30}
-              step={1}
-              onValueChange={(vals) => {
-                const next = Array.isArray(vals) ? vals[0] : vals;
-                setState((s) => ({
-                  ...s,
-                  purgePerSwap: next,
-                  profileId: "custom",
-                }));
-              }}
-            />
-            <p className="text-xs text-muted-foreground">
-              Bambu&apos;s default flush is 8g per swap. Tuned profiles can drop
-              to 4-6g. Default-setting prints can hit 12-15g.
-            </p>
-          </div>
-
-          <InputWithUnit
-            id="actual-grams"
-            label="Actual print weight (excluding purge)"
-            value={state.actualPrintGrams}
-            onValueChange={(v) =>
-              setState((s) => ({ ...s, actualPrintGrams: v }))
-            }
-            unit="g"
-            min={0}
-            step={1}
-            placeholder="80"
-            hint="The weight of the model itself, not including flushed material. Bambu Studio separates this in the preview."
-          />
-
-          <InputWithUnit
-            id="price"
-            label="Avg filament price per kg"
-            value={state.pricePerKg}
-            onValueChange={(v) =>
-              setState((s) => ({ ...s, pricePerKg: v }))
-            }
-            min={0}
-            step={0.5}
-            placeholder="20"
-            hint="For multi-color prints, use an average across the colors you&apos;re using."
-          />
-
+          </details>
+          <InputWithUnit id="ams-price" label="Filament price per kg" value={state.pricePerKg} onValueChange={(v) => setAmount("pricePerKg", v)} min={0} step={0.01} hint="For multiple prices use the average weighted by consumed grams. A simple average is only approximate." />
           <div className="space-y-2">
-            <Label htmlFor="currency">Currency</Label>
-            <Select
-              value={state.currency}
-              items={CURRENCY_ITEMS}
-              onValueChange={(v) => {
-                if (v !== null)
-                  setState((s) => ({ ...s, currency: v as CurrencyCode }));
-              }}
-            >
-              <SelectTrigger id="currency" className="w-full">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {CURRENCIES.map((c) => (
-                  <SelectItem key={c.code} value={c.code}>
-                    {c.symbol} {c.code}, {c.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
+            <Label htmlFor="ams-currency">Currency</Label>
+            <Select value={state.currency} items={CURRENCY_ITEMS} onValueChange={(v) => { if (v) setState((s) => ({ ...s, currency: v as CurrencyCode })); }}>
+              <SelectTrigger id="ams-currency" className="w-full"><SelectValue /></SelectTrigger>
+              <SelectContent>{CURRENCIES.map((c) => <SelectItem key={c.code} value={c.code}>{c.symbol} {c.code}, {c.label}</SelectItem>)}</SelectContent>
             </Select>
-            <p className="text-xs text-muted-foreground">
-              Sets the symbol. Your numbers stay in the currency you type,
-              nothing is converted.
-            </p>
+            <p className="text-xs text-muted-foreground">Labels your amounts. No exchange-rate conversion.</p>
           </div>
+          {error && <p role="alert" className="text-sm text-destructive">Use finite, non-negative amounts, whole swap counts and a positive density. Check any values hidden under discarded material.</p>}
+          <CalculatorSettings {...settings} />
         </CardContent>
       </Card>
-
-      <div className="space-y-4">
-        <ResultDisplay
-          prominent
-          label="Purge waste for this print"
-          value={
-            hasInput
-              ? formatCurrency(result.totalPurgeCost, state.currency)
-              : "-"
-          }
-          sublabel={
-            hasInput
-              ? `${result.totalPurgeGrams.toFixed(0)} g wasted (${result.purgeWastePercent.toFixed(1)}% of all filament)`
-              : "Enter swaps, print weight, and price to calculate."
-          }
-          copyValue={
-            hasInput
-              ? formatCurrency(result.totalPurgeCost, state.currency)
-              : undefined
-          }
-        />
-
-        {hasInput && (
-          <>
-            <Card className="glass-card gap-2 p-5">
-              <div className="text-xs uppercase tracking-wide text-muted-foreground">
-                Verdict
-              </div>
-              <div className={cn("text-lg font-medium", verdict.color)}>
-                {verdict.label}
-              </div>
-              <div className="text-xs text-muted-foreground">
-                {verdict.advice}
-              </div>
-            </Card>
-
-            <div className="grid grid-cols-2 gap-3">
-              <ResultDisplay
-                label="Total filament used"
-                value={result.totalFilamentGrams.toFixed(0)}
-                unit="g"
-                sublabel={formatCurrency(
-                  result.totalFilamentCost,
-                  state.currency,
-                )}
-              />
-              <ResultDisplay
-                label="Cost per color swap"
-                value={formatCurrency(result.costPerSwap, state.currency, {
-                  minimumFractionDigits: 3,
-                  maximumFractionDigits: 3,
-                })}
-              />
-            </div>
-
-            <FormulaBreakdown
-              formula="purge_grams = swaps × grams_per_swap
-waste_percent = purge_grams / (purge + print) × 100"
-              steps={[
-                { label: "color swaps", value: `${swaps}` },
-                {
-                  label: "× purge per swap",
-                  value: `${state.purgePerSwap} g`,
-                },
-                {
-                  label: "= total purge",
-                  value: `${result.totalPurgeGrams.toFixed(0)} g`,
-                },
-                {
-                  label: "purge cost",
-                  value: formatCurrency(
-                    result.totalPurgeCost,
-                    state.currency,
-                  ),
-                },
-                {
-                  label: "waste fraction",
-                  value: `${result.purgeWastePercent.toFixed(1)}%`,
-                },
-              ]}
-              note="Purge waste is not captured in most filament cost calculators. For multi-color prints it can dominate the total cost. Bambu Studio's 'flush data' panel shows the exact per-swap purge being used by your current settings."
-            />
-          </>
-        )}
-
+      <div id="calculator-results" tabIndex={-1} className="scroll-mt-40 space-y-4 lg:sticky lg:top-24 lg:self-start">
+        <ResultDisplay prominent label={estimate ? "Estimated total material cost" : "Total material cost from your amounts"} value={resultText} sublabel={hasResult ? `${result.totalFilamentGrams.toFixed(2)} g consumed` : "Enter model, flushing and price. Zero is valid."} copyValue={hasResult ? money(result.totalFilamentCost) : undefined} />
+        {hasResult && <>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <ResultDisplay label="Discarded material" value={`${result.discardedGrams.toFixed(2)} g`} sublabel={`${money(result.discardedCost)} · ${result.discardedPercent.toFixed(1)}% of total`} />
+            <ResultDisplay label="Useful models" value={`${Number(state.modelGrams).toFixed(2)} g`} sublabel="Material retained in your models" />
+          </div>
+          <FormulaBreakdown formula={estimate ? "flush_g = swaps × average × multiplier\nif average is mm³: average_g = mm³ × density / 1000\nconsumed = model + flush + support + tower + other" : "discarded = flush + support + tower + other\nconsumed = model + discarded\ncost = consumed_g / 1000 × price_per_kg"} steps={[
+            { label: "Useful model material", value: `${Number(state.modelGrams).toFixed(2)} g` },
+            { label: estimate ? "Estimated discarded flush" : "Discarded flush", value: `${flushingGrams.toFixed(2)} g` },
+            { label: "Support + tower + other", value: `${(Number(state.supportGrams) + Number(state.towerGrams) + Number(state.extraGrams)).toFixed(2)} g` },
+            { label: "Total material", value: `${result.totalFilamentGrams.toFixed(2)} g` },
+          ]} note="Each gram belongs in one category. Slicer figures are estimates; actual consumption may differ. Total cost uses the supplied average price." />
+          <Link href={`/tools/print-pricing-calculator?m=${result.totalFilamentCost}&c=${state.currency}`} className="block rounded-lg border p-3 text-center text-sm font-medium text-primary">Use this material cost in print pricing →</Link>
+        </>}
         <ShareButton className="w-full" />
       </div>
     </div>

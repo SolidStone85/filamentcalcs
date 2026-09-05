@@ -11,7 +11,7 @@ import { Calculator } from "./Calculator";
 
 const TITLE = "3D Print Pricing Calculator: what to charge for a print";
 const DESCRIPTION =
-  "Free 3D print pricing calculator. Material, electricity, printer wear, failure rate, and your time, turned into an honest price for Etsy, commissions, or friends.";
+  "Estimate production cost, break-even and a selling price from material, electricity, machine wear, failures, labor and your chosen markup. Free, no sign-up.";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -30,23 +30,23 @@ export const metadata: Metadata = {
 const FAQ: { q: string; a: string }[] = [
   {
     q: "What markup should I use?",
-    a: "2x is friends-and-family territory, basically covering your risk. 3x is the common floor for Etsy hobbyists and casual commissions. 4x to 5x is where you need to be if this is a business with fees, returns, marketing, and taxes. Underpricing is the most common mistake by far; almost nobody regrets charging more.",
+    a: "Choose a multiplier for your costs and the particular product, then compare the resulting price with what buyers will pay. There is no universal 3x minimum. This calculator multiplies failure-adjusted production cost and adds labor afterward. A 3x multiplier is 200% markup on that production cost, not a 300% profit margin.",
   },
   {
-    q: "Why divide by the failure rate instead of just adding a percent?",
-    a: "Because a failed print costs a whole print, not a percent of one. If 1 in 10 prints dies, every 9 good prints have to carry the cost of the dead one. Dividing production cost by 0.9 spreads that loss correctly. Adding 10% undercounts it, and the gap grows fast at higher failure rates.",
+    q: "Why divide by one minus the failure rate?",
+    a: "The model assumes each failed attempt consumes a full print's material, electricity and machine cost. If 10% of attempts fail, divide production cost by 0.9 to spread those losses across successes. Early failures can cost less, so use your observed losses to refine the estimate. Labor is added separately and is not automatically increased by this adjustment.",
   },
   {
     q: "Should I really charge for my time at hobbyist scale?",
-    a: "Put a number on it even if you end up discounting it. Support removal, sanding, glue-ups, and packing are real work. If you price them at zero, every commission quietly becomes a favor, and favors burn people out. Even $10 to $15 an hour changes the price enough to matter.",
+    a: "Recording preparation, finishing, packing and required supervision makes the estimate more useful, even if you choose to discount a job. Enter your own hourly rate. Machine runtime and hands-on labor are separate inputs; include design or repeated failure-cleanup work in your labor total when relevant.",
   },
   {
     q: "What lifetime should I assume for my printer?",
-    a: "5,000 print hours is a fair default for a modern machine that gets basic maintenance. Budget bedslingers may live shorter, well-maintained CoreXY machines longer. The good news: the number barely moves the result. A $350 printer over 5,000 hours is 7 cents per print hour, so being off by 1,000 hours changes a 6 hour print by about a penny.",
+    a: "Use an assumption that fits your replacement plans and test how changing it affects the price. The 5,000-hour default is an editable example, not a measured lifespan. For a $350 printer and six-hour job, changing 5,000 hours to 4,000 raises machine cost from $0.42 to $0.525: a $0.105 difference, about 11 cents, before failure adjustment and markup.",
   },
   {
     q: "Does this include marketplace fees, shipping, and packaging?",
-    a: "No. Etsy takes roughly 6.5% plus payment processing around 3%, and boxes, tape, and filler are real money. Those depend on the platform and the parcel, so they are not baked in. Treat the suggested price as your workshop-door price and add fees and shipping on top for online sales.",
+    a: "No. Check your actual platform and payment-processing charges, shipping, packaging, taxes where applicable, and other business costs. Some fees depend on the final selling price or shipping amount, so verify the final take-home amount after adding them. A markup does not guarantee that every omitted cost is covered.",
   },
 ];
 
@@ -90,11 +90,8 @@ export default function PrintPricingCalculatorPage() {
           <Highlight3D>3D Print Pricing Calculator</Highlight3D>
         </h1>
         <p className="mt-2 text-muted-foreground">
-          Work out what a print should sell for, not just what it costs.
-          Material, electricity, printer wear, your real failure rate, and
-          your hands-on time go in. An honest price comes out, with the
-          break-even floor shown right next to it so you know how much room
-          you actually have.
+          Estimate production cost, break-even and a selling price using
+          your own costs, labor and chosen markup.
         </p>
       </header>
 
@@ -114,26 +111,26 @@ export default function PrintPricingCalculatorPage() {
           How the math works
         </h2>
         <p className="text-sm leading-6 text-muted-foreground">
-          Production cost is the part most people already track: filament,
-          power, and a slice of the printer itself. Machine wear is just the
-          printer's price spread over its useful hours. A $350 printer that
-          lives 5,000 print hours costs 7 cents per hour to own, so a 6 hour
-          job carries 42 cents of wear. Small, but skip it on a hundred prints
-          and you gave away a nozzle, a build plate, and half a set of belts.
+          Production cost combines material, electricity and a share of the
+          printer&apos;s purchase price. For example, $350 spread over 5,000
+          useful hours is $0.07/hour, so a six-hour job carries $0.42 of machine
+          cost. Price and lifetime are illustrative inputs, not current product
+          prices or manufacturer lifespan claims. Replacement parts and repairs
+          may require a separate allowance.
         </p>
         <p className="text-sm leading-6 text-muted-foreground">
-          Then failures. If 8% of your prints die, dividing by 0.92 makes
-          every good print carry its share of the wreckage. That is the part
-          almost every seller forgets, and it is why a shop with a messy
-          printer quietly loses money at prices that look profitable on paper.
+          The failure adjustment divides production cost by the success rate.
+          At an assumed 8% failure rate, that means division by 0.92. This model
+          treats each failure as a full-production-cost attempt; it can overstate
+          losses when failures occur early. Use a tracked failure rate and check
+          the result against actual material and machine time lost.
         </p>
         <p className="text-sm leading-6 text-muted-foreground">
-          Markup multiplies the production cost, and your labor gets added
-          after it, at full value. The logic: markup exists to cover profit
-          and invisible overhead, but your hour of sanding is not something to
-          multiply, it is something to pay for. If a price feels too high for
-          the market, the honest lever is reducing hands-on time per piece,
-          not silently working for free.
+          Your selected multiplier applies to failure-adjusted production cost;
+          labor is added afterward. That is this calculator&apos;s pricing model,
+          not a rule every business must use. Break-even covers only the costs
+          entered here. Selling fees, shipping, packaging and other omitted costs
+          still need to be checked before treating the difference as profit.
         </p>
       </section>
 
@@ -145,59 +142,61 @@ export default function PrintPricingCalculatorPage() {
           price = (production ÷ (1 - failure_rate)) × markup + labor
         </p>
         <p className="text-sm leading-6 text-muted-foreground">
-          Worked example. A print uses $2.50 of filament and about $0.20 of
+          Illustrative example. A print uses $2.50 of filament and $0.20 of
           electricity across 6 hours. Wear on a $350 printer over 5,000 hours
           adds $0.42, so production is $3.12. At an 8% failure rate that
           becomes 3.12 ÷ 0.92 = $3.39. Half an hour of prep and cleanup at
-          $15/h is $7.50. With a 3× markup: 3.39 × 3 + 7.50 = $17.67. Round
-          to $18 and you have a defensible price, with a break-even floor of
-          $10.89 if someone haggles.
+          $15/h is $7.50. With a chosen 3× multiplier, (3.12 ÷ 0.92) × 3 +
+          7.50 = $17.67, rounded. The entered-cost break-even is $10.89.
+          These results use unrounded intermediate values and exclude selling
+          fees and other costs described below; they are not market-price recommendations.
         </p>
       </section>
 
       <section className="mx-auto mt-10 max-w-3xl space-y-3">
         <h2 className="text-xl font-semibold tracking-tight">
-          What people get wrong when pricing prints
+          Check these before quoting
         </h2>
         <ol className="list-decimal pl-5 space-y-2 text-sm leading-6 text-muted-foreground">
           <li>
             <span className="font-medium text-foreground">
-              Competing with injection molding.
+              Compare the finished product.
             </span>{" "}
-            If a mass-produced version exists for $4, you will not win at $6.
-            Sell what printing is actually good at: custom sizes, personalized
-            text, niche parts nobody stocks, and repairs.
+            Consider fit, customization, finish and delivery as well as the
+            price of alternatives. Your calculated cost alone does not establish
+            demand or what someone will pay.
           </li>
           <li>
             <span className="font-medium text-foreground">
-              Pricing from the filament number alone.
+              Include the costs beyond plastic.
             </span>{" "}
-            "It only cost $2 of plastic" ignores the machine, the failures,
-            the electricity, and the hour you spent removing supports. That $2
-            print is closer to $11 at break-even in the worked example above.
+            The example&apos;s $2.50 of material becomes a $10.89 entered-cost
+            break-even after electricity, machine use, assumed failures and
+            labor. Use your own inputs instead of a fixed multiple of filament cost.
           </li>
           <li>
             <span className="font-medium text-foreground">
-              Forgetting batch effects.
+              Price the actual batch.
             </span>{" "}
-            Ten keychains on one plate share one setup, one warmup, and one
-            cleanup. Price the batch, then divide. Single tiny items priced
-            individually always look absurd, because they are.
+            Several parts may share preparation and warmup, while finishing
+            still takes time for each part. Enter the whole batch&apos;s material,
+            duration and labor, then divide by the number of acceptable parts.
           </li>
           <li>
             <span className="font-medium text-foreground">
-              Treating every hour as billable machine-sitting.
+              Separate machine time from labor.
             </span>{" "}
-            The printer works alone. Only count the time your hands are
-            actually on the job, or your prices will scare off everyone.
+            Use print duration for the machine-cost input and actual work or
+            required supervision for labor. Include design and cleanup work
+            where it belongs, without counting the same work twice.
           </li>
           <li>
             <span className="font-medium text-foreground">
-              Racing to the bottom on Etsy.
+              Check the final take-home amount.
             </span>{" "}
-            There is always someone selling at a loss. Let them. They churn
-            out and disappear; shops that price at 3× and up are the ones
-            still around a year later.
+            Calculate the fees and other costs of the actual sales channel.
+            Compare what remains with your complete costs and intended profit;
+            no particular multiplier guarantees a sustainable sale.
           </li>
         </ol>
       </section>
@@ -207,30 +206,34 @@ export default function PrintPricingCalculatorPage() {
           Where the inputs come from
         </h2>
         <p className="text-sm leading-6 text-muted-foreground">
-          Each input has a calculator behind it on this site. Material cost
-          comes from the{" "}
+          Start with your purchase records and sliced job. Calculate material
+          cost with the{" "}
           <a
             href="/tools/filament-cost-calculator"
             className="underline underline-offset-4"
           >
             Filament Cost Calculator
           </a>
-          , including purge waste for multi-color work. Electricity comes from
-          the{" "}
+          , using total consumed grams without adding waste twice. For a detailed
+          multi-color breakdown, use the{" "}
+          <a href="/tools/ams-purge-waste-calculator" className="underline underline-offset-4">
+            AMS Purge Waste Calculator
+          </a>
+          . Electricity comes from the{" "}
           <a
             href="/tools/electricity-cost-calculator"
             className="underline underline-offset-4"
           >
             Electricity Cost Calculator
           </a>
-          . Your failure rate is worth measuring honestly with the{" "}
+          . Record successful and failed attempts in the{" "}
           <a
             href="/tools/failure-rate-calculator"
             className="underline underline-offset-4"
           >
             Failure Rate Calculator
           </a>{" "}
-          instead of guessing; most people guess low.
+          and enter your own purchase price, useful-life assumption and labor time.
         </p>
       </section>
 
