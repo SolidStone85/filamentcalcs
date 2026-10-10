@@ -20,7 +20,7 @@ const TOOL_GROUPS = [
   {
     title: "Do I have enough filament?",
     description: "Plan your next print before loading the spool.",
-    slugs: ["remaining-spool-calculator", "enough-filament-calculator", "ams-purge-waste-calculator"],
+    slugs: ["remaining-spool-calculator", "enough-filament-calculator", "filament-length-converter", "ams-purge-waste-calculator"],
   },
   {
     title: "What should I plan for?",
@@ -57,7 +57,7 @@ export default function HomePage() {
           </h1>
           <p className="mt-4 max-w-2xl text-base leading-7 text-muted-foreground">
             Work out print costs, set a price and check your remaining filament.
-            Nine free calculators, ready when you are. No sign-up.
+            Ten free calculators, ready when you are. No sign-up.
           </p>
         </div>
         <Image

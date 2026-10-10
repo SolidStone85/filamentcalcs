@@ -155,7 +155,6 @@ export const AFFILIATE_PICKS: Record<string, string[]> = {
   "/guides/best-3d-printer-under-300": [
     "bambu-a1-mini",
     "bambu-a1",
-    "creality-ender-v3-ke",
     "elegoo-neptune-4-plus",
   ],
   "/guides/multi-color-printing-ams-worth-it": [
@@ -341,7 +340,15 @@ export const RELATED_CONTENT: { path: string; links: RelatedLink[] }[] = [
     links: [
       related("/tools/enough-filament-calculator", "Will it cover the next print?", "Check the spool against the slicer estimate."),
       related("/tools/filament-cost-calculator", "Filament cost calculator", "Use remaining grams in your cost math."),
-      related("/guides/how-to-dry-filament", "Dry and store filament", "Keep opened spools usable longer."),
+      related("/tools/filament-length-converter", "Grams to meters", "See how much length is left on the spool."),
+    ],
+  },
+  {
+    path: "/tools/filament-length-converter",
+    links: [
+      related("/tools/remaining-spool-calculator", "Weigh what's left first", "Scale weight minus the empty spool weight."),
+      related("/tools/filament-cost-calculator", "Filament cost calculator", "Price the grams with waste included."),
+      related("/tools/material-comparison", "Material comparison", "Heat and strength data for the same products."),
     ],
   },
   {

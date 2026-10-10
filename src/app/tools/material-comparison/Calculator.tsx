@@ -6,6 +6,7 @@ import { Check, X } from "lucide-react";
 import { ShareButton } from "@/components/shared/ShareButton";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getMaterialDatasheet } from "@/lib/presets/materialDatasheets";
 import {
   MATERIALS_FULL,
   type MaterialFull,
@@ -121,7 +122,9 @@ export function Calculator() {
           materials.length === 4 && "sm:grid-cols-2 lg:grid-cols-4",
         )}
       >
-        {materials.map((m) => (
+        {materials.map((m) => {
+          const sheet = getMaterialDatasheet(m.id);
+          return (
           <Card key={m.id} className="glass-card">
             <CardHeader>
               <div className="flex items-start justify-between gap-2">
@@ -131,6 +134,9 @@ export function Calculator() {
               <p className="text-sm text-muted-foreground">{m.tagline}</p>
             </CardHeader>
             <CardContent className="space-y-4 text-sm">
+              <div className="text-xs font-medium text-muted-foreground">
+                Typical for the family
+              </div>
               <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-2">
                 <dt className="text-muted-foreground">Nozzle</dt>
                 <dd className="text-right font-mono tabular-nums">
@@ -156,15 +162,11 @@ export function Calculator() {
 
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-muted-foreground">Strength</span>
-                  <StarRating value={m.strengthRating} />
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-xs text-muted-foreground">Flex</span>
+                  <span className="text-xs text-muted-foreground">Flexibility</span>
                   <StarRating value={m.flexRating} />
                 </div>
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-xs text-muted-foreground">Outdoor OK</span>
+                  <span className="text-xs text-muted-foreground">Outdoor (general)</span>
                   {m.outdoorOk ? (
                     <Check className="h-4 w-4 text-emerald-500" />
                   ) : (
@@ -176,6 +178,43 @@ export function Calculator() {
                   <span className="text-right text-xs">{m.foodSafe}</span>
                 </div>
               </div>
+
+              {sheet && (
+                <div className="space-y-2 border-t pt-3">
+                  <div className="text-xs font-medium text-muted-foreground">
+                    Datasheet example:{" "}
+                    <a
+                      href={sheet.source.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary underline underline-offset-4"
+                    >
+                      {sheet.product}
+                    </a>
+                  </div>
+                  <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-xs">
+                    <dt className="text-muted-foreground">Heat deflection</dt>
+                    <dd className="text-right font-mono tabular-nums">
+                      {sheet.hdtC045 === null
+                        ? "Not published"
+                        : `${sheet.hdtC045} °C / ${sheet.hdtC18} °C`}
+                    </dd>
+                    <dt className="text-muted-foreground">Tensile strength</dt>
+                    <dd className="text-right font-mono tabular-nums">
+                      {sheet.tensileMpa} MPa
+                    </dd>
+                    <dt className="text-muted-foreground">Impact (Charpy)</dt>
+                    <dd className="text-right font-mono tabular-nums">
+                      {sheet.impactKjM2} kJ/m²
+                    </dd>
+                  </dl>
+                  <p className="text-xs leading-5 text-muted-foreground">
+                    Heat deflection at 0.45 / 1.8 MPa. Tensile: {sheet.tensileTest}.
+                    Impact: {sheet.impactTest}. {sheet.specimens}.
+                    {sheet.note ? ` ${sheet.note}` : ""}
+                  </p>
+                </div>
+              )}
 
               <div className="space-y-2 border-t pt-3">
                 <div>
@@ -201,7 +240,8 @@ export function Calculator() {
               </div>
             </CardContent>
           </Card>
-        ))}
+          );
+        })}
       </div>
 
       <div className="flex justify-center">

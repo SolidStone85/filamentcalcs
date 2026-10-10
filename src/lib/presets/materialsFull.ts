@@ -1,6 +1,7 @@
 // Full material specs for the Material Comparison tool. Different from
 // materials.ts which is a shorter set of price/waste defaults for the
-// filament cost calculator. Values are community-consensus typicals.
+// filament cost calculator. Values are broad family tendencies, not
+// measurements; named-product test data lives in materialDatasheets.ts.
 
 export type MaterialFull = {
   id: string;
@@ -11,7 +12,6 @@ export type MaterialFull = {
   shrinkagePercent: number;
   typicalPriceUsdPerKg: number;
   difficulty: "Easy" | "Moderate" | "Hard";
-  strengthRating: 1 | 2 | 3 | 4 | 5;
   flexRating: 1 | 2 | 3 | 4 | 5;
   outdoorOk: boolean;
   foodSafe: "No" | "Check product certification" | "Depends on brand";
@@ -30,7 +30,6 @@ export const MATERIALS_FULL: MaterialFull[] = [
     shrinkagePercent: 0.3,
     typicalPriceUsdPerKg: 20,
     difficulty: "Easy",
-    strengthRating: 3,
     flexRating: 1,
     outdoorOk: false,
     foodSafe: "Depends on brand",
@@ -47,11 +46,10 @@ export const MATERIALS_FULL: MaterialFull[] = [
     shrinkagePercent: 0.5,
     typicalPriceUsdPerKg: 25,
     difficulty: "Moderate",
-    strengthRating: 4,
     flexRating: 2,
     outdoorOk: true,
     foodSafe: "Check product certification",
-    tagline: "Stronger than PLA, survives outdoors, stringier.",
+    tagline: "Tougher and more heat-tolerant than PLA, usable outdoors, stringier.",
     bestFor: ["Outdoor parts", "Functional parts"],
     avoidFor: ["Fine detail", "Beginners (stringing)", "Parts that slide or snap together"],
   },
@@ -64,12 +62,11 @@ export const MATERIALS_FULL: MaterialFull[] = [
     shrinkagePercent: 1.5,
     typicalPriceUsdPerKg: 22,
     difficulty: "Hard",
-    strengthRating: 4,
     flexRating: 3,
     outdoorOk: false,
     foodSafe: "No",
     tagline: "High heat resistance, needs enclosure. Protect from UV outdoors.",
-    bestFor: ["Automotive interior parts", "High-heat environments", "Post-processing (acetone smoothing)"],
+    bestFor: ["Parts that see moderate heat", "Post-processing (acetone smoothing)"],
     avoidFor: ["Open printers (warping)", "Small rooms (fumes)", "Beginners"],
   },
   {
@@ -81,7 +78,6 @@ export const MATERIALS_FULL: MaterialFull[] = [
     shrinkagePercent: 1.2,
     typicalPriceUsdPerKg: 28,
     difficulty: "Hard",
-    strengthRating: 4,
     flexRating: 3,
     outdoorOk: true,
     foodSafe: "No",
@@ -98,7 +94,6 @@ export const MATERIALS_FULL: MaterialFull[] = [
     shrinkagePercent: 0.8,
     typicalPriceUsdPerKg: 30,
     difficulty: "Moderate",
-    strengthRating: 4,
     flexRating: 5,
     outdoorOk: true,
     foodSafe: "No",
@@ -109,19 +104,18 @@ export const MATERIALS_FULL: MaterialFull[] = [
   {
     id: "pc",
     label: "Polycarbonate (PC)",
-    nozzleTempC: "260 to 310",
-    bedTempC: "100 to 130",
+    nozzleTempC: "260 to 285",
+    bedTempC: "90 to 120",
     densityGPerCm3: 1.2,
     shrinkagePercent: 0.7,
     typicalPriceUsdPerKg: 45,
     difficulty: "Hard",
-    strengthRating: 5,
     flexRating: 3,
     outdoorOk: true,
     foodSafe: "No",
     tagline: "Engineering material. High heat, impact, transparency options.",
     bestFor: ["Mechanical parts under load", "Transparent prints", "High-temp environments"],
-    avoidFor: ["Hobbyist printers", "Open enclosures", "Beginners"],
+    avoidFor: ["Printers that can't reach its temperatures", "Open enclosures", "Beginners"],
   },
   {
     id: "nylon",
@@ -132,7 +126,6 @@ export const MATERIALS_FULL: MaterialFull[] = [
     shrinkagePercent: 1.5,
     typicalPriceUsdPerKg: 45,
     difficulty: "Hard",
-    strengthRating: 5,
     flexRating: 4,
     outdoorOk: false,
     foodSafe: "No",

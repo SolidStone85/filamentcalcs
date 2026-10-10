@@ -82,6 +82,14 @@ export const TOOLS: Tool[] = [
       "Check whether what's left on the spool covers your next print, before you start it.",
     available: true,
   },
+  {
+    slug: "filament-length-converter",
+    title: "Filament Length to Weight Converter",
+    shortTitle: "Grams to Meters",
+    description:
+      "Convert filament grams to meters and back for 1.75 or 2.85 mm, with densities from product data sheets.",
+    available: true,
+  },
 ];
 
 export const SITE = {

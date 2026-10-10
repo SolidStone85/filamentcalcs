@@ -7,13 +7,39 @@ import { AffiliatePicks } from "@/components/shared/AffiliatePicks";
 import { RelatedContent } from "@/components/shared/RelatedContent";
 import { AuthorBio } from "@/components/shared/AuthorBio";
 import { AuthorByline } from "@/components/shared/AuthorByline";
+import { DryingSettingsTable } from "@/components/shared/DryingSettingsTable";
 import { Highlight3D } from "@/components/shared/Highlight3D";
 import { AUTHOR_JSONLD } from "@/lib/author";
+import { DRYER_LIMITS, DRYING_SETTINGS } from "@/lib/dryingSettings";
 import { getGuide } from "@/lib/guides";
+import type { Source } from "@/lib/reference";
 import { SITE } from "@/lib/tools";
 
 const SLUG = "how-to-dry-filament";
 const guide = getGuide(SLUG)!;
+
+const PRUSA_DRYING = "https://help.prusa3d.com/article/drying-filament_332086";
+const BAMBU_DRYING = "https://wiki.bambulab.com/en/filament-acc/filament/dry-filament";
+// Sources cited in the prose and FAQ that are not table rows.
+const EXTRA_SOURCES: Source[] = [
+  {
+    label: "Bambu Lab Wiki: Bambu reusable spool (no 3D-printed spools for drying)",
+    url: "https://wiki.bambulab.com/en/knowledge-sharing/bambu-reusable-spool",
+    checked: "2026-10-10",
+  },
+  {
+    label: "Polymaker Wiki: Panchroma PLA (dry only if absorbed moisture)",
+    url: "https://wiki.polymaker.com/polymaker-products/polymaker-filaments/panchroma-tm/panchroma-tm-pla",
+    checked: "2026-10-10",
+  },
+  {
+    label: "Polymaker Wiki: airflow matters more than heat when drying",
+    url: "https://wiki.polymaker.com/the-basics/fun-3d-printing-facts/airflow-is-more-important-than-heat-when-drying",
+    checked: "2026-10-10",
+  },
+];
+const BAMBU_PLA_TDS =
+  "https://store.bblcdn.com/s7/default/b189de92249a4b9ebed28b8ea1f080f0/Bambu_PLA_Basic_Technical_Data_Sheet.pdf";
 
 export const metadata: Metadata = {
   title: guide.title,
@@ -25,31 +51,40 @@ export const metadata: Metadata = {
     url: `${SITE.url}/guides/${SLUG}`,
     type: "article",
     publishedTime: guide.publishedAt,
+    modifiedTime: guide.updatedAt,
   },
 };
 
 const FAQ: { q: string; a: string }[] = [
   {
     q: "How do I know if my filament is wet?",
-    a: "Three signs: popping or crackling sounds at the nozzle during printing, surface stringing and 'fuzz' on otherwise smooth walls, and prints that snap easily under light pressure. PETG and TPU show problems first because they absorb moisture fastest. PLA can sit open for a few weeks before symptoms show.",
+    a: "Popping or hissing at the nozzle, more stringing than usual, rough or fuzzy surfaces, and weaker layers. Moisture comes back quickly: Bambu Lab says freshly dried filament left in a typical room at around 55% relative humidity can absorb enough moisture to affect print quality within 2 to 12 hours, depending on the material.",
   },
   {
     q: "Does PLA actually need drying?",
-    a: "Most of the time, no. PLA absorbs less water than PETG, ABS, or nylon, and most spools last a month or two open without issues. Dry it if prints suddenly look fuzzy after a humid week, or if your spool sat opened in a garage all summer. Otherwise don't waste the energy.",
+    a: "Not always. Polymaker lists its Panchroma PLA drying setting as for use only if the filament has absorbed moisture. Dry PLA when you see the symptoms above. When you do, it needs the lowest temperatures in the table, 45 to 55 °C depending on the maker and the equipment.",
   },
   {
     q: "Can I leave filament in a dryer overnight?",
-    a: "For dedicated filament dryers like the Sunlu S2, yes, that's what they're built for. For ovens, only if you're confident in the thermostat (some home ovens overshoot by 10-20°C, which would melt PLA). For food dehydrators, generally yes, but check after the first hour to make sure the temperature is stable.",
+    a: "Stay within the filament maker's time. Prusa says to stick to its recommended times to prevent overdrying, Bambu Lab warns that PC can become brittle after repeated heating and cooling cycles, and Creality says not to go above the filament maker's recommended temperature just to shorten drying time. The longest maker times in our table are 12 hours, in a temperature-controlled dryer. Do not leave a kitchen oven running unattended.",
   },
   {
     q: "How long does dry filament stay dry?",
-    a: "In open air at typical humidity (40-60% RH), maybe 2-4 weeks before reabsorbing enough water to print poorly. In a sealed dry box with active silica gel, several months. In vacuum-sealed bags with desiccant, almost indefinitely.",
+    a: "Shorter than most people expect. Bambu Lab says that even in a 20% relative humidity environment, filaments generally stay dry for 2 to 7 days depending on the material, and every Bambu data sheet we checked gives under 20% RH, sealed with desiccant, for printing and storage. Keep spools you are not using sealed with fresh desiccant.",
   },
   {
     q: "What about the microwave method?",
-    a: "Don't. Microwaves heat unevenly, can melt small spots in the filament, and can damage the spool's plastic core. The 'a few seconds in the microwave' tips you see on Reddit are bad advice. Stick to ovens or dehydrators.",
+    a: "Don't. Bambu Lab says not to use a microwave or a kitchen oven to dry filament, because microwave heating is uneven and its temperature cannot be controlled.",
   },
 ];
+
+function SourceLink({ source, children }: { source: Source; children: React.ReactNode }) {
+  return (
+    <a href={source.url} className="underline" rel="noopener noreferrer" target="_blank">
+      {children}
+    </a>
+  );
+}
 
 export default function GuidePage() {
   const jsonLd = {
@@ -60,6 +95,7 @@ export default function GuidePage() {
         headline: guide.title,
         description: guide.description,
         datePublished: guide.publishedAt,
+        dateModified: guide.updatedAt,
         author: AUTHOR_JSONLD,
         publisher: { "@type": "Organization", name: SITE.name },
         mainEntityOfPage: { "@type": "WebPage", "@id": `${SITE.url}/guides/${SLUG}` },
@@ -75,6 +111,12 @@ export default function GuidePage() {
     ],
   };
 
+  const sources = [
+    ...DRYING_SETTINGS.map((row) => row.source),
+    ...DRYER_LIMITS.map((row) => row.source),
+    ...EXTRA_SOURCES,
+  ].filter((source, i, all) => all.findIndex((s) => s.url === source.url) === i);
+
   return (
     <article className="mx-auto max-w-3xl px-4 py-10 lg:py-14">
       <script
@@ -89,7 +131,7 @@ export default function GuidePage() {
         <h1 className="text-3xl font-semibold tracking-tight lg:text-4xl">
           <Highlight3D>{guide.title}</Highlight3D>
         </h1>
-        <AuthorByline updatedLabel="Updated May 2026" />
+        <AuthorByline updatedLabel="Settings rechecked October 10, 2026" />
       </header>
 
       <figure className="my-8">
@@ -121,215 +163,187 @@ export default function GuidePage() {
 
       <div className="prose prose-sm dark:prose-invert max-w-none space-y-5 text-sm leading-7">
         <p>
-          Wet filament is the cause of more failed prints than people
-          realize. The symptoms look like printer or slicer issues:
-          stringing that wasn&apos;t there last week, fuzzy walls, weak
-          layer adhesion, popping sounds at the nozzle. The actual problem
-          is the spool absorbed moisture from the air, and now the water
-          flashes to steam during extrusion.
+          Wet filament causes problems that look like printer or slicer
+          issues: stringing that wasn&apos;t there last week, fuzzy walls,
+          weak layer adhesion, popping sounds at the nozzle. The spool has
+          absorbed moisture from the air, and the water boils off as the
+          filament melts.
         </p>
 
         <p>
-          The fix is simple in concept, fiddly in practice: heat the
-          filament to a temperature that drives moisture out without
-          softening the polymer, hold it for several hours, then store it
-          in a sealed environment with desiccant. Different methods cost
-          different amounts and give different results.
-        </p>
-
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
-          Drying temperatures by material
-        </h2>
-        <p>
-          The numbers below are conservative. Higher temperatures dry
-          faster but risk softening the spool. Lower is always safer.
-        </p>
-        <div className="overflow-x-auto rounded-md border">
-          <table className="w-full text-xs leading-6">
-            <thead>
-              <tr className="border-b bg-muted/50">
-                <th className="px-3 py-2 text-left font-medium">Material</th>
-                <th className="px-3 py-2 text-left font-medium">Temp</th>
-                <th className="px-3 py-2 text-left font-medium">Time</th>
-                <th className="px-3 py-2 text-left font-medium">Notes</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="border-b">
-                <td className="px-3 py-2">PLA</td>
-                <td className="px-3 py-2">45°C</td>
-                <td className="px-3 py-2">4 hours</td>
-                <td className="px-3 py-2">Glass transition is 60°C, do not exceed 50°C</td>
-              </tr>
-              <tr className="border-b">
-                <td className="px-3 py-2">PETG</td>
-                <td className="px-3 py-2">65°C</td>
-                <td className="px-3 py-2">5 hours</td>
-                <td className="px-3 py-2">Most common candidate for drying</td>
-              </tr>
-              <tr className="border-b">
-                <td className="px-3 py-2">ABS / ASA</td>
-                <td className="px-3 py-2">80°C</td>
-                <td className="px-3 py-2">4-6 hours</td>
-                <td className="px-3 py-2">Watch for spool warping above 80°C</td>
-              </tr>
-              <tr className="border-b">
-                <td className="px-3 py-2">TPU</td>
-                <td className="px-3 py-2">50°C</td>
-                <td className="px-3 py-2">8 hours</td>
-                <td className="px-3 py-2">Slow to release moisture, needs longer time</td>
-              </tr>
-              <tr className="border-b">
-                <td className="px-3 py-2">Nylon (PA)</td>
-                <td className="px-3 py-2">80°C</td>
-                <td className="px-3 py-2">8-12 hours</td>
-                <td className="px-3 py-2">Most hygroscopic; often needs drying mid-print</td>
-              </tr>
-              <tr>
-                <td className="px-3 py-2">Polycarbonate</td>
-                <td className="px-3 py-2">85°C</td>
-                <td className="px-3 py-2">6-8 hours</td>
-                <td className="px-3 py-2">Very hygroscopic, dry before every print</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
-          Method 1: Kitchen oven (free, works for most filaments)
-        </h2>
-        <p>
-          The cheapest method if you already have an oven. Set to the
-          temperature for your material, leave the spool on a baking sheet
-          for the time listed above, then move to a sealed container.
-        </p>
-        <p>
-          Risks: many home ovens overshoot the set temperature by 10-20°C,
-          especially when first heating up. PLA at 60°C softens enough
-          that the spool can deform under its own weight. Use an oven
-          thermometer to verify, or use a different method for PLA. Gas
-          ovens are worse than electric here.
-        </p>
-        <p>
-          One trick: preheat the oven, turn it OFF, then put the spool in
-          and let it cool slowly. This avoids overshoot at the cost of
-          taking longer.
+          The fix: heat the filament to the temperature its maker
+          recommends, hold it for the stated time, then store it sealed with
+          desiccant. The right setting depends on the exact filament, the
+          equipment and the spool it is wound on, so this guide gives each
+          maker&apos;s own number instead of one setting per material.
         </p>
 
         <h2 className="text-xl font-semibold tracking-tight pt-4">
-          Method 2: Food dehydrator ($40-60, best cheap option)
+          Drying settings from the filament makers
         </h2>
         <p>
-          A food dehydrator like the Presto 06300 or Cosori CFD-N051
-          holds steady temperature in the 40-70°C range, perfect for most
-          filaments. Single-tray models can hold one spool at a time.
-          Stackable models can dry several spools simultaneously, which
-          matters if you go through filament fast.
+          Use the row for your filament. If your brand is not listed, use
+          its own data sheet. Makers disagree: Prusa dries its PETG at 55 °C
+          while Bambu Lab uses 65 °C for PETG Basic, and Bambu&apos;s own PLA
+          setting drops from 50 °C for 8 hours in a drying oven to 45 °C for
+          12 hours in an AMS. Neither number is wrong for its product and
+          equipment, so do not average them. Prusa warns that going above
+          its temperatures makes filament soften and stick together.
         </p>
-        <p>
-          Cost vs benefit: a dehydrator pays for itself if you print PETG,
-          ABS, or TPU regularly. For a PLA-only printer, an oven works
-          fine and a dehydrator is overkill. Dehydrators run very low
-          power (around 250W), so leaving one on for 6 hours costs about
-          25 cents at average US electricity rates.
+        <DryingSettingsTable />
+        <p className="text-xs text-muted-foreground">
+          Each product name links to the maker&apos;s page or data sheet,
+          checked October 10, 2026. &ldquo;Forced-air drying oven&rdquo; is
+          Bambu&apos;s term for a lab-style convection drying oven, not a
+          kitchen oven.
         </p>
 
         <h2 className="text-xl font-semibold tracking-tight pt-4">
-          Method 3: Dedicated filament dryer ($60-150)
+          Check the spool and the dryer before you heat
         </h2>
         <p>
-          The Sunlu S2 (single spool, $60), Sunlu S4 (four spools, $130),
-          and Eibos Polyphemus ($150) are purpose-built. They go up to
-          70°C reliably, hold humidity well, and most can feed filament
-          while drying so you can print straight from the dryer for
-          materials that re-absorb moisture quickly.
+          The filament setting is only half the limit. The spool has its own,
+          and so does the equipment:
         </p>
+        <ul className="list-disc pl-5 space-y-2 marker:text-primary">
+          <li>
+            <span className="font-medium">Bambu Lab spools.</span>{" "}Bambu&apos;s
+            data sheets list PLA and PETG on an ABS spool rated to 70 °C, and
+            ABS, ASA, PC, TPU and nylon on a PC + ABS spool rated to 90 °C
+            (see the{" "}
+            <a href={BAMBU_PLA_TDS} className="underline" rel="noopener noreferrer" target="_blank">
+              PLA Basic data sheet
+            </a>
+            ). Bambu also warns that some third-party spools may deform during
+            drying and says not to dry filament on a 3D-printed spool.
+          </li>
+          <li>
+            <span className="font-medium">Prusament spools.</span>{" "}Prusa says
+            its current black spool withstands up to 90 °C. The older black
+            spool with a cardboard center is safe only to 45 °C unless you add
+            a screw holding the sides together, and the older grey spool&apos;s
+            glue withstands up to 90 °C.{" "}
+            <a href={PRUSA_DRYING} className="underline" rel="noopener noreferrer" target="_blank">
+              Prusa&apos;s drying article
+            </a>{" "}
+            shows how to tell them apart.
+          </li>
+          <li>
+            <span className="font-medium">Other brands.</span>{" "}Polymaker&apos;s
+            pages give drying settings but no spool limit. For a cardboard or
+            unknown spool, check with the maker before going above the
+            filament&apos;s listed temperature.
+          </li>
+        </ul>
+        <p>Dryer maximums, from each maker:</p>
+        <ul className="list-disc pl-5 space-y-1 marker:text-primary">
+          {DRYER_LIMITS.map((row) => (
+            <li key={row.equipment}>
+              <SourceLink source={row.source}>{row.equipment}</SourceLink>: up
+              to {row.maxC} °C
+            </li>
+          ))}
+        </ul>
         <p>
-          Worth buying if: you print PETG, nylon, or TPU often, you live in
-          a humid climate, or you want a "set and forget" solution.
-        </p>
-        <p>
-          Skip if: you print PLA almost exclusively and your filament
-          doesn&apos;t sit open for long.
+          A 70 °C dryer cannot reach the nylon and PC settings in the table,
+          which run from 75 to 100 °C. If you print those materials often,
+          check the maximum before you buy.
         </p>
 
         <h2 className="text-xl font-semibold tracking-tight pt-4">
-          Method 4: Vacuum bag plus desiccant (preventive, not corrective)
+          Method 1: Kitchen oven (risky; Bambu says don&apos;t)
         </h2>
         <p>
-          This doesn&apos;t dry already-wet filament; it keeps dry
-          filament dry. Cheap food vacuum-seal bags plus 50-100 grams of
-          color-changing silica gel per bag will hold a spool at &lt;15%
-          relative humidity for months.
+          Bambu Lab says plainly not to use a kitchen oven: heat is uneven,
+          and the area near the heating element runs hotter than the
+          setting. Prusa allows a home oven with care, but warns that many
+          cannot be set low enough to dry filament without damaging it.
+          If you try it anyway, check the actual temperature with a separate
+          oven thermometer, keep the spool away from the element, stay
+          within the maker&apos;s setting, and do not leave it unattended.
+          PLA, with the lowest settings, is the riskiest.
+        </p>
+
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
+          Method 2: Food dehydrator
+        </h2>
+        <p>
+          A food dehydrator with a thermostat can hold a low, steady
+          temperature, which suits PLA, PETG and TPU settings. Check your
+          model&apos;s maximum temperature against the table and confirm the
+          real temperature with a thermometer. Some need a modified tray to
+          fit a spool.
         </p>
         <p>
-          The color-changing silica is important. It turns from blue or
-          orange to pink as it absorbs water, so you can see when to
-          recharge it. Recharge by baking the silica at 120°C for an hour.
+          Running cost is mostly electricity, and it is small. A 250 W
+          dehydrator running for 6 hours at full power uses 1.5 kWh, about
+          25 cents at $0.17/kWh; the heater cycles, so real use is usually
+          lower. Enter your own numbers in the{" "}
+          <Link href="/tools/electricity-cost-calculator" className="underline underline-offset-4">
+            electricity cost calculator
+          </Link>
+          .
+        </p>
+
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
+          Method 3: Dedicated filament dryer
+        </h2>
+        <p>
+          Purpose-built dryers hold temperature, circulate air and keep the
+          spool enclosed. Some let you feed filament to the printer while it
+          dries. Polymaker notes that airflow matters more than simply
+          raising the temperature. The main limit is the maximum temperature
+          listed above: several popular hobby dryers, including SUNLU&apos;s S2
+          and S4 and Creality&apos;s Space Pi Plus, stop at 70 °C.
         </p>
         <p>
-          Best workflow: dry a fresh spool once after opening, then store
-          in a vacuum bag with fresh desiccant whenever it&apos;s not on
-          the printer.
+          Worth buying if you print PETG, TPU or nylon often or live
+          somewhere humid. If you print PLA almost exclusively and keep
+          spools sealed, you may rarely need one.
+        </p>
+
+        <h2 className="text-xl font-semibold tracking-tight pt-4">
+          Method 4: Sealed bag or box with desiccant (prevention, not drying)
+        </h2>
+        <p>
+          Storage doesn&apos;t dry already-wet filament; it keeps dry
+          filament dry. Every Bambu data sheet we checked lists under 20%
+          relative humidity, sealed with desiccant, for printing and storage.
+          A cheap hygrometer in the box shows whether you are there.
+        </p>
+        <p>
+          Color-changing silica gel shows when it is saturated. Regenerate
+          it the way its maker specifies; temperatures and times differ
+          between products.
+        </p>
+        <p>
+          Best workflow: dry a spool when it shows symptoms or before a
+          moisture-sensitive print, then store it sealed with fresh
+          desiccant whenever it is not on the printer.
         </p>
 
         <h2 className="text-xl font-semibold tracking-tight pt-4">
           Method 5: Microwave (don&apos;t)
         </h2>
         <p>
-          You will see this advice on Reddit. It is bad advice. Microwaves
-          heat unevenly. Some spots on the filament melt while others
-          stay cool. The plastic spool itself can warp. Microwaves are
-          built to excite water molecules in food, not to evenly heat a
-          large plastic object.
+          Bambu Lab says not to use one: microwave heating is uneven and its
+          temperature cannot be controlled. Use any other method.
         </p>
-        <p>
-          Even when it appears to work, you&apos;ve introduced
-          microscopic deformations in the filament that cause stringing
-          and inconsistent extrusion later. Use any other method.
-        </p>
-
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
-          Cost summary
-        </h2>
-        <ul className="list-disc pl-5 space-y-1 marker:text-primary">
-          <li>
-            <span className="font-medium">Oven:</span> $0 upfront, ~$0.30
-            per drying session in electricity
-          </li>
-          <li>
-            <span className="font-medium">Food dehydrator:</span> $40-60
-            upfront, ~$0.25 per session
-          </li>
-          <li>
-            <span className="font-medium">Dedicated dryer:</span> $60-150
-            upfront, ~$0.20 per session, can dry while printing
-          </li>
-          <li>
-            <span className="font-medium">Vacuum bag plus desiccant:</span>{" "}
-            $30 upfront for bags and 1 kg silica, runs indefinitely
-          </li>
-          <li>
-            <span className="font-medium">Microwave:</span> avoid; ruins
-            filament regardless of cost
-          </li>
-        </ul>
 
         <h2 className="text-xl font-semibold tracking-tight pt-4">
           When wet filament becomes a real cost
         </h2>
         <p>
-          Wet filament can push your effective failure rate from 5% to
-          15% or higher. On a heavy-print month, that&apos;s real money in
-          wasted material. The{" "}
+          Wet filament can raise your failure rate, and failed prints waste
+          material. The{" "}
           <Link
             href="/tools/failure-rate-calculator"
             className="underline underline-offset-4"
           >
             Failure Rate Calculator
           </Link>{" "}
-          can help you spot this trend over time. If your monthly failure
-          rate spikes after a humid week, drying is usually the answer.
+          can help you spot the trend. If failures spike after a humid week,
+          drying is a good first check.
         </p>
 
         <h2 className="text-xl font-semibold tracking-tight pt-4">
@@ -351,52 +365,27 @@ export default function GuidePage() {
         </h2>
         <ul className="list-disc pl-5 space-y-1 text-xs leading-6 marker:text-primary">
           <li>
-            Prusa Research,{" "}
-            <a
-              href="https://help.prusa3d.com/article/how-to-dry-filament_124458"
-              className="underline"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              how to dry filament knowledge-base article
+            <a href={BAMBU_DRYING} className="underline" rel="noopener noreferrer" target="_blank">
+              Bambu Lab Wiki: filament drying
             </a>{" "}
-            (drying temperatures and times per material)
+            (methods, kitchen-oven and microwave warnings, storage times)
           </li>
-          <li>
-            Polymaker,{" "}
-            <a
-              href="https://us.polymaker.com/pages/material-properties"
-              className="underline"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              material properties and glass-transition data
-            </a>
-          </li>
-          <li>
-            Bambu Lab,{" "}
-            <a
-              href="https://wiki.bambulab.com/en/filament-acc/filament/h2d-filament-guide"
-              className="underline"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              filament storage and humidity guidance
-            </a>
-          </li>
-          <li>
-            Sunlu,{" "}
-            <a
-              href="https://www.sunlu.com/collections/filament-dryer"
-              className="underline"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              S2 and S4 filament dryer specifications
-            </a>{" "}
-            (rated temperatures and times referenced in the guide)
-          </li>
+          {sources
+            .filter((source) => source.url !== BAMBU_DRYING)
+            .map((source) => (
+              <li key={source.url}>
+                <SourceLink source={source}>{source.label}</SourceLink>
+              </li>
+            ))}
         </ul>
+        <p className="text-xs text-muted-foreground">
+          <span className="font-medium text-foreground">Correction note:</span>{" "}
+          October 10, 2026: replaced a single generic temperature table (for
+          example PETG at 65 °C for 5 hours, with no brand named) with each
+          maker&apos;s own settings, removed advice that lower temperatures
+          are always safer and that oven or overnight drying is generally
+          fine, and replaced a broken Polymaker link.
+        </p>
       </div>
 
       <AuthorBio />

@@ -6,9 +6,18 @@ import { AdSlot } from "@/components/shared/AdSlot";
 import { AffiliatePicks } from "@/components/shared/AffiliatePicks";
 import { RelatedContent } from "@/components/shared/RelatedContent";
 import { Highlight3D } from "@/components/shared/Highlight3D";
+import { EvidenceBadge } from "@/components/shared/EvidenceBadge";
+import { SPOOL_BRAND_PAGES } from "@/lib/spoolBrands";
 import { SITE } from "@/lib/tools";
 
 import { Calculator } from "./Calculator";
+
+// Calculator presets as shown on the brand pages, with their evidence.
+const PRESET_ROWS = SPOOL_BRAND_PAGES.flatMap((page) =>
+  page.weights
+    .filter((row) => row.presetId)
+    .map((row) => ({ page, row })),
+);
 
 const TITLE = "Remaining Filament Calculator: how much is left on your spool?";
 const DESCRIPTION =
@@ -146,11 +155,11 @@ export default function RemainingSpoolCalculatorPage() {
         </p>
         <p className="text-sm leading-6 text-muted-foreground">
           The trick is knowing the empty spool weight. Spool weights vary
-          surprisingly: a Bambu reusable spool with a refill core is around
-          233 g, a Polymaker cardboard spool is around 140 g, and most
-          generic plastic spools are 200-230 g. We&apos;ve included presets
-          for the common brands so you don&apos;t have to weigh an empty
-          spool every time.
+          surprisingly: a Bambu reusable spool with a refill core measured
+          245 to 260 g, Polymaker specs its 1 kg cardboard spool at 140 g,
+          and plastic spools from other brands commonly measure about 200 to
+          265 g. The presets below cover common brands, each with its
+          evidence, so you don&apos;t have to weigh an empty spool every time.
         </p>
       </section>
 
@@ -182,57 +191,28 @@ export default function RemainingSpoolCalculatorPage() {
             <thead>
               <tr className="border-b bg-muted/50">
                 <th className="px-3 py-2 text-left font-medium">Spool</th>
-                <th className="px-3 py-2 text-left font-medium">Empty weight</th>
-                <th className="px-3 py-2 text-left font-medium">Notes</th>
+                <th className="px-3 py-2 text-left font-medium">Empty weight (g)</th>
+                <th className="px-3 py-2 text-left font-medium">Evidence</th>
               </tr>
             </thead>
             <tbody>
-              <tr className="border-b">
-                <td className="px-3 py-2">Bambu reusable spool + refill core</td>
-                <td className="px-3 py-2">~233 g</td>
-                <td className="px-3 py-2">
-                  Reusable spool (~208 g) plus the refill&apos;s cardboard
-                  core (~25 g)
-                </td>
-              </tr>
-              <tr className="border-b">
-                <td className="px-3 py-2">Bambu cardboard spool</td>
-                <td className="px-3 py-2">~205 g</td>
-                <td className="px-3 py-2">
-                  Full cardboard spool when you don&apos;t buy refills
-                </td>
-              </tr>
-              <tr className="border-b">
-                <td className="px-3 py-2">Polymaker cardboard spool</td>
-                <td className="px-3 py-2">~140 g</td>
-                <td className="px-3 py-2">
-                  Current standard; older plastic spools are ~215 g
-                </td>
-              </tr>
-              <tr className="border-b">
-                <td className="px-3 py-2">eSun</td>
-                <td className="px-3 py-2">~200 g</td>
-                <td className="px-3 py-2">Standard plastic spool</td>
-              </tr>
-              <tr className="border-b">
-                <td className="px-3 py-2">Prusament</td>
-                <td className="px-3 py-2">~200 g</td>
-                <td className="px-3 py-2">
-                  Cardboard-core spool, community-measured 192-207 g
-                </td>
-              </tr>
-              <tr className="border-b">
-                <td className="px-3 py-2">Generic plastic spool</td>
-                <td className="px-3 py-2">200-250 g</td>
-                <td className="px-3 py-2">
-                  Most other brands fall in this range
-                </td>
-              </tr>
+              {PRESET_ROWS.map(({ page, row }) => (
+                <tr key={row.presetId} className="border-b align-top">
+                  <td className="px-3 py-2">
+                    <Link href={`/spools/${page.slug}`} className="text-primary underline underline-offset-4">
+                      {page.brand}
+                    </Link>
+                    <div className="text-muted-foreground">{row.variant}</div>
+                  </td>
+                  <td className="px-3 py-2 font-mono tabular-nums">{row.grams}</td>
+                  <td className="px-3 py-2"><EvidenceBadge evidence={row.evidence} /></td>
+                </tr>
+              ))}
               <tr>
-                <td className="px-3 py-2">Heavy "premium" spool</td>
-                <td className="px-3 py-2">260-280 g</td>
-                <td className="px-3 py-2">
-                  Some specialty filaments use heavier spools
+                <td className="px-3 py-2">Generic plastic spool</td>
+                <td className="px-3 py-2 font-mono tabular-nums">220</td>
+                <td className="px-3 py-2 text-muted-foreground">
+                  Starting point only, not a measurement
                 </td>
               </tr>
             </tbody>

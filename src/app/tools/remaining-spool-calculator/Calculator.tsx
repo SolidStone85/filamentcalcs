@@ -184,6 +184,7 @@ export function Calculator({ initialSpoolPresetId }: CalculatorProps = {}) {
   };
 
   const presetIsCustom = state.spoolPresetId === "custom";
+  const selectedPreset = getSpoolPreset(state.spoolPresetId);
 
   return (
     <div className="grid gap-6 lg:grid-cols-[1.2fr_1fr]">
@@ -259,7 +260,10 @@ export function Calculator({ initialSpoolPresetId }: CalculatorProps = {}) {
             hint={
               presetIsCustom
                 ? "Weigh an empty spool of the same type once. Save the number for next time."
-                : "Auto-set from spool type. Override if your spool weighs differently."
+                : state.emptySpoolWeight !== "" &&
+                    state.emptySpoolWeight !== selectedPreset.emptyWeightGrams
+                  ? `Differs from the current ${selectedPreset.label} preset (${selectedPreset.emptyWeightGrams} g), for example from an older shared link. Enter ${selectedPreset.emptyWeightGrams} to use the preset.`
+                  : "Auto-set from spool type. Override if your spool weighs differently."
             }
           />
 
@@ -335,6 +339,7 @@ export function Calculator({ initialSpoolPresetId }: CalculatorProps = {}) {
         {hasInput && (
           <>
             {!result.belowEmpty && !result.overFull && <Link href={`/tools/enough-filament-calculator?${new URLSearchParams({ r: String(result.remainingGrams) })}`} className="flex min-h-11 items-center justify-center rounded-lg bg-primary px-4 py-3 text-center text-sm font-medium text-primary-foreground hover:opacity-90">Check whether this will finish my print</Link>}
+            {!result.belowEmpty && <Link href={`/tools/filament-length-converter?${new URLSearchParams({ d: "g", a: String(result.remainingGrams) })}`} className="block text-center text-sm text-primary underline underline-offset-4">How many meters is that?</Link>}
             <Card className="glass-card gap-2 p-5">
               <div className="text-xs uppercase tracking-wide text-muted-foreground">
                 Status
@@ -398,7 +403,7 @@ export function Calculator({ initialSpoolPresetId }: CalculatorProps = {}) {
                   value: `${result.percentRemaining.toFixed(1)}%`,
                 },
               ]}
-              note="Empty spool weight varies by manufacturer (Bambu reusable spool with a refill core ~233 g, cardboard spools ~140-205 g, most plastic spools 200-230 g). Weigh one empty spool of each type you use, write it on the spool with a Sharpie, save yourself this question forever."
+              note="Empty spool weight varies by manufacturer and spool revision (Bambu reusable spool with a refill core measured 245-260 g, Polymaker's 1 kg cardboard spool is specified at 140 ± 7 g, plastic spools commonly measure about 200-265 g). Weigh one empty spool of each type you use, write it on the spool, and you never have to guess again."
             />
           </>
         )}

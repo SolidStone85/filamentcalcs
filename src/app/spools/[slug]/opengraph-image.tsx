@@ -20,7 +20,7 @@ export default async function Image({
     eyebrow: "Empty spool weight",
     title: page ? `${page.brand} empty spool weight` : "Empty spool weights",
     subtitle: page
-      ? "Community-measured tare weights plus a calculator for grams remaining."
+      ? "Sourced tare weights plus a calculator for grams remaining."
       : undefined,
   });
 }

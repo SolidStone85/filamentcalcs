@@ -7,6 +7,7 @@ export type Guide = {
   shortTitle: string;
   description: string;
   publishedAt: string; // ISO date
+  updatedAt?: string; // ISO date of the last substantive content change
   readMinutes: number;
   relatedToolSlugs: string[]; // calculator slugs linked from this article
 };
@@ -76,6 +77,7 @@ export const GUIDES: Guide[] = [
     description:
       "Compare the A1 mini, A1, Ender-3 V3 KE and Neptune 4 Plus by build size and budget, with dated US prices, manufacturer sources and clear tradeoffs.",
     publishedAt: "2026-04-29",
+    updatedAt: "2026-10-10",
     readMinutes: 6,
     relatedToolSlugs: [
       "filament-cost-calculator",
@@ -102,8 +104,9 @@ export const GUIDES: Guide[] = [
     title: "How to dry filament: 5 methods compared, with temperatures and times",
     shortTitle: "How to dry filament",
     description:
-      "Wet filament causes more print failures than people realize. Oven, dedicated dryer, food dehydrator, vacuum bag with desiccant, and the methods to skip. Real temps, real times, by material.",
+      "Wet filament causes more print failures than people realize. Drying settings from Prusa, Bambu Lab and Polymaker by named product, spool and dryer temperature limits, and which methods to skip.",
     publishedAt: "2026-05-03",
+    updatedAt: "2026-10-10",
     readMinutes: 9,
     relatedToolSlugs: [
       "failure-rate-calculator",

@@ -15,7 +15,7 @@ import { SITE } from "@/lib/tools";
 
 const SLUG = "best-3d-printer-under-300";
 const guide = getGuide(SLUG)!;
-const UPDATED_AT = "2026-09-05";
+const UPDATED_AT = "2026-10-10";
 
 export const metadata: Metadata = {
   title: guide.title,
@@ -73,15 +73,15 @@ const SPECS = [
   },
   {
     printer: "Creality Ender-3 V3 KE",
-    price: "$259",
+    price: "Not listed",
     volume: "220 × 220 × 240",
     multicolor: "Single filament as supplied",
-    budget: "Under $300 before extras",
-    source: "https://store.creality.com/products/ender-3-v3-ke-3d-printer",
+    budget: "Not on Creality's US store at this check",
+    source: "https://wiki.creality.com/en/ender-series/ender-3-v3-ke",
   },
   {
     printer: "Elegoo Neptune 4 Plus",
-    price: "$309",
+    price: "$309 sale ($425 list)",
     volume: "320 × 320 × 385",
     multicolor: "Single filament as supplied",
     budget: "Above $300 at this check",
@@ -120,7 +120,7 @@ export default function GuidePage() {
       <header className="space-y-3">
         <p className="text-xs uppercase tracking-wide text-muted-foreground">Guide · {guide.readMinutes} min read</p>
         <h1 className="text-3xl font-semibold tracking-tight lg:text-4xl"><Highlight3D>{guide.title}</Highlight3D></h1>
-        <AuthorByline updatedLabel="Reviewed September 5, 2026 (UTC)" />
+        <AuthorByline updatedLabel="Prices rechecked October 10, 2026 (UTC)" />
       </header>
 
       <figure className="my-8">
@@ -148,8 +148,8 @@ export default function GuidePage() {
         </p>
         <p>
           This is a specification and budget comparison using manufacturer sources, not a hands-on reliability test.
-          Prices shown are indicative US-store base-printer listings in USD, checked September 5, 2026 UTC (September 4 Pacific), before tax, shipping and accessories.
-          Select the US region and the base printer, not a Combo, when checking Bambu prices. Affiliate offers may differ from the manufacturer listings.
+          Prices shown are indicative US-store base-printer listings in USD, rechecked October 10, 2026 UTC on each manufacturer&apos;s US store, before tax, shipping and accessories.
+          Select the US region and the base printer, not a Combo, when checking Bambu prices: Bambu&apos;s store can redirect visitors outside the US to a regional store in local currency, and the A1 page can open on the $399 Combo rather than the $299 base printer. Affiliate offers may differ from the manufacturer listings.
         </p>
 
         <h2 className="text-xl font-semibold tracking-tight pt-4">Four options, with the budget boundary visible</h2>
@@ -198,7 +198,7 @@ export default function GuidePage() {
         <p>
           The A1 expands the build volume to 256 × 256 × 256 mm and lists a 100°C maximum bed temperature.
           At the verified $299 base price, it is worth comparing if your intended parts exceed the mini&apos;s usable space,
-          but it leaves only $1 of a $300 total for extras. The $399 A1 Combo was above this budget.
+          but it leaves only $1 of a $300 total for extras. The $399 A1 Combo is above this budget.
           Bambu&apos;s current listing includes AMS lite and other AMS compatibility options; some need an additional hub. Check the exact connection hardware before buying an add-on.
         </p>
         <p>
@@ -214,27 +214,27 @@ export default function GuidePage() {
           prompt="Clean infographic-style illustration showing four transparent cubes side by side, scaled to represent the build volumes of four 3D printers: 180×180×180mm, 256×256×256mm, 220×220×240mm, and 320×320×385mm. Each cube has its dimensions labeled in cyan-on-dark below it. Minimal flat design, dark background, cyan accents. No printers shown, just the volumes. 16:9 aspect ratio."
         />
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4">Ender-3 V3 KE: a verified sub-$300 listing</h2>
+        <h2 className="text-xl font-semibold tracking-tight pt-4">Ender-3 V3 KE: no longer on Creality&apos;s US store</h2>
         <p>
-          Creality&apos;s US store listed the base KE at $259 during this check. Its 220 × 220 × 240 mm build volume sits between the two Bambu sizes.
+          On September 5 Creality&apos;s US store listed the base KE at $259. By October 10 its US product page returned &ldquo;not found&rdquo; and the KE was missing from Creality&apos;s US Ender listings; we found no official discontinuation notice. If you find one from another seller, check the price, condition and warranty terms before treating it as a sub-$300 option. Its 220 × 220 × 240 mm build volume sits between the two Bambu sizes. Creality&apos;s US store did list the Ender-3 V3 SE at $179 on October 10 (sale; $199 list); we have not reviewed it for this comparison.
           The manufacturer specifies a Sprite direct-drive extruder, automatic leveling and USB or network printing.
           Its vibration-compensation sensor and camera are listed as optional accessories, so include them only if you need them.
         </p>
         <p>
-          The KE is a reasonable comparison for single-filament jobs that need more room than the mini.
+          If you find a KE elsewhere, it is a reasonable comparison for single-filament jobs that need more room than the mini.
           Review the <a href="https://wiki.creality.com/en/ender-series/ender-3-v3-ke" className="underline" rel="noreferrer">official setup and maintenance guide</a> before buying.
           Do not assume firmware changes or hardware modifications are warranty-neutral. This guide does not rank its long-term reliability against printers we have not tested side by side.
         </p>
 
         <h2 className="text-xl font-semibold tracking-tight pt-4">Neptune 4 Plus: larger, and above this budget</h2>
         <p>
-          Elegoo&apos;s US listing was $309 for the ribbon-cable version, with a 320 × 320 × 385 mm build volume.
+          Elegoo&apos;s US listing on October 10 was $309, shown as a sale price against $425 with no end date, for the Type-C version; the ribbon-cable version was sold out. The build volume is 320 × 320 × 385 mm.
           It includes Klipper firmware, a direct extruder and X/Y acceleration sensors.
           That size may justify a larger budget for a specific project, but $309 before extras does not qualify as an under-$300 pick.
         </p>
         <p>
           Measure the available workspace and the full motion clearance before choosing it.
-          Elegoo notes that this version needs compatible parts and local updates. Buy for a demonstrated size requirement;
+          Elegoo notes that the Type-C version takes over-the-air updates and asks buyers to check that replacement parts match that model. Buy for a demonstrated size requirement;
           a larger plate alone does not establish better or worse precision than the alternatives.
         </p>
 
@@ -249,8 +249,8 @@ export default function GuidePage() {
 
         <h2 className="text-xl font-semibold tracking-tight pt-4">Leave room for the first prints</h2>
         <p>
-          A hypothetical $259 printer plus a $20 spool is already $279 before tax and any shipping.
-          That leaves $21 from a $300 total. This is an example budget, not a quoted filament offer.
+          The $219 A1 mini plus a hypothetical $20 spool is already $239 before tax and any shipping.
+          That leaves $61 from a $300 total. The $299 A1 plus the same spool is $319, already over it. This is an example budget, not a quoted filament offer.
           Price only the extras your first jobs need; a dryer, spare plate and multicolor feeder do not all have to be bought on day one.
         </p>
         <p>

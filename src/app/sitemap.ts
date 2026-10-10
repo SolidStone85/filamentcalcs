@@ -24,13 +24,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })),
     ...GUIDES.map((guide) => ({
       url: `${SITE.url}/guides/${guide.slug}`,
-      lastModified: new Date(guide.publishedAt),
+      lastModified: new Date(guide.updatedAt ?? guide.publishedAt),
       changeFrequency: "monthly" as const,
       priority: 0.7,
     })),
     ...SPOOL_BRAND_PAGES.map((page) => ({
       url: `${SITE.url}/spools/${page.slug}`,
-      lastModified: now,
+      lastModified: new Date(page.checked),
       changeFrequency: "monthly" as const,
       priority: 0.7,
     })),

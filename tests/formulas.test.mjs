@@ -5,6 +5,7 @@ import { calculateElectricityCost, calculateAnnualElectricityCost } from "../src
 import { calculateEnoughFilament } from "../src/lib/formulas/enoughFilament.ts";
 import { calculateFailureRate } from "../src/lib/formulas/failureRate.ts";
 import { calculateFilamentCost } from "../src/lib/formulas/filamentCost.ts";
+import { calculateFilamentLength } from "../src/lib/formulas/filamentLength.ts";
 import { calculatePrintPricing } from "../src/lib/formulas/printPricing.ts";
 import { calculatePrintTime } from "../src/lib/formulas/printTime.ts";
 import { calculateRemainingSpool } from "../src/lib/formulas/remainingSpool.ts";
@@ -103,4 +104,35 @@ test("legacy AMS arithmetic is valid for an explicitly supplied average", () => 
   close(result.totalFilamentCost, 1.92);
   close(result.purgeWastePercent, 100 / 6);
   close(calculateAmsPurgeWaste({ colorSwaps: 0, purgePerSwapGrams: 0.4, actualPrintGrams: 80, pricePerKg: 0 }).totalPurgeCost, 0);
+});
+
+function near(actual, expected, tolerance) {
+  assert.ok(Math.abs(actual - expected) < tolerance, `${actual} should be within ${tolerance} of ${expected}`);
+}
+
+test("1.75 mm filament at 1.24 g/cm3 converts grams and meters both ways", () => {
+  const forward = calculateFilamentLength({ amount: 1000, direction: "g", diameterMm: 1.75, densityGPerCm3: 1.24, pricePerKg: 24 });
+  near(forward.gramsPerMeter, 2.98255, 1e-5);
+  near(forward.meters, 335.284, 1e-3);
+  near(forward.costPerMeter, 0.07158, 1e-5);
+  close(forward.cost, 24);
+  near(calculateFilamentLength({ amount: 250, direction: "g", diameterMm: 1.75, densityGPerCm3: 1.24, pricePerKg: 0 }).meters, 83.8209, 1e-4);
+  const reverse = calculateFilamentLength({ amount: 10, direction: "m", diameterMm: 1.75, densityGPerCm3: 1.24, pricePerKg: 0 });
+  near(reverse.grams, 29.8255, 1e-4);
+  close(reverse.meters, 10);
+});
+
+test("2.85 mm filament and a changed density scale grams per meter", () => {
+  near(calculateFilamentLength({ amount: 1, direction: "m", diameterMm: 2.85, densityGPerCm3: 1.24, pricePerKg: 0 }).grams, 7.91045, 1e-5);
+  near(calculateFilamentLength({ amount: 1, direction: "m", diameterMm: 1.75, densityGPerCm3: 1.05, pricePerKg: 0 }).grams, 2.52554, 1e-5);
+});
+
+test("converter rejects zero geometry and negative or invalid inputs", () => {
+  assert.equal(calculateFilamentLength({ amount: 0, direction: "g", diameterMm: 1.75, densityGPerCm3: 1.24, pricePerKg: 0 }).meters, 0);
+  assert.ok(Number.isNaN(calculateFilamentLength({ amount: 100, direction: "g", diameterMm: 0, densityGPerCm3: 1.24, pricePerKg: 0 }).meters));
+  assert.ok(Number.isNaN(calculateFilamentLength({ amount: -5, direction: "g", diameterMm: 1.75, densityGPerCm3: 1.24, pricePerKg: 0 }).meters));
+  assert.ok(Number.isNaN(calculateFilamentLength({ amount: 100, direction: "g", diameterMm: 1.75, densityGPerCm3: Number.NaN, pricePerKg: 0 }).meters));
+  const negativePrice = calculateFilamentLength({ amount: 100, direction: "g", diameterMm: 1.75, densityGPerCm3: 1.24, pricePerKg: -1 });
+  assert.ok(Number.isNaN(negativePrice.cost));
+  near(negativePrice.meters, 33.5284, 1e-4);
 });

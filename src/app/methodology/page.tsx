@@ -17,7 +17,7 @@ export default function MethodologyPage() {
       <header className="space-y-3">
         <p className="text-xs uppercase tracking-wide text-muted-foreground">Methodology</p>
         <h1 className="text-3xl font-semibold tracking-tight">How the calculators work</h1>
-        <p className="text-sm text-muted-foreground">Arithmetic and AMS assumptions reviewed September 2026</p>
+        <p className="text-sm text-muted-foreground">Arithmetic and AMS assumptions reviewed September 2026; reference data reviewed October 2026</p>
       </header>
       <div className="mt-8 max-w-none space-y-5 text-sm leading-7">
         <p>The calculations run from the numbers you enter. Correct arithmetic cannot make an uncertain weight, price, power draw or throughput exact. This page separates the formulas from the assumptions so you can replace them with your own measurements.</p>
@@ -58,6 +58,7 @@ export default function MethodologyPage() {
         <h2 className="pt-4 text-xl font-semibold tracking-tight">6. Remaining spool</h2>
         <p className="rounded-md bg-muted p-3 font-mono text-xs">remaining_g = max(0, loaded_spool_g − empty_spool_g)<br />remaining_percent = remaining_g / original_filament_g × 100</p>
         <p>Weigh the loaded spool and use a matching tare, including any refill core or parts still on the scale. Preset tares are estimates and can differ across spool revisions. A loaded weight below tare is flagged; more than the original filament amount is flagged rather than silently capped. Value remaining is remaining_g / 1000 × price_per_kg.</p>
+        <p>Each brand page labels every tare as a manufacturer figure, a community database entry or user measurements, says what is on the scale, and links the source. Brand presets use the manufacturer&apos;s nominal figure, the middle of the traced measurements, or, where only one exists, a single community database entry. October 2026 correction: the Bambu reusable-spool-plus-refill-core preset changed from 233 g to 253 g (measured cores are 37 to 38 g, not 25 g), and the Bambu cardboard, Polymaker plastic, eSun and Prusament presets were reset to traced figures. Untraceable rows were removed.</p>
 
         <h2 className="pt-4 text-xl font-semibold tracking-tight">7. Enough filament</h2>
         <p className="rounded-md bg-muted p-3 font-mono text-xs">needed_g = print_g × (1 + extra_waste_percent / 100) + separate_purge_g<br />spare_g = remaining_g − needed_g</p>
@@ -68,9 +69,14 @@ export default function MethodologyPage() {
         <p>The failure adjustment is an expectation model that assumes independent attempts with a constant failure probability and the same production cost for failed and successful attempts. It is not a guaranteed cost or a universal upper bound. At 10% failure probability, expected attempts per success are 1 / 0.9, approximately 1.111. A 100% failure probability has no finite successful-print estimate.</p>
         <p>Machine lifetime is an allocation assumption, not a prediction of when a printer will break. Labor is added once after production markup. Break-even equals adjusted production plus labor. Profit is suggested price minus break-even; margin is profit divided by suggested price. Thus a 2× production multiplier is not a 100% profit margin. Shipping, taxes, platform fees and other expenses are excluded unless you account for them separately.</p>
 
+        <h2 className="pt-4 text-xl font-semibold tracking-tight">9. Filament length and weight</h2>
+        <p className="rounded-md bg-muted p-3 font-mono text-xs">grams_per_meter = density_g_per_cm³ × π × (diameter_mm / 2)²<br />meters = grams / grams_per_meter<br />cost_per_meter = grams_per_meter / 1000 × price_per_kg</p>
+        <p>One meter of filament is a cylinder whose volume in cm³ equals its cross-section in mm². At 1.75 mm and 1.24 g/cm³ that is 2.983 g per meter, about 335 m per kilogram. Density presets come from named product data sheets; real diameter and density vary by product and batch, so expect a few percent of difference from a weighed spool.</p>
+
         <h2 className="pt-4 text-xl font-semibold tracking-tight">Material comparisons and verification</h2>
         <p>Generic material rows describe broad tendencies. Grades, moisture, print orientation and test methods can change strength and temperature performance substantially. Consult the exact product datasheet; a category comparison is not a test report for your finished part.</p>
-        <p>The September 2026 arithmetic review includes regression checks of the eight formula modules, unit conversion, duration rounding and selected boundary cases. These checks verify the calculations against stated inputs. They do not physically validate a printer preset or predict every print.</p>
+        <p>Measured heat and strength values appear only for a named product, copied from its technical data sheet with the test standard, load and specimen orientation. Values from different labs or test methods are labeled as not directly comparable. October 2026 correction: one-number &ldquo;heat resistance&rdquo; figures per material family and strength star ratings were removed because no product or test stood behind them. Drying settings in the drying guide now name the product, maker and equipment for each row.</p>
+        <p>The September 2026 arithmetic review includes regression checks of the formula modules, unit conversion, duration rounding and selected boundary cases. These checks verify the calculations against stated inputs. They do not physically validate a printer preset or predict every print.</p>
 
         <h2 className="pt-4 text-xl font-semibold tracking-tight">Saved inputs and corrections</h2>
         <p>Calculations happen in the browser. Input values are included in the page URL so links can restore them; URLs can be shared or sent with page requests. Optional remembered preferences are stored on this device. See the <Link href="/privacy" className="underline underline-offset-4">privacy notice</Link> for hosting, analytics and browser storage details.</p>

@@ -7,10 +7,8 @@
 //   value_remaining = (remaining_grams / 1000) × price_per_kg
 //
 // The empty spool weight is the trickiest input because it varies by
-// manufacturer. Bambu reusable spool + refill core: ~233g. Polymaker
-// cardboard spool: ~140g. Standard plastic spool (eSun, most others):
-// 200 to 250g. Some heavier "premium" spools hit 280g. See
-// lib/presets/spools.ts for the maintained per-brand figures.
+// manufacturer and spool revision. See lib/presets/spools.ts for the
+// maintained presets and lib/spoolBrands.ts for their sources.
 
 export type RemainingSpoolInput = {
   currentTotalWeightGrams: number;

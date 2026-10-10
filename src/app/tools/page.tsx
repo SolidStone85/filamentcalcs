@@ -2,10 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import {
   AlertTriangle,
+  CircleCheck,
   Coins,
   Disc3,
   Layers,
   Palette,
+  Ruler,
+  Tag,
   Timer,
   Zap,
   type LucideIcon,
@@ -16,7 +19,7 @@ import { SITE, TOOLS } from "@/lib/tools";
 
 const TITLE = "All 3D printing calculators on filamentcalcs.com";
 const DESCRIPTION =
-  "Seven free 3D printing calculators in one place: filament cost, print time, electricity, material comparison, failure rate, AMS purge waste, and remaining spool. No sign-up, runs in your browser.";
+  "Ten free 3D printing calculators in one place: filament cost, print pricing, print time, electricity, material comparison, failure rate, AMS purge waste, remaining spool, enough filament, and grams to meters. No sign-up, runs in your browser.";
 
 const TOOL_ICONS: Record<string, LucideIcon> = {
   "filament-cost-calculator": Coins,
@@ -26,6 +29,9 @@ const TOOL_ICONS: Record<string, LucideIcon> = {
   "failure-rate-calculator": AlertTriangle,
   "ams-purge-waste-calculator": Palette,
   "remaining-spool-calculator": Disc3,
+  "print-pricing-calculator": Tag,
+  "enough-filament-calculator": CircleCheck,
+  "filament-length-converter": Ruler,
 };
 
 export const metadata: Metadata = {
@@ -55,7 +61,7 @@ const TOOL_DETAILS: Record<string, { useCase: string; whenToUse: string }> = {
   },
   "material-comparison": {
     useCase:
-      "Side-by-side specs for PLA, PETG, ABS, ASA, TPU, Nylon, and PC. Temperature ranges, strength, flex, outdoor performance, and price-per-kg.",
+      "Side-by-side specs for PLA, PETG, ABS, ASA, TPU, Nylon, and PC: typical print temperatures, outdoor and food-contact notes, price per kg, and measured heat and strength values from a named product's data sheet.",
     whenToUse:
       "Use when picking material for a new project. Especially helpful for comparison between similar options like PLA vs PLA+, ABS vs ASA, or PETG vs PETG-CF.",
   },
@@ -73,7 +79,7 @@ const TOOL_DETAILS: Record<string, { useCase: string; whenToUse: string }> = {
   },
   "ams-purge-waste-calculator": {
     useCase:
-      "Multi-color print purge waste. Bambu AMS, Prusa MMU, Mosaic Palette presets. Shows how much filament gets dumped into the purge tower per print.",
+      "Multi-color print purge waste. Enter your slicer's material totals, or your own per-swap estimate, to separate useful model material from flush, supports and the purge tower.",
     whenToUse:
       "Use before any multi-color print to see if it's worth the material cost. For small parts with many color swaps, purge can exceed the part weight.",
   },
@@ -81,7 +87,25 @@ const TOOL_DETAILS: Record<string, { useCase: string; whenToUse: string }> = {
     useCase:
       "Filament left on a partial spool. Weigh the spool on any kitchen scale, pick your spool brand from the preset list, get the remaining grams and percent.",
     whenToUse:
-      "Use before starting a print to know if your spool will make it, or before reordering to confirm it's actually time. Empty-spool weight presets cover Bambu refillable cores, Polymaker, eSun, Prusament, and generic plastic spools.",
+      "Use before starting a print to know if your spool will make it, or before reordering to confirm it's actually time. Empty-spool weight presets cover Bambu refillable cores, Polymaker, eSun, Prusament, and generic plastic spools, each with its source.",
+  },
+  "print-pricing-calculator": {
+    useCase:
+      "What to charge for a print: material, electricity, printer wear and expected failures, plus your time, with markup and margin shown separately.",
+    whenToUse:
+      "Use before quoting a print for someone else. Start from the filament cost calculator's result; platform fees and shipping are not included.",
+  },
+  "enough-filament-calculator": {
+    useCase:
+      "Checks whether the filament left on a spool covers your next print, with a margin for slicer estimates and purge.",
+    whenToUse:
+      "Use right before starting a long print on a partly used spool. Get the remaining grams from the remaining filament calculator first.",
+  },
+  "filament-length-converter": {
+    useCase:
+      "Converts filament grams to meters and back for 1.75 mm or 2.85 mm, with densities from named product data sheets and optional cost per meter.",
+    whenToUse:
+      "Use when your slicer reports meters but your spool is sold by weight, or to see how much length is left on a weighed spool.",
   },
 };
 
@@ -110,7 +134,7 @@ export default function ToolsIndexPage() {
           All 3D printing calculators
         </h1>
         <p className="mt-3 text-muted-foreground">
-          Seven focused calculators for the things hobbyist 3D printer owners
+          Ten focused calculators for the things hobbyist 3D printer owners
           actually need to compute. Free, fast, mobile-friendly. Every
           calculator runs in your browser, results update as you type, and
           URLs encode your inputs so you can bookmark or share. No sign-up,
