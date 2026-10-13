@@ -9,8 +9,8 @@ import { Highlight3D } from "@/components/shared/Highlight3D";
 import { SITE } from "@/lib/tools";
 import { Calculator } from "./Calculator";
 
-const TITLE = "3D Print Time Estimator: ballpark hours from filament weight";
-const DESCRIPTION = "Estimate print hours from filament weight and an assumed average throughput. Editable starting values, explicit limits and a preference for your actual sliced file.";
+const TITLE = "3D Print Time Calculator: Estimate Hours from Grams";
+const DESCRIPTION = "Estimate 3D print time from filament grams and your average grams per hour. Free, no upload or account. Get a rough duration, then verify it in your slicer.";
 export const metadata: Metadata = {
   title: TITLE, description: DESCRIPTION,
   alternates: { canonical: `${SITE.url}/tools/print-time-estimator` },

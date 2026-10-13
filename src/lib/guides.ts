@@ -49,12 +49,13 @@ export const GUIDES: Guide[] = [
   },
   {
     slug: "3d-printer-electricity-usage",
-    title: "How much electricity does a 3D printer actually use?",
+    title: "3D Printer Electricity Cost: Watts, kWh and Examples",
     shortTitle: "3D printer electricity use",
     description:
-      "Real numbers on watts, kWh, and monthly electricity cost. Why most people massively overestimate this.",
+      "Work out 3D printer electricity cost per hour, print or month. See labeled watt/kWh examples, measure your Bambu or Prusa, and use the free calculator.",
     publishedAt: "2026-04-23",
-    readMinutes: 6,
+    updatedAt: "2026-10-13",
+    readMinutes: 5,
     relatedToolSlugs: [
       "electricity-cost-calculator",
       "filament-cost-calculator",
@@ -72,12 +73,12 @@ export const GUIDES: Guide[] = [
   },
   {
     slug: "best-3d-printer-under-300",
-    title: "3D printers under $300: a practical 2026 buying guide",
+    title: "3D Printers Under $300: A1 mini vs A1",
     shortTitle: "Printers on a $300 budget",
     description:
-      "Compare the A1 mini, A1, Ender-3 V3 KE and Neptune 4 Plus by build size and budget, with dated US prices, manufacturer sources and clear tradeoffs.",
+      "Compare A1 mini and A1 build sizes, dated US base prices and setup costs. See which alternatives exceed $300 and why multicolor costs extra.",
     publishedAt: "2026-04-29",
-    updatedAt: "2026-10-10",
+    updatedAt: "2026-10-13",
     readMinutes: 6,
     relatedToolSlugs: [
       "filament-cost-calculator",

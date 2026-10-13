@@ -49,6 +49,10 @@ assert(
 );
 
 const commerce = read("src", "lib", "commerce.ts");
+const affiliateRegistry = commerce.split("export const RELATED_CONTENT")[0];
+// The October 10 converter has no product picks; wait for search/usage evidence.
+// New tools still require an explicit decision instead of silently skipping checks.
+const nonAffiliateTools = new Set(["filament-length-converter"]);
 const affiliateComponent = read("src", "components", "shared", "AffiliatePicks.tsx");
 const relatedComponent = read("src", "components", "shared", "RelatedContent.tsx");
 const footer = read("src", "components", "layout", "Footer.tsx");
@@ -83,9 +87,10 @@ assert(
 );
 
 for (const pagePath of contentPaths) {
+  const unmonetized = nonAffiliateTools.has(pagePath.replace("/tools/", ""));
   assert(
-    commerce.includes(`"${pagePath}"`),
-    `Missing affiliate product mapping for ${pagePath}`,
+    unmonetized ? !affiliateRegistry.includes(`"${pagePath}"`) : affiliateRegistry.includes(`"${pagePath}"`),
+    unmonetized ? `Unexpected affiliate mapping for ${pagePath}` : `Missing affiliate product mapping for ${pagePath}`,
   );
   assert(
     commerce.includes(`path: "${pagePath}"`),
@@ -106,7 +111,10 @@ for (const slug of guideSlugs) {
 for (const slug of toolSlugs) {
   const page = read("src", "app", "tools", slug, "page.tsx");
   const pagePath = `/tools/${slug}`;
-  assert(page.includes("AffiliatePicks"), `Tool ${slug} does not render AffiliatePicks`);
+  assert(
+    nonAffiliateTools.has(slug) ? !page.includes("AffiliatePicks") : page.includes("AffiliatePicks"),
+    nonAffiliateTools.has(slug) ? `Tool ${slug} should stay unmonetized until supported` : `Tool ${slug} does not render AffiliatePicks`,
+  );
   assert(page.includes("RelatedContent"), `Tool ${slug} does not render RelatedContent`);
   assert(
     page.includes(`pagePath="${pagePath}"`),
@@ -119,7 +127,12 @@ for (const topPath of [
   "/guides/multi-color-printing-ams-worth-it",
   "/tools/ams-purge-waste-calculator",
 ]) {
-  assert(homepage.includes(topPath), `Homepage must link to top page ${topPath}`);
+  const slug = topPath.split("/").pop();
+  const generatedLink = homepage.includes(`"${slug}"`) && (
+    (topPath.startsWith("/guides/") && homepage.includes('href={`/guides/${guide.slug}`}')) ||
+    (topPath.startsWith("/tools/") && homepage.includes('href={`/tools/${slug}`}'))
+  );
+  assert(homepage.includes(topPath) || generatedLink, `Homepage must link to top page ${topPath}`);
 }
 
 for (const staleCopy of [

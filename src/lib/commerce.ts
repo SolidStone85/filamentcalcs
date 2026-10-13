@@ -20,14 +20,14 @@ const AFFILIATE_PRODUCTS: Record<string, AffiliateProduct> = {
     id: "bambu-a1-mini",
     title: "Bambu Lab A1 mini 3D printer",
     eyebrow: "Starter printer",
-    reason: "The lowest-friction first printer pick for small PLA and PETG parts.",
+    reason: "A 180 mm build cube for smaller parts. Compare the delivered base-printer price and bundle contents.",
     url: "https://www.amazon.com/s?k=Bambu+Lab+A1+mini+3D+printer",
   },
   "bambu-a1": {
     id: "bambu-a1",
     title: "Bambu Lab A1 3D printer",
     eyebrow: "Bigger build plate",
-    reason: "The same easy workflow as the mini, with more room for practical parts.",
+    reason: "A 256 mm build cube for larger parts. Check the delivered price; a base printer and a Combo are different purchases.",
     url: "https://www.amazon.com/s?k=Bambu+Lab+A1+3D+printer",
   },
   "creality-ender-v3-ke": {
@@ -109,9 +109,9 @@ const AFFILIATE_PRODUCTS: Record<string, AffiliateProduct> = {
   },
   "digital-scale": {
     id: "digital-scale",
-    title: "0.1 g digital scale",
+    title: "Digital scale for filament",
     eyebrow: "Spool weighing",
-    reason: "Needed for remaining-spool math and cleaner real-world cost tracking.",
+    reason: "Weigh filament or a loaded spool, subtracting the empty spool for remaining-filament calculations. Check capacity and resolution before buying.",
     url: "https://www.amazon.com/filament-scale/s?k=filament+scale",
   },
   "digital-calipers": {
@@ -125,14 +125,14 @@ const AFFILIATE_PRODUCTS: Record<string, AffiliateProduct> = {
     id: "kill-a-watt",
     title: "P3 Kill A Watt power meter",
     eyebrow: "Electricity use",
-    reason: "Measures real printer draw instead of guessing from nameplate wattage.",
+    reason: "Read whole-job kWh to price a print. Check outlet voltage, plug type and load rating before buying.",
     url: "https://www.amazon.com/P3-P4400-Electricity-Usage-Monitor/dp/B00009MDBU",
   },
   "smart-energy-plug": {
     id: "smart-energy-plug",
     title: "Smart plug with energy monitoring",
     eyebrow: "Longer tracking",
-    reason: "Useful when you want printer power data over multiple jobs.",
+    reason: "Compare job energy over time. Confirm that the model records kWh and matches your outlet voltage, plug type and load.",
     url: "https://www.amazon.com/s?k=smart+plug+energy+monitoring",
   },
   "nozzle-cleaning-kit": {
@@ -152,22 +152,14 @@ const AFFILIATE_PRODUCTS: Record<string, AffiliateProduct> = {
 };
 
 export const AFFILIATE_PICKS: Record<string, string[]> = {
-  "/guides/best-3d-printer-under-300": [
-    "bambu-a1-mini",
-    "bambu-a1",
-    "elegoo-neptune-4-plus",
-  ],
+  "/guides/best-3d-printer-under-300": ["bambu-a1-mini", "bambu-a1"],
   "/guides/multi-color-printing-ams-worth-it": [
     "bambu-ams-lite",
     "ams-purge-bucket",
     "sunlu-s4",
     "filament-storage-bags",
   ],
-  "/tools/ams-purge-waste-calculator": [
-    "bambu-ams-lite",
-    "ams-purge-bucket",
-    "sunlu-s4",
-  ],
+  "/tools/ams-purge-waste-calculator": ["digital-scale", "ams-purge-bucket"],
   "/tools/filament-cost-calculator": [
     "overture-pla",
     "digital-scale",
@@ -183,22 +175,14 @@ export const AFFILIATE_PICKS: Record<string, string[]> = {
     "filament-storage-bags",
     "overture-pla",
   ],
-  "/tools/print-time-estimator": [
-    "digital-calipers",
-    "bambu-a1-mini",
-    "pei-build-plate",
-  ],
+  "/tools/print-time-estimator": ["digital-scale"],
   "/tools/material-comparison": [
     "overture-pla",
     "petg-filament",
     "tpu-filament",
     "sunlu-s4",
   ],
-  "/tools/electricity-cost-calculator": [
-    "kill-a-watt",
-    "smart-energy-plug",
-    "bambu-a1-mini",
-  ],
+  "/tools/electricity-cost-calculator": ["kill-a-watt", "smart-energy-plug"],
   "/tools/failure-rate-calculator": [
     "nozzle-cleaning-kit",
     "sunlu-s4",
@@ -225,11 +209,7 @@ export const AFFILIATE_PICKS: Record<string, string[]> = {
     "pei-build-plate",
     "filament-storage-bags",
   ],
-  "/guides/3d-printer-electricity-usage": [
-    "kill-a-watt",
-    "smart-energy-plug",
-    "bambu-a1-mini",
-  ],
+  "/guides/3d-printer-electricity-usage": ["kill-a-watt", "smart-energy-plug"],
   "/guides/slicer-settings-that-waste-filament": [
     "digital-scale",
     "overture-pla",

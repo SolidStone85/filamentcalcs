@@ -9,9 +9,9 @@ import { SITE } from "@/lib/tools";
 
 import { Calculator } from "./Calculator";
 
-const TITLE = "3D Printer Electricity Cost Calculator: cost per print, per month";
+const TITLE = "3D Printer Electricity Cost Calculator (Free)";
 const DESCRIPTION =
-  "Estimate a 3D print's electricity cost from average watts, print hours and your rate per kWh. Free, with editable printer and regional reference estimates.";
+  "Calculate electricity cost per 3D print or month from watts, hours and your rate per kWh. Free, no account. Use measured draw or editable reference estimates.";
 
 export const metadata: Metadata = {
   title: TITLE,

@@ -15,7 +15,7 @@ import { SITE } from "@/lib/tools";
 
 const SLUG = "best-3d-printer-under-300";
 const guide = getGuide(SLUG)!;
-const UPDATED_AT = "2026-10-10";
+const UPDATED_AT = guide.updatedAt!;
 
 export const metadata: Metadata = {
   title: guide.title,
@@ -120,7 +120,11 @@ export default function GuidePage() {
       <header className="space-y-3">
         <p className="text-xs uppercase tracking-wide text-muted-foreground">Guide · {guide.readMinutes} min read</p>
         <h1 className="text-3xl font-semibold tracking-tight lg:text-4xl"><Highlight3D>{guide.title}</Highlight3D></h1>
-        <AuthorByline updatedLabel="Prices rechecked October 10, 2026 (UTC)" />
+        <AuthorByline updatedLabel="Content updated October 13; prices checked October 10, 2026 (UTC)" />
+        <p className="text-sm leading-7 text-muted-foreground">
+          Start with the A1 mini for parts that fit its 180 mm build cube, or compare the A1&apos;s 256 mm cube for larger parts.
+          The dated US listings below put both base printers under $300 before tax, shipping and filament; multicolor bundles cost extra.
+        </p>
       </header>
 
       <figure className="my-8">
@@ -139,7 +143,6 @@ export default function GuidePage() {
       </figure>
 
       <AdSlot slot="top" className="my-8" />
-      <AffiliatePicks pagePath={`/guides/${SLUG}`} className="my-8" />
 
       <div className="prose prose-sm dark:prose-invert max-w-none space-y-5 text-sm leading-7">
         <p>
@@ -177,6 +180,7 @@ export default function GuidePage() {
             </tbody>
           </table>
         </div>
+        <AffiliatePicks pagePath={`/guides/${SLUG}`} className="my-8" />
         <p className="text-xs text-muted-foreground">
           Check the linked store for the selected model, stock and delivered total. Neither a crossed-out list price nor a bundle&apos;s starting price proves that your chosen configuration fits the budget.
         </p>
