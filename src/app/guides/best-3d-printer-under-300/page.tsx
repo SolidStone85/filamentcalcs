@@ -237,6 +237,9 @@ export default function GuidePage() {
           That size may justify a larger budget for a specific project, but $309 before extras does not qualify as an under-$300 pick.
         </p>
         <p>
+          Planning a costume helmet? <Link href="/guides/3d-print-cosplay-helmet-size-cost" className="underline">Check helmet fit, splits and the full project cost</Link> before paying for a larger printer.
+        </p>
+        <p>
           Measure the available workspace and the full motion clearance before choosing it.
           Elegoo notes that the Type-C version takes over-the-air updates and asks buyers to check that replacement parts match that model. Buy for a demonstrated size requirement;
           a larger plate alone does not establish better or worse precision than the alternatives.

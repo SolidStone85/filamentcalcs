@@ -14,6 +14,23 @@ export type Guide = {
 
 export const GUIDES: Guide[] = [
   {
+    "slug": "3d-print-cosplay-helmet-size-cost",
+    "title": "3D Printing a Cosplay Helmet: Size, Splits and Real Cost",
+    "shortTitle": "Cosplay helmet fit and cost",
+    "description": "Plan a 3D printed cosplay helmet: check head and printer fit, compare whole versus split prints, and budget filament, finishing and reprints.",
+    "publishedAt": "2026-10-23",
+    "readMinutes": 10,
+    "relatedToolSlugs": [
+      "filament-cost-calculator",
+      "enough-filament-calculator",
+      "electricity-cost-calculator",
+      "print-pricing-calculator",
+      "print-time-estimator",
+      "material-comparison"
+    ],
+    "updatedAt": "2026-10-23"
+  },
+  {
     slug: "3d-printing-cost-breakdown",
     title: "How much does it really cost to 3D print? Full breakdown for 2026",
     shortTitle: "True cost of a 3D print",

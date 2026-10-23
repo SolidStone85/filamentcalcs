@@ -236,6 +236,14 @@ export const AFFILIATE_PICKS: Record<string, string[]> = {
 
 export const RELATED_CONTENT: { path: string; links: RelatedLink[] }[] = [
   {
+    path: "/guides/3d-print-cosplay-helmet-size-cost",
+    links: [
+      related("/tools/filament-cost-calculator", "Cost the sliced job", "Include supports, brims and connectors once."),
+      related("/tools/enough-filament-calculator", "Check the spool", "Compare remaining filament with the whole job."),
+      related("/tools/print-pricing-calculator", "Budget finishing time", "Keep machine time and hands-on work separate."),
+    ],
+  },
+  {
     path: "/guides/best-3d-printer-under-300",
     links: [
       related("/tools/filament-cost-calculator", "Estimate filament cost", "Price the first spools before you buy."),
