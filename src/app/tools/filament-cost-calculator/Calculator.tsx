@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { CURRENCIES, formatCurrency, type CurrencyCode } from "@/lib/currency";
+import { applyMaterialPreset } from "@/lib/currencyPresetState";
 import { calculateFilamentCost } from "@/lib/formulas/filamentCost";
 import {
   MATERIAL_PRESETS,
@@ -114,19 +115,12 @@ const CURRENCY_ITEMS = CURRENCIES.map((c) => ({
 export function Calculator() {
   const { state, setState, settings } = useCalculatorState(parseStateFromParams, encodeState, {
     c: "currency", p: "filamentPricePerKg", pm: "priceMode", sp: "spoolPrice", sw: "pricedSpoolWeight",
-  }, [["p", "pm", "sp", "sw"]]);
+  }, [["c", "p", "pm", "sp", "sw"]]);
 
   // When material preset changes, apply its defaults unless "custom".
   function applyMaterial(id: MaterialPreset["id"]) {
     const preset = getMaterialPreset(id);
-    if (!preset) return;
-    setState((s) => ({
-      ...s,
-      materialId: id,
-      ...(id === "custom"
-        ? {}
-        : { pricePerKg: preset.pricePerKg, priceMode: "kg", wasteFactor: preset.wasteFactor }),
-    }));
+    setState((s) => applyMaterialPreset(s, id, preset));
   }
 
   const gramsNum = typeof state.grams === "number" ? state.grams : 0;
@@ -210,7 +204,7 @@ export function Calculator() {
                     {m.label}
                     {m.id !== "custom" && (
                       <span className="ml-2 text-xs text-muted-foreground">
-                        {currencySymbol}
+                        USD
                         {m.pricePerKg}/kg · {Math.round(m.wasteFactor * 100)}%
                         waste
                       </span>
@@ -220,7 +214,7 @@ export function Calculator() {
               </SelectContent>
             </Select>
             <p className="text-xs text-muted-foreground">
-              Illustrative price and waste assumptions, not current market prices. Your actual spool price is more useful.
+              Reference prices are illustrative USD assumptions, not current market prices. Choosing one sets USD; changing currency only changes the label and does not convert. Your actual spool price is more useful.
             </p>
           </div>
           </details>

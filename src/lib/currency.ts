@@ -11,7 +11,11 @@ export type CurrencyCode =
   | "AUD"
   | "NZD"
   | "JPY"
-  | "INR";
+  | "INR"
+  | "PHP"
+  | "SEK"
+  | "NOK"
+  | "DKK";
 
 export const CURRENCIES: { code: CurrencyCode; symbol: string; label: string }[] = [
   { code: "USD", symbol: "$", label: "US Dollar" },
@@ -20,8 +24,12 @@ export const CURRENCIES: { code: CurrencyCode; symbol: string; label: string }[]
   { code: "CAD", symbol: "C$", label: "Canadian Dollar" },
   { code: "AUD", symbol: "A$", label: "Australian Dollar" },
   { code: "NZD", symbol: "NZ$", label: "New Zealand Dollar" },
+  { code: "PHP", symbol: "₱", label: "Philippine Peso" },
   { code: "JPY", symbol: "¥", label: "Japanese Yen" },
   { code: "INR", symbol: "₹", label: "Indian Rupee" },
+  { code: "SEK", symbol: "SEK", label: "Swedish Krona" },
+  { code: "NOK", symbol: "NOK", label: "Norwegian Krone" },
+  { code: "DKK", symbol: "DKK", label: "Danish Krone" },
 ];
 
 export function formatCurrency(
@@ -36,7 +44,9 @@ export function formatCurrency(
         ? "en-GB"
         : code === "INR"
           ? "en-IN"
-          : "en-US";
+          : code === "PHP"
+            ? "en-PH"
+            : "en-US";
   // Yen has no minor unit; forcing two decimals would look wrong (¥25.00).
   const fractionDigits = code === "JPY" ? 0 : 2;
   return new Intl.NumberFormat(locale, {

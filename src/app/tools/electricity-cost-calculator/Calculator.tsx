@@ -19,6 +19,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { CURRENCIES, formatCurrency, type CurrencyCode } from "@/lib/currency";
+import {
+  changeElectricityCurrency,
+  chooseElectricityRate,
+  parseElectricityRateState,
+} from "@/lib/currencyPresetState";
 import { calculateElectricityCost } from "@/lib/formulas/electricityCost";
 import {
   ELECTRICITY_RATE_PRESETS,
@@ -55,8 +60,16 @@ function parseStateFromParams(params: URLSearchParams): State {
   };
 
   const printerId = params.get("p");
-  const rateId = params.get("r");
-  const c = params.get("c") as CurrencyCode | null;
+  const electricityState = parseElectricityRateState(
+    params,
+    {
+      rateId: DEFAULT_STATE.rateId,
+      customRate: DEFAULT_STATE.customRate,
+      currency: DEFAULT_STATE.currency,
+    },
+    ELECTRICITY_RATE_PRESETS,
+    CURRENCIES,
+  );
 
   return {
     printerId:
@@ -68,16 +81,7 @@ function parseStateFromParams(params: URLSearchParams): State {
         ? DEFAULT_STATE.customWatts
         : toNumOrEmpty(params.get("w")),
     hours: toNumOrEmpty(params.get("h")),
-    rateId:
-      rateId && ELECTRICITY_RATE_PRESETS.some((r) => r.id === rateId)
-        ? rateId
-        : DEFAULT_STATE.rateId,
-    customRate:
-      params.get("rt") === null
-        ? DEFAULT_STATE.customRate
-        : toNumOrEmpty(params.get("rt")),
-    currency:
-      c && CURRENCIES.some((x) => x.code === c) ? c : getElectricityRatePreset(rateId ?? DEFAULT_STATE.rateId)?.currency ?? DEFAULT_STATE.currency,
+    ...electricityState,
   };
 }
 
@@ -114,7 +118,7 @@ const CURRENCY_ITEMS = CURRENCIES.map((c) => ({
 export function Calculator() {
   const { state, setState, settings } = useCalculatorState(parseStateFromParams, encodeState, {
     c: "currency", p: "printerId", w: "watts", r: "electricityRateId", rt: "electricityRate",
-  });
+  }, [["c", "r", "rt"], ["p", "w"]]);
 
   const printerPreset = getPrinterPreset(state.printerId);
   const watts =
@@ -216,7 +220,7 @@ export function Calculator() {
               value={state.rateId}
               items={RATE_ITEMS}
               onValueChange={(v) => {
-                if (v !== null) setState((s) => ({ ...s, rateId: v, currency: getElectricityRatePreset(v)?.currency ?? s.currency }));
+                if (v !== null) setState((s) => chooseElectricityRate(s, v, ELECTRICITY_RATE_PRESETS));
               }}
             >
               <SelectTrigger id="rate" className="w-full">
@@ -237,6 +241,9 @@ export function Calculator() {
             </Select>
             <p className="text-xs text-muted-foreground">
               Presets are rough examples, not live tariffs. Use the per-kWh rate from your utility bill for your own estimate.
+            </p>
+            <p className="text-xs text-muted-foreground">
+              Each regional preset uses its listed currency. Changing currency clears the preset; enter your local utility rate. No conversion is applied.
             </p>
           </div>
 
@@ -262,7 +269,7 @@ export function Calculator() {
               items={CURRENCY_ITEMS}
               onValueChange={(v) => {
                 if (v !== null)
-                  setState((s) => ({ ...s, currency: v as CurrencyCode }));
+                  setState((s) => changeElectricityCurrency(s, v as CurrencyCode));
               }}
             >
               <SelectTrigger id="currency" className="w-full">
