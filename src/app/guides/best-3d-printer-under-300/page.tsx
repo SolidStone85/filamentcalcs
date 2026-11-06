@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import { GuideImageCredit } from "@/components/shared/GuideImageCredit";
 import Link from "next/link";
 
 import { AdSlot } from "@/components/shared/AdSlot";
@@ -137,8 +138,8 @@ export default function GuidePage() {
           priority
         />
         <figcaption className="mt-2 text-xs text-muted-foreground">
-          A desktop FDM setup, not a photograph of the four models compared below. Photo via{" "}
-          <a href="https://commons.wikimedia.org/wiki/File:BEETHEFIRST_3D_printer_and_3D-printed_filament_spools.jpg" className="underline" rel="noreferrer">Wikimedia Commons</a>.
+          A desktop FDM setup, not a photograph of the models compared below.
+          <GuideImageCredit image="printer-with-spools.jpg" />
         </figcaption>
       </figure>
 

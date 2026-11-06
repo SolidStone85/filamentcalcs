@@ -53,7 +53,7 @@ const TERMS: Term[] = [
   {
     term: "Bed adhesion",
     definition:
-      "How well the first layer of a print sticks to the build plate. Poor adhesion is the single most common cause of print failure. Fixed by cleaning the bed, leveling, adjusting first layer height, or using a glue stick.",
+      "How well the first layer sticks to the build plate. Poor adhesion can cause detachment or warping. Follow the plate and printer instructions for cleaning, calibration and any release agent; different surfaces need different care.",
     related: ["First layer", "Warping"],
   },
   {
@@ -197,7 +197,7 @@ const TERMS: Term[] = [
   {
     term: "Print failure",
     definition:
-      "Any print that doesn't complete successfully. Includes detachment from the bed, layer shifts, spaghetti from extrusion failures, support collapse, and warping. Hobbyist failure rates typically 5-10%.",
+      "An attempt that fails your chosen definition of a usable print. Examples include bed detachment, layer shifts, support collapse or warping. Track comparable attempts consistently; this site has no verified industry benchmark for a normal failure rate.",
     related: ["Bed adhesion", "Layer shift"],
   },
   {

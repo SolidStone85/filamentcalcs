@@ -7,6 +7,7 @@ import { AffiliatePicks } from "@/components/shared/AffiliatePicks";
 import { RelatedContent } from "@/components/shared/RelatedContent";
 import { AuthorBio } from "@/components/shared/AuthorBio";
 import { AuthorByline } from "@/components/shared/AuthorByline";
+import { GuideImageCredit } from "@/components/shared/GuideImageCredit";
 import { Highlight3D } from "@/components/shared/Highlight3D";
 import { AUTHOR_JSONLD } from "@/lib/author";
 import { getGuide } from "@/lib/guides";
@@ -14,6 +15,7 @@ import { SITE } from "@/lib/tools";
 
 const SLUG = "why-3d-prints-fail";
 const guide = getGuide(SLUG)!;
+const UPDATED_AT = "2026-11-06";
 
 export const metadata: Metadata = {
   title: guide.title,
@@ -25,29 +27,78 @@ export const metadata: Metadata = {
     url: `${SITE.url}/guides/${SLUG}`,
     type: "article",
     publishedTime: guide.publishedAt,
+    modifiedTime: UPDATED_AT,
   },
 };
 
-const FAQ: { q: string; a: string }[] = [
+const FAQ = [
+  { q: "What failure rate is normal?", a: "FilamentCalcs has no verified industry benchmark for a normal hobbyist or print-farm failure rate. Compare similar jobs on your own printer using a consistent definition of failure. Zero failures in a recorded batch is possible; it does not guarantee the next attempt will succeed. No recorded attempts means no observed rate." },
+  { q: "Why can a print start well and fail later?", a: "Look for the first changed feature or layer: a lifted corner, collision, unsupported area, spool feed problem or extrusion interruption. A good first layer does not rule out later problems. Save the failed part, relevant settings and a photograph so you can investigate the specific symptom." },
+  { q: "Can a webcam prevent failures?", a: "It can help you notice a problem, but a camera alone does not stop a printer. Automatic detection and pausing require a supported, configured system and can miss failures. Follow the printer manufacturer's supervision and safety instructions." },
+  { q: "Does automatic bed leveling replace first-layer checks?", a: "No. Check the build surface, selected plate and material profile, and the first layer itself. Follow the calibration process for your model; printers differ in whether and how a manual nozzle offset is set." },
+  { q: "What should I check after a nozzle change?", a: "Use the replacement and calibration procedure for the exact printer and hotend. Tightening temperature, torque, tools and required calibration differ by design; there is no universal hand-tight rule. Check for leaks or damaged wiring and follow the maker's instructions before printing again." },
+];
+
+const CHECKS = [
   {
-    q: "What failure rate is normal?",
-    a: "Under 5% is excellent, 5 to 10% is typical hobbyist range, 10 to 20% means something is off and worth investigating, and over 20% usually points at a specific mechanical or calibration problem. Print farms run at 2 to 4%. 0% is not realistic and chasing it will drive you crazy.",
+    title: "First layer does not stick",
+    symptoms: "Lines fail to join, lift with the nozzle, or detach from the plate.",
+    next: "Check the selected plate and material profile. Clean the surface and calibrate the first layer using the plate and printer maker's instructions. Solvents and adhesion or release products are surface-specific. A brim can help some shapes, but it does not repair a calibration or contamination problem.",
   },
   {
-    q: "Why do prints sometimes fail halfway through but start fine?",
-    a: "Usually layer adhesion or thermal problems. Warping pulls a corner up, nozzle catches it on the next pass, print shifts or fails. Inadequate cooling on PLA causes overhangs to droop. Mid-print power fluctuations. Or filament run-out on long prints. Check what layer number or what feature it failed on for a clue.",
+    title: "Popping, bubbles or inconsistent extrusion",
+    symptoms: "These can be signs of moisture, although extrusion problems have other possible causes.",
+    next: "Check the filament maker's drying instructions and the limits of both spool and dryer. Use the named-product settings in our drying guide rather than one temperature for an entire material family. Store dried filament appropriately and compare a small test before changing several print settings.",
   },
   {
-    q: "Is it worth using a webcam to monitor prints?",
-    a: "Yes, especially for prints over 4 hours. Bambu's built-in cameras on P1S and X1C are good. For other printers, an Octoprint plus a cheap USB webcam works. Catching a failure 20 minutes in instead of 6 hours in saves a lot of wasted filament.",
+    title: "Under-extrusion or a possible nozzle blockage",
+    symptoms: "Walls have gaps, extrusion becomes thin or irregular, or filament stops feeding.",
+    next: "Check for a tangled spool, restricted feed path, incorrect profile or extruder problem before assuming the nozzle is blocked. Follow the hotend maker's cleaning or cold-pull procedure. Cold-pull temperatures depend on the material and hotend. Replace parts only with the correct model-specific instructions.",
   },
   {
-    q: "Does bed leveling matter as much as people say?",
-    a: "Yes. First layer calibration is the single biggest factor in print success. Auto-bed-leveling helps but doesn't replace a properly trammed frame or a clean bed. Print a first-layer calibration square before committing to a long print on a freshly wiped bed.",
+    title: "Corners curl upward",
+    symptoms: "Warping lifts an edge and can lead to detachment or a nozzle collision.",
+    next: "Check surface preparation, the material profile and unwanted drafts. A brim or a different orientation may help. Use an enclosure only where the printer and material instructions support it, with the required ventilation. More heat or an enclosure is not a universal fix for every material.",
   },
   {
-    q: "I'm getting failures after replacing a nozzle, why?",
-    a: "New nozzles need to be re-calibrated. The exact length from the nozzle tip to the bed changed, so your z-offset is off. Run bed leveling and z-offset calibration before printing. Also check that the nozzle is torqued to the right spec (about 1.5 Nm, or firm hand-tight with a wrench when the hotend is at 250°C).",
+    title: "Layers suddenly shift sideways",
+    symptoms: "A section of the model moves in X or Y while later layers continue above it.",
+    next: "Check for obstructions, collisions, pulley alignment and belt condition using the printer's maintenance procedure. Use the maker's belt-tension method rather than a generic tightening instruction. Check whether an altered speed or acceleration profile exceeds what the machine can handle.",
+  },
+  {
+    title: "Strings appear between features",
+    symptoms: "Fine strands or blobs remain where the nozzle travels between printed areas.",
+    next: "Start with the right material profile, a clean nozzle and dry filament. Review the slicer's retraction and travel settings for your extruder. Change one relevant setting and compare a test; direct-drive and Bowden settings are not interchangeable. Do not assume slower travel or a universal retraction distance will fix it.",
+  },
+  {
+    title: "Loose spaghetti or material collects on the nozzle",
+    symptoms: "The printer extrudes without building the intended shape, or a blob starts to accumulate.",
+    next: "Stop a failed job following the printer's instructions. Check whether the part or a support detached before it failed. Investigate the original loss of adhesion or support, rather than only removing loose material. A blob around heater wiring needs the manufacturer's removal procedure; do not pull it off by force.",
+  },
+  {
+    title: "Supports collapse or fuse to the model",
+    symptoms: "Supported areas sag, supports detach, or removal damages the part.",
+    next: "Inspect the sliced support paths, orientation and contact settings. Use the slicer's supported profile for your nozzle, layer height and material. Test support spacing on a small section. Different support materials may need different contact settings and compatible hardware.",
+  },
+  {
+    title: "Bridges sag across a gap",
+    symptoms: "Unsupported horizontal strands droop or fail to reach the opposite side.",
+    next: "Check bridge direction, span and the slicer's material-specific cooling and bridge settings. Prusa's bridging guide suggests testing reduced bridge speed and flow, not automatically adding more material. Reorient the part or add supports when the span cannot be bridged reliably.",
+  },
+  {
+    title: "The bottom edge spreads outward",
+    symptoms: "An elephant's-foot shape makes the first layers wider than the model above them.",
+    next: "Inspect first-layer calibration and the bed-temperature profile for the selected plate and material. If the first layer is otherwise correct, test the slicer's elephant-foot compensation on a small fit sample. Avoid copying a nozzle-offset adjustment from a different printer design.",
+  },
+  {
+    title: "Filament stops before the job finishes",
+    symptoms: "The spool empties, tangles or meets resistance in the feed path.",
+    next: "Weigh the remaining filament after subtracting the correct spool tare and compare with the complete sliced consumption, including supports and flushing. Run-out can occur at any job weight if the spool is partly used. Check any run-out sensor and recovery feature in your model's manual.",
+  },
+  {
+    title: "The sliced job differs from what you intended",
+    symptoms: "Unexpected supports, missing features, an unusual duration, or a wrong material/nozzle selection.",
+    next: "Verify printer, nozzle, plate and material profiles, then inspect the layer preview and consumption summary. Keep the last known-good project so you can compare one change at a time. A successful small test reduces uncertainty but does not guarantee a long or different print.",
   },
 ];
 
@@ -55,358 +106,94 @@ export default function GuidePage() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
-      {
-        "@type": "Article",
-        headline: guide.title,
-        description: guide.description,
-        datePublished: guide.publishedAt,
-        author: AUTHOR_JSONLD,
-        publisher: { "@type": "Organization", name: SITE.name },
-        mainEntityOfPage: { "@type": "WebPage", "@id": `${SITE.url}/guides/${SLUG}` },
-      },
-      {
-        "@type": "FAQPage",
-        mainEntity: FAQ.map((item) => ({
-          "@type": "Question",
-          name: item.q,
-          acceptedAnswer: { "@type": "Answer", text: item.a },
-        })),
-      },
+      { "@type": "Article", headline: guide.title, description: guide.description,
+        datePublished: guide.publishedAt, dateModified: UPDATED_AT,
+        author: AUTHOR_JSONLD, publisher: { "@type": "Organization", name: SITE.name },
+        mainEntityOfPage: { "@type": "WebPage", "@id": `${SITE.url}/guides/${SLUG}` } },
+      { "@type": "FAQPage", mainEntity: FAQ.map((item) => ({ "@type": "Question", name: item.q,
+        acceptedAnswer: { "@type": "Answer", text: item.a } })) },
     ],
   };
 
   return (
     <article className="mx-auto max-w-3xl px-4 py-10 lg:py-14">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <header className="space-y-3">
-        <p className="text-xs uppercase tracking-wide text-muted-foreground">
-          Guide · {guide.readMinutes} min read
-        </p>
-        <h1 className="text-3xl font-semibold tracking-tight lg:text-4xl">
-          <Highlight3D>{guide.title}</Highlight3D>
-        </h1>
-        <AuthorByline updatedLabel="Updated April 2026" />
+        <p className="text-xs uppercase tracking-wide text-muted-foreground">Guide · {guide.readMinutes} min read</p>
+        <h1 className="text-3xl font-semibold tracking-tight lg:text-4xl"><Highlight3D>{guide.title}</Highlight3D></h1>
+        <AuthorByline updatedLabel="Reviewed November 6, 2026 (UTC)" />
       </header>
-
       <figure className="my-8">
-        <Image
-          src="/images/guides/spaghetti-fail.jpg"
-          alt="A failed 3D print resembling tangled spaghetti on the print bed"
-          width={1536}
-          height={2048}
-          className="w-full h-auto rounded-lg object-cover max-h-96"
-          priority
-        />
+        <Image src="/images/guides/spaghetti-fail.jpg" alt="A failed 3D print resembling tangled spaghetti on the print bed"
+          width={1536} height={2048} className="w-full h-auto rounded-lg object-cover max-h-96" priority />
         <figcaption className="mt-2 text-xs text-muted-foreground">
-          The classic &quot;spaghetti monster&quot; failure: the part
-          detached from the bed mid-print and the printer kept extruding
-          into thin air. Photo via{" "}
-          <a
-            href="https://commons.wikimedia.org/wiki/File:Spaghetti_monster.jpg"
-            className="underline"
-            rel="noreferrer"
-          >
-            Wikimedia Commons
-          </a>
-          .
+          A spaghetti-type failure. Record what detached or stopped working first.
+          <GuideImageCredit image="spaghetti-fail.jpg" />
         </figcaption>
       </figure>
-
       <AdSlot slot="top" className="my-8" />
-
       <AffiliatePicks pagePath={`/guides/${SLUG}`} className="my-8" />
 
       <div className="prose prose-sm dark:prose-invert max-w-none space-y-5 text-sm leading-7">
         <p>
-          Print failures cluster around a dozen common causes. Most of what
-          gets posted on Reddit as "why did this fail" is actually one of
-          these twelve things, and each has a specific fix. Working through
-          them in the order below (rough frequency, most common first) will
-          resolve almost every hobbyist failure.
+          Start with the symptom and the point where the print first went wrong.
+          These twelve checks are a troubleshooting index, not a measured ranking
+          by frequency. This is research-based guidance; FilamentCalcs does not
+          claim hands-on tests of the printers or fixes discussed here.
         </p>
         <p>
-          Before starting: track your failure rate. If you don't know
-          whether you're at 5% or 25% failure, you don't know if you have a
-          problem. The{" "}
-          <Link
-            href="/tools/failure-rate-calculator"
-            className="underline underline-offset-4"
-          >
-            Failure Rate Calculator
-          </Link>{" "}
-          helps with this and compares you to hobbyist benchmarks.
+          The <Link href="/tools/failure-rate-calculator" className="underline underline-offset-4">Failure Rate Calculator</Link>{" "}
+          tracks your recorded attempts and estimated lost material. This site has
+          no verified industry benchmark for a normal hobbyist or print-farm
+          failure rate. Its display bands are descriptive tracking ranges, not a
+          diagnosis. Compare similar jobs, keep the sample size, and use the same
+          definition of failure over time.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
-          1. Poor first layer adhesion
-        </h2>
+        {CHECKS.map((item, index) => (
+          <section key={item.title} className="space-y-3 pt-4">
+            <h2 className="text-xl font-semibold tracking-tight">{index + 1}. {item.title}</h2>
+            <p>{item.symptoms}</p><p>{item.next}</p>
+          </section>
+        ))}
+
+        <h2 className="text-xl font-semibold tracking-tight pt-4">Record failures and the material they actually consumed</h2>
         <p>
-          Most common failure by far. Print detaches partway or pulls up at
-          a corner. Fixes, in order of likelihood to matter:
+          Keep the model, profile, material, outcome, failed layer or feature, and
+          discarded grams beside each attempt. Nine successes and one failure
+          give an observed 10% failure rate. If that failed attempt used 5 g at
+          $20/kg, its material loss is $0.10. The intended weight of the completed
+          part does not tell you how much an early failure consumed.
         </p>
-        <ul className="list-disc pl-5 space-y-1 marker:text-primary">
-          <li>Clean the bed with isopropyl alcohol (IPA 70% or higher) or soap and water. Skin oils from handling kill adhesion.</li>
-          <li>Recalibrate z-offset. Nozzle should lay filament with a slight squish, not air-printing and not bulldozing.</li>
-          <li>Check bed temperature is correct for the material (60°C PLA, 70 to 80°C PETG).</li>
-          <li>Brim or raft for tall, small-footprint prints.</li>
-          <li>Glue stick or hairspray as a bed prep if the surface is worn.</li>
+        <p>
+          Include discarded supports or purge consistently if you want them in
+          your failed-attempt average. Keep ordinary successful-print consumption
+          separate and count each gram once. Electricity, machine time and labor
+          are additional costs outside this material-loss calculation.
+        </p>
+
+        <h2 className="text-xl font-semibold tracking-tight pt-4">Sources and next checks</h2>
+        <p className="text-xs text-muted-foreground">Checked November 6, 2026. Apply the instructions for your own model; these sources do not establish an industry failure rate.</p>
+        <ul className="list-disc pl-5 space-y-2 text-xs leading-6 marker:text-primary">
+          <li><a href="https://www.klipper3d.org/Bed_Level.html" className="underline" rel="noreferrer">Klipper bed leveling</a>: choose the calibration method for the machine.</li>
+          <li><Link href="/guides/how-to-dry-filament" className="underline">Drying guide with named-product manufacturer sources</Link>: filament, spool and equipment limits.</li>
+          <li><a href="https://help.prusa3d.com/article/layer-shifting_2020" className="underline" rel="noreferrer">Prusa layer shifting</a>: obstructions, pulleys and model-specific belt checks.</li>
+          <li><a href="https://help.prusa3d.com/article/stringing-and-oozing_1805" className="underline" rel="noreferrer">Prusa stringing and oozing</a>: profile and retraction checks.</li>
+          <li><a href="https://help.prusa3d.com/article/poor-bridging_1802" className="underline" rel="noreferrer">Prusa poor bridging</a>: speed, flow, cooling and orientation.</li>
+          <li><a href="https://help.prusa3d.com/article/warping_2011" className="underline" rel="noreferrer">Prusa warping</a>: material and environment considerations.</li>
+          <li><a href="https://help.prusa3d.com/article/extruder-blob_2005" className="underline" rel="noreferrer">Prusa extruder blobs</a>: first-layer checks, removal precautions and supervision.</li>
+          <li><a href="https://help.prusa3d.com/article/changing-or-replacing-the-nozzle-mk2-5-s-mk3-s-mk3-5-s_2069" className="underline" rel="noreferrer">Prusa MK2.5/MK3 nozzle procedure</a> and <a href="https://help.prusa3d.com/guide/how-to-replace-the-prusa-nozzle-mk4-mk3-9_421215" className="underline" rel="noreferrer">MK4/MK3.9 nozzle procedure</a>: examples of why replacement instructions differ by hotend.</li>
         </ul>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
-          2. Wet filament
-        </h2>
-        <p>
-          Symptoms: popping sounds during printing, stringy prints, brittle
-          finished parts, inconsistent extrusion. PETG and TPU absorb
-          moisture fastest. PLA tolerates more but isn't immune.
-        </p>
-        <p>
-          Fix: dry the filament in a filament dryer for 4 to 8 hours at the
-          recommended temperature (40 to 50°C for PLA, 55 to 65°C for PETG,
-          45°C for TPU). Store dry filament in airtight containers with
-          silica gel packs.
-        </p>
-
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
-          3. Clogged or partially clogged nozzle
-        </h2>
-        <p>
-          Under-extrusion, thin layer lines, gaps in walls. Usually caused
-          by burnt residue from older filament, dust, or carbon buildup.
-        </p>
-        <p>
-          Fix: cold pull. Heat to printing temp, manually feed filament,
-          cool to 90°C, pull out cleanly. Repeat until clean. If that
-          fails, replace the nozzle (they cost $2 to $10 and last 200 to
-          500 hours typically).
-        </p>
-
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
-          4. Warping (ABS especially)
-        </h2>
-        <p>
-          Corners lift off the bed as the print cools. Common on ABS,
-          occasional on PETG, rare on PLA.
-        </p>
-        <p>
-          Fix: enclosure (the real fix for ABS), heated bed at correct
-          temp, reduce part cooling fan on first few layers, brim or mouse
-          ears on corners, slower print speeds for first layers. If you
-          can't enclose, switch to PETG or PLA.
-        </p>
-
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
-          5. Layer shift
-        </h2>
-        <p>
-          Print suddenly skews mid-way. The printer lost steps on X or Y.
-          Causes include: loose belts, something obstructing the head, too
-          high speed and acceleration, or a mechanical collision.
-        </p>
-        <p>
-          Fix: check belt tension (should twang like a guitar string),
-          reduce speed or acceleration in slicer, inspect for anything
-          catching on the print.
-        </p>
-
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
-          6. Stringing and oozing
-        </h2>
-        <p>
-          Thin hairs of filament between parts of the print. Common on
-          PETG, occasional on PLA, common on TPU.
-        </p>
-        <p>
-          Fix: slower travel moves, higher retraction distance (0.8 to 2mm
-          for direct drive, 4 to 6mm for Bowden), slightly lower nozzle
-          temp, combing enabled in slicer, dry the filament.
-        </p>
-
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
-          7. Spaghetti (complete mid-print failure)
-        </h2>
-        <p>
-          The print came off the bed, the nozzle kept extruding into air,
-          you come back to a bird's nest. Usually the cascade failure of
-          warping or poor bed adhesion.
-        </p>
-        <p>
-          Fix: fix the underlying adhesion issue (#1). A webcam plus print
-          monitoring catches this early and pauses the printer before you
-          waste 6 hours of filament.
-        </p>
-
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
-          8. Supports fail or fuse to the part
-        </h2>
-        <p>
-          Overhangs sagging, supports that peel off and ruin the print, or
-          supports that weld permanently to the part.
-        </p>
-        <p>
-          Fix: increase support Z distance in slicer (0.2mm is a good
-          start), use tree supports for complex overhangs, orient the
-          model to minimize overhang area. For critical parts, print with
-          two materials and use a water-soluble support material.
-        </p>
-
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
-          9. Bridging failure
-        </h2>
-        <p>
-          Long unsupported horizontal spans sagging. Usually means cooling
-          is insufficient or bridging speed is too high.
-        </p>
-        <p>
-          Fix: increase part cooling fan to 100% during bridges, reduce
-          bridging speed to 30 to 50% of normal, increase bridge flow
-          slightly if droopy.
-        </p>
-
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
-          10. Elephant's foot
-        </h2>
-        <p>
-          First layer bulges wider than the rest. Caused by nozzle too
-          close to bed or bed too hot.
-        </p>
-        <p>
-          Fix: raise z-offset slightly (~0.02 to 0.04mm), reduce bed temp
-          for first layer, or use a small chamfer on bottom edges of the
-          model.
-        </p>
-
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
-          11. Filament run-out
-        </h2>
-        <p>
-          Spool empties mid-print. Happens on prints over about 800g
-          without filament run-out sensors.
-        </p>
-        <p>
-          Fix: enable filament run-out sensor (most modern printers have
-          one), weigh the spool before long prints, or split large prints
-          into multiple files you start manually.
-        </p>
-
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
-          12. Slicer setting mistakes
-        </h2>
-        <p>
-          Wrong filament profile, wrong nozzle temp, wrong supports
-          enabled, etc. The most embarrassing category because it's usually
-          user error.
-        </p>
-        <p>
-          Fix: slow down when slicing. Double-check filament type matches
-          what's loaded, check print summary for obvious issues (2 hour
-          print suddenly showing 20 hours means something is off), print
-          the first 10 layers and verify before committing to the full
-          print.
-        </p>
-
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
-          Frequently asked
-        </h2>
-        <dl className="space-y-4">
-          {FAQ.map((item) => (
-            <div key={item.q} className="space-y-1">
-              <dt className="font-medium">{item.q}</dt>
-              <dd className="text-sm leading-7 text-muted-foreground">
-                {item.a}
-              </dd>
-            </div>
-          ))}
-        </dl>
-
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
-          Sources and references
-        </h2>
-        <ul className="list-disc pl-5 space-y-1 text-xs leading-6 marker:text-primary">
-          <li>
-            Bambu Lab,{" "}
-            <a
-              href="https://wiki.bambulab.com/en/general/bambu-studio-tutorial/calibration"
-              className="underline"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              calibration and first-layer guides
-            </a>{" "}
-            (bed leveling, flow calibration)
-          </li>
-          <li>
-            Prusa Research,{" "}
-            <a
-              href="https://help.prusa3d.com/article/troubleshooting-prints-prusaslicer_1804"
-              className="underline"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              print troubleshooting in PrusaSlicer
-            </a>{" "}
-            (warping, stringing, layer shift causes)
-          </li>
-          <li>
-            Klipper,{" "}
-            <a
-              href="https://www.klipper3d.org/Bed_Level.html"
-              className="underline"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              bed leveling documentation
-            </a>{" "}
-            (mechanical fundamentals of first-layer adhesion)
-          </li>
-          <li>
-            OrcaSlicer,{" "}
-            <a
-              href="https://github.com/SoftFever/OrcaSlicer/wiki/Calibration"
-              className="underline"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              calibration wiki
-            </a>{" "}
-            (pressure advance, retraction, temperature towers)
-          </li>
-        </ul>
+        <h2 className="text-xl font-semibold tracking-tight pt-4">Frequently asked</h2>
+        <dl className="space-y-4">{FAQ.map((item) => (
+          <div key={item.q} className="space-y-1"><dt className="font-medium">{item.q}</dt>
+            <dd className="text-sm leading-7 text-muted-foreground">{item.a}</dd></div>
+        ))}</dl>
       </div>
-
       <AuthorBio />
-
       <RelatedContent pagePath={`/guides/${SLUG}`} className="mt-8" />
-
       <AdSlot slot="inline" className="my-10" />
-
-      <nav className="mt-10 rounded-lg border p-5 text-sm">
-        <p className="mb-3 text-xs uppercase tracking-wide text-muted-foreground">
-          Related tools
-        </p>
-        <ul className="space-y-2">
-          <li>
-            <Link
-              href="/tools/failure-rate-calculator"
-              className="underline underline-offset-4"
-            >
-              Failure Rate Calculator
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/tools/filament-cost-calculator"
-              className="underline underline-offset-4"
-            >
-              Filament Cost Calculator
-            </Link>
-          </li>
-        </ul>
-      </nav>
     </article>
   );
 }

@@ -55,7 +55,7 @@ export const TOOLS: Tool[] = [
     title: "Failure Rate Calculator",
     shortTitle: "Failure Rate",
     description:
-      "Calculate your failure rate and the production cost carried by successful prints.",
+      "Track your recorded failure rate and estimate material consumed by failed attempts.",
     available: true,
   },
   {

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import { GuideImageCredit } from "@/components/shared/GuideImageCredit";
 import Link from "next/link";
 
 import { AdSlot } from "@/components/shared/AdSlot";
@@ -144,16 +145,8 @@ export default function GuidePage() {
           priority
         />
         <figcaption className="mt-2 text-xs text-muted-foreground">
-          Filament spools left out of sealed storage absorb moisture from the
-          surrounding air. Photo via{" "}
-          <a
-            href="https://commons.wikimedia.org/wiki/File:Helsinki,_Oodi,_3D_printer_filament.jpg"
-            className="underline"
-            rel="noreferrer"
-          >
-            Wikimedia Commons
-          </a>
-          .
+          Stored filament can absorb moisture; follow the material maker&apos;s drying instructions.
+          <GuideImageCredit image="filament-spools-helsinki.jpg" />
         </figcaption>
       </figure>
 

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import { GuideImageCredit } from "@/components/shared/GuideImageCredit";
 import Link from "next/link";
 
 import { AdSlot } from "@/components/shared/AdSlot";
@@ -118,16 +119,8 @@ export default function GuidePage() {
           priority
         />
         <figcaption className="mt-2 text-xs text-muted-foreground">
-          Different filament chemistries print, behave, and age very
-          differently. Photo via{" "}
-          <a
-            href="https://commons.wikimedia.org/wiki/File:QiDi_3D_Printer_Filaments.png"
-            className="underline"
-            rel="noreferrer"
-          >
-            Wikimedia Commons
-          </a>
-          .
+          Filament chemistry affects printing and the properties of a finished part.
+          <GuideImageCredit image="filament-types-qidi.png" />
         </figcaption>
       </figure>
 

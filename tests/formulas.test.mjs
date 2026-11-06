@@ -89,6 +89,40 @@ test("failure rate divides failures by all attempts; consumed failed material is
   close(result.wastedCost, 1);
 });
 
+test("failure waste uses material consumed by failed attempts, not completed-part weight", () => {
+  const early = calculateFailureRate({ successfulPrints: 9, failedPrints: 1, avgGramsPerPrint: 5, pricePerKg: 20 });
+  close(early.failureRatePercent, 10);
+  close(early.wastedGrams, 5);
+  close(early.wastedCost, 0.1);
+  const late = calculateFailureRate({ successfulPrints: 9, failedPrints: 1, avgGramsPerPrint: 50, pricePerKg: 20 });
+  close(late.failureRatePercent, early.failureRatePercent);
+  close(late.wastedCost, 1);
+});
+
+test("zero failures and all failures are valid observations for nonempty samples", () => {
+  close(calculateFailureRate({ successfulPrints: 12, failedPrints: 0, avgGramsPerPrint: 5, pricePerKg: 20 }).failureRatePercent, 0);
+  const all = calculateFailureRate({ successfulPrints: 0, failedPrints: 12, avgGramsPerPrint: 5, pricePerKg: 20 });
+  close(all.failureRatePercent, 100);
+  close(all.wastedCost, 1.2);
+});
+
+test("illustrative guide durations come from explicit grams and average throughput", () => {
+  assert.equal(calculatePrintTime({ gramsUsed: 60, throughputGramsPerHour: 10 }).formatted, "6h 0m");
+  assert.equal(calculatePrintTime({ gramsUsed: 60, throughputGramsPerHour: 20 }).formatted, "3h 0m");
+  assert.equal(calculatePrintTime({ gramsUsed: 60, throughputGramsPerHour: 30 }).formatted, "2h 0m");
+  assert.equal(calculatePrintTime({ gramsUsed: 150, throughputGramsPerHour: 20 }).formatted, "7h 30m");
+});
+
+test("published cost example includes overhead, power, machine time and failures once", () => {
+  const material = calculateFilamentCost({ gramsUsed: 100, pricePerKg: 20, wasteFactor: 0.05 });
+  const electricity = calculateElectricityCost({ watts: 95, hours: 8, ratePerKwh: 0.18 });
+  const result = calculatePrintPricing({ materialCost: material.cost, electricityCost: electricity.cost,
+    printHours: 8, printerPrice: 700, printerLifetimeHours: 2000,
+    failureRatePercent: 7, laborHours: 0.25, laborRate: 15, markup: 1 });
+  close(result.productionCost, 5.0368);
+  assert.equal(result.floorPrice.toFixed(2), "9.17");
+});
+
 test("pricing example separates production markup from labor", () => {
   const result = calculatePrintPricing(pricing);
   close(result.machineCost, 0.42);

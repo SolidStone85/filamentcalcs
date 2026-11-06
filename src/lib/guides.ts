@@ -56,11 +56,12 @@ export const GUIDES: Guide[] = [
   },
   {
     slug: "why-3d-prints-fail",
-    title: "Why does my 3D print keep failing? 12 fixes ranked by frequency",
+    title: "Why Do 3D Prints Fail? 12 Checks by Symptom",
     shortTitle: "Print failure fixes",
     description:
-      "The twelve most common print failures, how to spot them, and what actually fixes each one.",
+      "Troubleshoot first-layer problems, warping, stringing and other symptoms with manufacturer guidance, consistent failure records and clear material-loss examples.",
     publishedAt: "2026-04-23",
+    updatedAt: "2026-11-06",
     readMinutes: 9,
     relatedToolSlugs: ["failure-rate-calculator", "filament-cost-calculator"],
   },
@@ -80,11 +81,12 @@ export const GUIDES: Guide[] = [
   },
   {
     slug: "3d-print-time-expectations",
-    title: "How long does a 3D print take? Realistic times by printer class",
+    title: "How Long Does a 3D Print Take? Estimates and Worked Examples",
     shortTitle: "How long prints take",
     description:
-      "Bambu, Prusa, Ender, Klipper-tuned. Real g/hr throughput numbers and why your slicer estimate is often wrong.",
+      "Estimate print time from grams and an explicit average rate, compare with your slicer, and plan long jobs. Worked examples are assumptions, not printer benchmarks.",
     publishedAt: "2026-04-23",
+    updatedAt: "2026-11-06",
     readMinutes: 6,
     relatedToolSlugs: ["print-time-estimator", "filament-cost-calculator"],
   },

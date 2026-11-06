@@ -1,14 +1,14 @@
 // Printer class presets. Throughput and wattage vary significantly with
 // print settings, model geometry, and calibration. These values are
-// community-consensus typical numbers, good enough for "am I buying the
-// right printer" and "how much does a print cost" questions. Do not
-// treat as specs.
+// illustrative planning assumptions, not audited performance measurements
+// or manufacturer specifications. Use comparable print logs or measured
+// whole-job power for a more useful estimate. Preserve IDs for shared URLs.
 
 export type PrinterPreset = {
   id: string;
   label: string;
-  throughputGramsPerHour: number; // typical flow rate for default settings
-  wattsAverage: number; // steady-state draw during printing
+  throughputGramsPerHour: number; // assumed whole-print average, not peak flow
+  wattsAverage: number; // assumed average draw, not a measured model spec
   className: "fast-corexy" | "bedslinger" | "legacy" | "custom";
 };
 

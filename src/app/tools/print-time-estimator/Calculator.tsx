@@ -131,9 +131,9 @@ export function Calculator() {
               </SelectContent>
             </Select>
             <p className="text-xs text-muted-foreground">
-              Throughput is how many grams of filament your printer extrudes
-              per hour at typical settings. Picking the right class sets a
-              realistic starting number.
+              These presets are illustrative planning assumptions, not measured
+              printer performance. Choose Custom to enter grams per elapsed hour
+              from your own comparable print.
             </p>
           </div>
 
@@ -193,7 +193,7 @@ export function Calculator() {
               },
               { label: "formatted", value: result.formatted },
             ]}
-            note="This is a rough ballpark. Real print time varies with layer height, speed, infill, and geometry. Your slicer's estimate is always more accurate for a specific file."
+            note="This is a rough weight-based estimate, not a measured completion time. Slice the actual model with the intended profile and compare with your own print logs before planning a deadline."
           />
         )}
 

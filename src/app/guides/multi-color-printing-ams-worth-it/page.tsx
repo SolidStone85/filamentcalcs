@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import { GuideImageCredit } from "@/components/shared/GuideImageCredit";
 import Link from "next/link";
 
 import { AdSlot } from "@/components/shared/AdSlot";
@@ -101,8 +102,8 @@ export default function GuidePage() {
           priority
         />
         <figcaption className="mt-2 text-xs text-muted-foreground">
-          Bambu Lab X1 Carbon with an AMS module. Material use depends on the sliced job. Photo via{" "}
-          <a href="https://commons.wikimedia.org/wiki/File:Bambu_Lab_X1_Carbon_with_AMS_module_(cropped).jpg" className="underline" rel="noreferrer">Wikimedia Commons</a>.
+          Bambu Lab X1 Carbon with an AMS module. Material use depends on the sliced job.
+          <GuideImageCredit image="bambu-x1c-ams.jpg" />
         </figcaption>
       </figure>
 

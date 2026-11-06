@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import { GuideImageCredit } from "@/components/shared/GuideImageCredit";
 import Link from "next/link";
 
 import { AdSlot } from "@/components/shared/AdSlot";
@@ -105,15 +106,8 @@ export default function GuidePage() {
           priority
         />
         <figcaption className="mt-2 text-xs text-muted-foreground">
-          Filament is one component of a print&apos;s total cost. Photo via{" "}
-          <a
-            href="https://commons.wikimedia.org/wiki/File:3D_Printing_Materials_(16863368275).jpg"
-            className="underline"
-            rel="noreferrer"
-          >
-            Wikimedia Commons
-          </a>
-          .
+          Filament is one component of a print&apos;s total cost.
+          <GuideImageCredit image="printing-materials.jpg" />
         </figcaption>
       </figure>
 

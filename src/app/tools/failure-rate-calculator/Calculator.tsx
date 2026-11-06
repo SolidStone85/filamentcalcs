@@ -150,14 +150,14 @@ export function Calculator() {
 
           <InputWithUnit
             id="avg-grams"
-            label="Average filament per print"
+            label="Average filament consumed per failed attempt"
             value={state.avgGrams}
             onValueChange={(v) => setState((s) => ({ ...s, avgGrams: v }))}
             unit="g"
             min={0}
             step={5}
             placeholder="50"
-            hint="Rough typical weight of your prints. Used to estimate wasted filament."
+            hint="Grams actually used before an attempt failed, including discarded supports or purge if counted. An early failure may use much less than a complete print."
           />
 
           <InputWithUnit
@@ -238,13 +238,13 @@ export function Calculator() {
 
             <div className="grid grid-cols-2 gap-3">
               <ResultDisplay
-                label="Filament wasted"
+                label="Estimated filament wasted"
                 value={result.wastedGrams.toFixed(0)}
                 unit="g"
-                sublabel={`${failed} failed × ${avgGrams} g avg`}
+                sublabel={`${failed} failed attempts × ${avgGrams} g consumed per failure`}
               />
               <ResultDisplay
-                label="Money wasted"
+                label="Estimated material cost wasted"
                 value={formatCurrency(result.wastedCost, state.currency)}
               />
             </div>

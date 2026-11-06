@@ -7,13 +7,16 @@ import { AffiliatePicks } from "@/components/shared/AffiliatePicks";
 import { RelatedContent } from "@/components/shared/RelatedContent";
 import { AuthorBio } from "@/components/shared/AuthorBio";
 import { AuthorByline } from "@/components/shared/AuthorByline";
+import { GuideImageCredit } from "@/components/shared/GuideImageCredit";
 import { Highlight3D } from "@/components/shared/Highlight3D";
 import { AUTHOR_JSONLD } from "@/lib/author";
+import { calculatePrintTime } from "@/lib/formulas/printTime";
 import { getGuide } from "@/lib/guides";
 import { SITE } from "@/lib/tools";
 
 const SLUG = "3d-print-time-expectations";
 const guide = getGuide(SLUG)!;
+const UPDATED_AT = "2026-11-06";
 
 export const metadata: Metadata = {
   title: guide.title,
@@ -25,289 +28,180 @@ export const metadata: Metadata = {
     url: `${SITE.url}/guides/${SLUG}`,
     type: "article",
     publishedTime: guide.publishedAt,
+    modifiedTime: UPDATED_AT,
   },
 };
 
-const FAQ: { q: string; a: string }[] = [
-  {
-    q: "Why is my slicer estimate often wrong?",
-    a: "Slicers simulate the motion commands but can't perfectly predict acceleration, cooling waits, or first-layer slowdowns. Most slicers are optimistic by 10 to 20% on real-world prints. Bambu Studio tends to be closer than PrusaSlicer, which tends to be closer than Cura. If your estimate says 4 hours, budget 4.5.",
-  },
-  {
-    q: "Is faster printing actually worse quality?",
-    a: "Sometimes. Above certain speeds, the hotend can't melt filament fast enough (volumetric flow rate limit), layer lines get rougher, and overhangs sag. For most printers, 100 to 150 mm/s with standard PLA is the quality sweet spot. 300+ mm/s is doable on Bambu and Voron but expect visible differences.",
-  },
-  {
-    q: "Does layer height really matter for print time?",
-    a: "Huge difference. A print at 0.2mm layer height vs 0.1mm takes roughly half the time, with some loss of detail. 0.08mm or 0.06mm for miniatures can 3x or 4x print times. For most functional prints, 0.2mm is fine. For detailed figurines, 0.12mm is a good balance.",
-  },
-  {
-    q: "Can I leave my printer running overnight?",
-    a: "For modern printers with thermal runaway protection and decent build quality: generally yes. Bambu, Prusa, and modern Creality printers have safety features that will shut down on anomalies. Older or modded printers without thermal runaway protection: no, not worth the house fire risk.",
-  },
-  {
-    q: "How long does the first layer take?",
-    a: "Usually 5 to 15% of total print time even though it's just one layer. First layer prints at slower speed for adhesion, uses more time per mm of movement. For a 4-hour print, expect 15 to 30 minutes on layer 1 alone. This is a good thing. Rushed first layers fail.",
-  },
+const FAQ = [
+  { q: "Why can my slicer estimate differ from elapsed time?", a: "The estimate depends on the selected printer profile and its motion settings. Startup routines, firmware limits, cooling waits, pauses and changes made at the printer can affect elapsed time. Compare predicted and actual durations for comparable jobs. This guide has no controlled test supporting a universal error percentage or a ranking of slicer accuracy." },
+  { q: "Is faster printing always worse quality?", a: "Quality depends on the printer, material, geometry and profile. Motion limits, cooling and the hotend's flow capacity can constrain a usable speed. Use the maker's profile as a starting point and compare small test parts; there is no single speed that suits every printer and filament." },
+  { q: "Does halving layer height double print time?", a: "It increases the number of layers for the same height, but total time also depends on paths, speeds, travel and cooling. Re-slice the same model at both settings instead of assuming an exact multiplier." },
+  { q: "Can I leave my printer running overnight?", a: "Follow your printer manufacturer's safety instructions. Thermal protection and a webcam do not make unattended operation safe by themselves. Prusa explicitly advises against leaving its printers switched on unattended. Plan long jobs for times when you can provide the supervision your printer requires." },
+  { q: "What share of the job does the first layer take?", a: "There is no fixed percentage. The footprint, first-layer speed, startup sequence and number of later layers all matter. Inspect the sliced preview and compare it with your printer's actual startup and first-layer time." },
+];
+
+const EXAMPLES = [
+  { grams: 60, throughput: 10 },
+  { grams: 60, throughput: 20 },
+  { grams: 60, throughput: 30 },
+  { grams: 150, throughput: 20 },
 ];
 
 export default function GuidePage() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
-      {
-        "@type": "Article",
-        headline: guide.title,
-        description: guide.description,
-        datePublished: guide.publishedAt,
-        author: AUTHOR_JSONLD,
-        publisher: { "@type": "Organization", name: SITE.name },
-        mainEntityOfPage: { "@type": "WebPage", "@id": `${SITE.url}/guides/${SLUG}` },
-      },
-      {
-        "@type": "FAQPage",
-        mainEntity: FAQ.map((item) => ({
-          "@type": "Question",
-          name: item.q,
-          acceptedAnswer: { "@type": "Answer", text: item.a },
-        })),
-      },
+      { "@type": "Article", headline: guide.title, description: guide.description,
+        datePublished: guide.publishedAt, dateModified: UPDATED_AT,
+        author: AUTHOR_JSONLD, publisher: { "@type": "Organization", name: SITE.name },
+        mainEntityOfPage: { "@type": "WebPage", "@id": `${SITE.url}/guides/${SLUG}` } },
+      { "@type": "FAQPage", mainEntity: FAQ.map((item) => ({ "@type": "Question", name: item.q,
+        acceptedAnswer: { "@type": "Answer", text: item.a } })) },
     ],
   };
 
   return (
     <article className="mx-auto max-w-3xl px-4 py-10 lg:py-14">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <header className="space-y-3">
-        <p className="text-xs uppercase tracking-wide text-muted-foreground">
-          Guide · {guide.readMinutes} min read
-        </p>
-        <h1 className="text-3xl font-semibold tracking-tight lg:text-4xl">
-          <Highlight3D>{guide.title}</Highlight3D>
-        </h1>
-        <AuthorByline updatedLabel="Updated April 2026" />
+        <p className="text-xs uppercase tracking-wide text-muted-foreground">Guide · {guide.readMinutes} min read</p>
+        <h1 className="text-3xl font-semibold tracking-tight lg:text-4xl"><Highlight3D>{guide.title}</Highlight3D></h1>
+        <AuthorByline updatedLabel="Reviewed November 6, 2026 (UTC)" />
       </header>
 
       <figure className="my-8">
-        <Image
-          src="/images/guides/printer-makers-party.jpg"
-          alt="A 3D printer mid-print at a maker community event"
-          width={4928}
-          height={3264}
-          className="w-full h-auto rounded-lg object-cover max-h-96"
-          priority
-        />
+        <Image src="/images/guides/printer-makers-party.jpg" alt="A 3D printer mid-print at a maker community event"
+          width={4928} height={3264} className="w-full h-auto rounded-lg object-cover max-h-96" priority />
         <figcaption className="mt-2 text-xs text-muted-foreground">
-          A 3D printer in the middle of a print. How fast a print
-          finishes depends on the printer model far more than the file
-          itself. Photo via{" "}
-          <a
-            href="https://commons.wikimedia.org/wiki/File:Printing_with_a_3D_printer_at_Makers_Party_Bangalore_2013_11.JPG"
-            className="underline"
-            rel="noreferrer"
-          >
-            Wikimedia Commons
-          </a>
-          .
+          A printer at a maker event; this photograph is not a timed performance test.
+          <GuideImageCredit image="printer-makers-party.jpg" />
         </figcaption>
       </figure>
 
       <AdSlot slot="top" className="my-8" />
-
       <AffiliatePicks pagePath={`/guides/${SLUG}`} className="my-8" />
 
       <div className="prose prose-sm dark:prose-invert max-w-none space-y-5 text-sm leading-7">
         <p>
-          Print time is one of those numbers nobody can pin down exactly
-          because it depends on everything: your printer, the filament,
-          the layer height, speed, infill, geometry. But there are
-          realistic ranges by printer class, and knowing them helps set
-          expectations and plan your prints.
+          For a specific model, start by slicing it for your intended printer,
+          material and settings. Weight alone cannot describe the toolpath. A
+          weight-based calculation is useful earlier in planning, when you need
+          a rough duration and understand the assumed average rate.
         </p>
         <p>
-          The quickest useful number: <strong>grams per hour of
-          throughput</strong>. This is how much filament your printer can
-          reliably extrude in an hour at typical print settings. Divide
-          your part weight by throughput and you get rough hours to print.
-          For a more specific estimate, the{" "}
-          <Link
-            href="/tools/print-time-estimator"
-            className="underline underline-offset-4"
-          >
-            Print Time Estimator
-          </Link>{" "}
-          has presets for common printer classes.
+          FilamentCalcs has not conducted controlled printer timing tests. The
+          examples below are calculations from explicit assumptions, not measured
+          Benchy times or comparisons between Bambu, Prusa and Creality machines.
         </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
-          Throughput by printer class
-        </h2>
-        <p>Realistic g/hr averages for default quality settings:</p>
-        <ul className="list-disc pl-5 space-y-1 marker:text-primary">
-          <li><strong>Fast CoreXY (Bambu X1C, P1S):</strong> 28 to 35 g/hr</li>
-          <li><strong>Modern bedslinger (Bambu A1, Prusa MK4):</strong> 18 to 25 g/hr</li>
-          <li><strong>Legacy budget printer (Ender 3 stock, older Creality):</strong> 8 to 12 g/hr</li>
-          <li><strong>Klipper-tuned custom builds:</strong> 35 to 50 g/hr</li>
-          <li><strong>Ultra-fast custom (Voron V2.4 tuned, Rat Rig V-Core):</strong> 40 to 70 g/hr</li>
-        </ul>
+        <h2 className="text-xl font-semibold tracking-tight pt-4">Estimate hours from a comparable job</h2>
+        <p className="rounded-md bg-muted p-3 font-mono text-xs">
+          average_g_per_hour = grams_consumed / elapsed_hours<br />
+          estimated_hours = planned_grams / average_g_per_hour
+        </p>
         <p>
-          The gap between a stock Ender and a fast CoreXY is roughly 3x.
-          That's the biggest single speed improvement you can get for
-          money: a modern printer will print faster than upgrading a slow
-          one can achieve in most cases.
+          Suppose a previous comparable job used 60 g in three elapsed printing
+          hours. Its average was 20 g/hour. At that assumed rate, 150 g would take
+          7.5 hours. That does not establish how fast a different shape or profile
+          will print. Include supports and other consumed material consistently
+          in both records, and use the same start/end definition for elapsed time.
         </p>
-
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
-          Real-world examples
-        </h2>
-        <p>Actual prints with weight-based time estimates:</p>
-        <ul className="list-disc pl-5 space-y-1 marker:text-primary">
-          <li>
-            <strong>3DBenchy (20g):</strong> Bambu X1C 35 min. Prusa MK4 60
-            min. Ender 3 120 min.
-          </li>
-          <li>
-            <strong>Articulated dragon (250g):</strong> Bambu X1C 8 hours.
-            MK4 12 hours. Ender 3 24+ hours.
-          </li>
-          <li>
-            <strong>Phone stand (60g):</strong> Bambu X1C 2 hours. Ender 3
-            6 hours.
-          </li>
-          <li>
-            <strong>Terrain tile (150g):</strong> Bambu X1C 5 hours. Ender
-            3 13 hours.
-          </li>
-          <li>
-            <strong>Functional replacement part (35g):</strong> Bambu X1C
-            75 min. Ender 3 3 hours.
-          </li>
-        </ul>
-
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
-          What makes prints slower than weight suggests
-        </h2>
         <p>
-          Throughput-based estimates assume a "normal" part shape and
-          settings. Some things throw the estimate off:
+          Average grams per elapsed hour is different from a hotend&apos;s maximum
+          volumetric flow in mm³/s. Whole-job time includes movements without
+          extrusion and other delays. Multiplying a peak flow limit by density
+          does not establish a whole-print average.
         </p>
-        <ul className="list-disc pl-5 space-y-1 marker:text-primary">
-          <li>
-            <strong>Lots of travel moves.</strong> Multi-part prints with
-            gaps between parts spend time moving without extruding.
-          </li>
-          <li>
-            <strong>Fine detail at low layer heights.</strong> 0.06 to
-            0.08mm layers cut throughput roughly 2x.
-          </li>
-          <li>
-            <strong>High infill.</strong> 100% infill on a large part can
-            double the print time vs 20% infill.
-          </li>
-          <li>
-            <strong>Supports.</strong> Tree supports for figurines can add
-            30 to 50% to print time.
-          </li>
-          <li>
-            <strong>Small parts.</strong> Layer times under 15 seconds
-            need minimum-layer-time slowdown, which cuts throughput to
-            maybe 30% of max. A 3g miniature takes much longer per gram
-            than a 300g dragon.
-          </li>
-          <li>
-            <strong>Multi-color with AMS.</strong> Each color swap costs
-            30 to 90 seconds plus purge time. A 40-swap print adds 20 to
-            60 minutes on top of base time.
-          </li>
+
+        <h2 className="text-xl font-semibold tracking-tight pt-4">Illustrative time calculations</h2>
+        <p>
+          The rates in this table are assumed inputs. Each result is weight
+          divided by the stated rate, using the same formula as the calculator.
+          They are not verified printer-class averages or promises for a downloaded model.
+        </p>
+        <div className="overflow-x-auto rounded-lg border border-border">
+          <table className="w-full text-xs">
+            <caption className="px-3 py-2 text-left">Examples using assumed average throughput</caption>
+            <thead className="bg-muted/50 text-left"><tr>
+              <th className="px-3 py-2" scope="col">Filament</th>
+              <th className="px-3 py-2" scope="col">Assumed average</th>
+              <th className="px-3 py-2" scope="col">Calculated duration</th>
+            </tr></thead>
+            <tbody>{EXAMPLES.map((row) => (
+              <tr key={`${row.grams}-${row.throughput}`} className="border-t">
+                <td className="px-3 py-2">{row.grams} g</td>
+                <td className="px-3 py-2">{row.throughput} g/hour</td>
+                <td className="px-3 py-2">
+                  <Link href={`/tools/print-time-estimator?g=${row.grams}&p=custom&t=${row.throughput}`} className="underline">
+                    {calculatePrintTime({ gramsUsed: row.grams, throughputGramsPerHour: row.throughput }).formatted}
+                  </Link>
+                </td>
+              </tr>
+            ))}</tbody>
+          </table>
+        </div>
+        <p>
+          Open an example to change the inputs in the{" "}
+          <Link href="/tools/print-time-estimator" className="underline underline-offset-4">Print Time Estimator</Link>.
+          Its named-printer presets are illustrative starting assumptions, not
+          manufacturer specifications. Choose Custom to use your own comparable record.
+          Rounding the answer to a minute does not imply minute-level accuracy.
+        </p>
+
+        <h2 className="text-xl font-semibold tracking-tight pt-4">Why equal-weight prints can take different times</h2>
+        <ul className="list-disc pl-5 space-y-2 marker:text-primary">
+          <li><strong>Paths and motion:</strong> short moves and travel between separate parts change how much time is spent extruding. Commanded speed is not the speed reached throughout every move.</li>
+          <li><strong>Layer height and detail:</strong> more layers, fine features and overhang settings change the path and speed mix. Re-slice to compare.</li>
+          <li><strong>Cooling:</strong> minimum layer time can slow small layers so they cool before the next pass.</li>
+          <li><strong>Infill and supports:</strong> these change both consumed material and toolpaths. Use final sliced grams when they are already included.</li>
+          <li><strong>Material changes:</strong> unloading, loading, flushing and travel add time. Use the actual multi-color slice rather than a fixed seconds-per-swap rule.</li>
         </ul>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
-          Why your slicer's estimate isn't always right
-        </h2>
+        <h2 className="text-xl font-semibold tracking-tight pt-4">Check the slicer profile before adding a timing allowance</h2>
         <p>
-          Slicers predict print time by simulating the G-code move by
-          move, applying your speed and acceleration settings. They're
-          pretty good but imperfect because:
+          Use the correct printer profile and check that its motion settings match
+          your machine. Prusa&apos;s documentation explains that its time estimate
+          accounts for acceleration and other profile settings. A mismatch can
+          change the prediction. This guide has no controlled evidence for claiming
+          one slicer is always more accurate than another.
         </p>
-        <ul className="list-disc pl-5 space-y-1 marker:text-primary">
-          <li>
-            Acceleration estimation is hard. Real printers ramp up more
-            slowly than slicers predict.
-          </li>
-          <li>
-            Slicers don't know about real-world delays: bed levelling,
-            nozzle wipe, filament loading, brief pauses during fan ramp-up.
-          </li>
-          <li>
-            Volumetric flow limits cap speed on high-demand moves. Slicers
-            sometimes underestimate.
-          </li>
+        <p>
+          Log the sliced estimate, actual elapsed time and any separately timed
+          startup or handling. Choose an allowance from comparable records and the
+          consequence of finishing late. Do not add startup twice if it is already
+          included in the duration you are using. No universal percentage buffer
+          guarantees a completion time.
+        </p>
+
+        <h2 className="text-xl font-semibold tracking-tight pt-4">Plan long jobs around supervision</h2>
+        <p>
+          Follow the printer&apos;s safety instructions when deciding when to start.
+          Prusa advises against leaving its printers switched on unattended.
+          Thermal protection or a camera does not override the manufacturer&apos;s
+          instructions. Check that you have enough filament and plan a time when
+          you can provide the required supervision; splitting the model can be an
+          alternative when a continuous run is impractical.
+        </p>
+
+        <h2 className="text-xl font-semibold tracking-tight pt-4">Sources and references</h2>
+        <p className="text-xs text-muted-foreground">Checked November 6, 2026. These explain settings and safety; they do not validate the illustrative rates above.</p>
+        <ul className="list-disc pl-5 space-y-2 text-xs leading-6 marker:text-primary">
+          <li><a href="https://help.prusa3d.com/article/faq-prusaslicer_1789" className="underline" rel="noreferrer">PrusaSlicer FAQ</a>: matching printer profiles and print-time estimation.</li>
+          <li><a href="https://help.prusa3d.com/article/speed-settings_480325" className="underline" rel="noreferrer">PrusaSlicer speed settings</a>: acceleration and actual move speeds.</li>
+          <li><a href="https://help.prusa3d.com/article/extruder-blob_2005" className="underline" rel="noreferrer">Prusa extruder-blob guidance</a>: supervision and first-layer problems.</li>
+          <li><Link href="/methodology" className="underline">FilamentCalcs methodology</Link>: formula assumptions and limits.</li>
         </ul>
-        <p>
-          Rule of thumb: PrusaSlicer and OrcaSlicer are usually within 10%
-          of actual. Cura tends to be 15 to 25% optimistic. Bambu Studio
-          is usually within 5 to 10% on Bambu printers.
-        </p>
 
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
-          Planning overnight prints
-        </h2>
-        <p>
-          Before you start an 11pm print, do the math: slicer estimate
-          plus 20% buffer. If that runs past when you need the printer
-          free, either start earlier or split the print. For multi-day
-          prints, weigh the spool first (need enough filament) and watch
-          for clog risk.
-        </p>
-
-        <h2 className="text-xl font-semibold tracking-tight pt-4">
-          Frequently asked
-        </h2>
-        <dl className="space-y-4">
-          {FAQ.map((item) => (
-            <div key={item.q} className="space-y-1">
-              <dt className="font-medium">{item.q}</dt>
-              <dd className="text-sm leading-7 text-muted-foreground">
-                {item.a}
-              </dd>
-            </div>
-          ))}
-        </dl>
+        <h2 className="text-xl font-semibold tracking-tight pt-4">Frequently asked</h2>
+        <dl className="space-y-4">{FAQ.map((item) => (
+          <div key={item.q} className="space-y-1"><dt className="font-medium">{item.q}</dt>
+            <dd className="text-sm leading-7 text-muted-foreground">{item.a}</dd></div>
+        ))}</dl>
       </div>
 
       <AuthorBio />
-
       <RelatedContent pagePath={`/guides/${SLUG}`} className="mt-8" />
-
       <AdSlot slot="inline" className="my-10" />
-
-      <nav className="mt-10 rounded-lg border p-5 text-sm">
-        <p className="mb-3 text-xs uppercase tracking-wide text-muted-foreground">
-          Related tools
-        </p>
-        <ul className="space-y-2">
-          <li>
-            <Link
-              href="/tools/print-time-estimator"
-              className="underline underline-offset-4"
-            >
-              Print Time Estimator
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/tools/filament-cost-calculator"
-              className="underline underline-offset-4"
-            >
-              Filament Cost Calculator
-            </Link>
-          </li>
-        </ul>
-      </nav>
     </article>
   );
 }

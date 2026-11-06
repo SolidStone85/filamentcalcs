@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import { GuideImageCredit } from "@/components/shared/GuideImageCredit";
 import Link from "next/link";
 
 import { AdSlot } from "@/components/shared/AdSlot";
@@ -102,17 +103,8 @@ export default function GuidePage() {
           priority
         />
         <figcaption className="mt-2 text-xs text-muted-foreground">
-          PrusaSlicer is one of several slicers (alongside Bambu Studio
-          and OrcaSlicer) where the settings discussed below live.
-          Screenshot via{" "}
-          <a
-            href="https://commons.wikimedia.org/wiki/File:PrusaSlicer.png"
-            className="underline"
-            rel="noreferrer"
-          >
-            Wikimedia Commons
-          </a>
-          .
+          PrusaSlicer interface. Use the profile for your printer, nozzle and material.
+          <GuideImageCredit image="prusaslicer.png" />
         </figcaption>
       </figure>
 

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import { GuideImageCredit } from "@/components/shared/GuideImageCredit";
 import Link from "next/link";
 
 import { AdSlot } from "@/components/shared/AdSlot";
@@ -93,7 +94,10 @@ export default function GuidePage() {
 
       <figure className="my-8">
         <Image src="/images/guides/printer-in-action.jpg" alt="A 3D printer with a partially printed object on the build plate" width={3072} height={4080} className="w-full h-auto rounded-lg object-cover max-h-96" priority />
-        <figcaption className="mt-2 text-xs text-muted-foreground">Photo via <a href="https://commons.wikimedia.org/wiki/File:3D_Printing.jpg" className="underline" rel="noreferrer">Wikimedia Commons</a>; this guide does not report hands-on printer tests.</figcaption>
+        <figcaption className="mt-2 text-xs text-muted-foreground">
+          Illustration only; this guide does not report hands-on printer tests.
+          <GuideImageCredit image="printer-in-action.jpg" />
+        </figcaption>
       </figure>
       <AdSlot slot="top" className="my-8" />
 
