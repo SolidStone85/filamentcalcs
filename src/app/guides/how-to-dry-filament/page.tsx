@@ -238,9 +238,10 @@ export default function GuidePage() {
           ))}
         </ul>
         <p>
-          A 70 °C dryer cannot reach the nylon and PC settings in the table,
-          which run from 75 to 100 °C. If you print those materials often,
-          check the maximum before you buy.
+          A 70 °C dryer cannot reach several settings in this table, including
+          Bambu ABS and ASA at 80 °C and the higher-temperature PC and nylon
+          settings. Match the exact filament, required time, spool limit and
+          equipment before buying; a material-family name alone is not enough.
         </p>
 
         <h2 className="text-xl font-semibold tracking-tight pt-4">
@@ -290,8 +291,10 @@ export default function GuidePage() {
           and S4 and Creality&apos;s Space Pi Plus, stop at 70 °C.
         </p>
         <p>
-          Worth buying if you print PETG, TPU or nylon often or live
-          somewhere humid. If you print PLA almost exclusively and keep
+          A dryer can help when your filament needs drying and the equipment
+          can reach its specified settings within the spool&apos;s limits. A
+          70 °C model is not a substitute for equipment required by a hotter
+          drying schedule. If you print PLA almost exclusively and keep
           spools sealed, you may rarely need one.
         </p>
 

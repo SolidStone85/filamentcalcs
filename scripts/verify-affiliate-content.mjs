@@ -1,6 +1,8 @@
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { GUIDES } from "../src/lib/guides.ts";
+import { TOOLS } from "../src/lib/tools.ts";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const disclosure = "As an Amazon Associate I earn from qualifying purchases.";
@@ -25,8 +27,8 @@ function slugsFromRegistry(source, registryName) {
   return slugs;
 }
 
-const toolSlugs = slugsFromRegistry(read("src", "lib", "tools.ts"), "TOOLS");
-const guideSlugs = slugsFromRegistry(read("src", "lib", "guides.ts"), "GUIDES");
+const toolSlugs = TOOLS.map((tool) => tool.slug);
+const guideSlugs = GUIDES.map((guide) => guide.slug);
 
 const contentPaths = [
   ...toolSlugs.map((slug) => `/tools/${slug}`),
@@ -53,6 +55,8 @@ const affiliateRegistry = commerce.split("export const RELATED_CONTENT")[0];
 // The October 10 converter has no product picks; wait for search/usage evidence.
 // New tools still require an explicit decision instead of silently skipping checks.
 const nonAffiliateTools = new Set(["filament-length-converter"]);
+// The existing helmet article intentionally has no product recommendations.
+const nonAffiliateGuides = new Set(["3d-print-cosplay-helmet-size-cost"]);
 const affiliateComponent = read("src", "components", "shared", "AffiliatePicks.tsx");
 const relatedComponent = read("src", "components", "shared", "RelatedContent.tsx");
 const footer = read("src", "components", "layout", "Footer.tsx");
@@ -66,8 +70,8 @@ assert(
   "AffiliatePicks must read NEXT_PUBLIC_AMZN_TAG",
 );
 assert(
-  affiliateComponent.includes('rel="sponsored nofollow"'),
-  'Affiliate links must use rel="sponsored nofollow"',
+  /rel="[^"]*\bsponsored\b[^\"]*\bnofollow\b/.test(affiliateComponent),
+  'Affiliate links must retain sponsored and nofollow relations',
 );
 assert(
   affiliateComponent.includes('target="_blank"'),
@@ -87,7 +91,7 @@ assert(
 );
 
 for (const pagePath of contentPaths) {
-  const unmonetized = nonAffiliateTools.has(pagePath.replace("/tools/", ""));
+  const unmonetized = nonAffiliateTools.has(pagePath.replace("/tools/", "")) || nonAffiliateGuides.has(pagePath.replace("/guides/", ""));
   assert(
     unmonetized ? !affiliateRegistry.includes(`"${pagePath}"`) : affiliateRegistry.includes(`"${pagePath}"`),
     unmonetized ? `Unexpected affiliate mapping for ${pagePath}` : `Missing affiliate product mapping for ${pagePath}`,
@@ -100,12 +104,12 @@ for (const pagePath of contentPaths) {
 
 for (const slug of guideSlugs) {
   const page = read("src", "app", "guides", slug, "page.tsx");
-  assert(page.includes("AffiliatePicks"), `Guide ${slug} does not render AffiliatePicks`);
-  assert(page.includes("RelatedContent"), `Guide ${slug} does not render RelatedContent`);
-  assert(
-    page.includes("pagePath={`/guides/${SLUG}`}"),
-    `Guide ${slug} should use its SLUG when rendering commerce blocks`,
-  );
+  if (!nonAffiliateGuides.has(slug)) {
+    assert(page.includes("AffiliatePicks"), `Guide ${slug} does not render AffiliatePicks`);
+    assert(page.includes("pagePath={`/guides/${SLUG}`}"), `Guide ${slug} should use its SLUG when rendering commerce blocks`);
+  }
+  const sharedArticle = page.includes("BeginnerGuide") && read("src", "components", "shared", "BeginnerGuide.tsx").includes("RelatedContent");
+  assert(page.includes("RelatedContent") || sharedArticle, `Guide ${slug} does not render related content`);
 }
 
 for (const slug of toolSlugs) {

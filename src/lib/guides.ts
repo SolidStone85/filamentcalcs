@@ -14,6 +14,38 @@ export type Guide = {
 
 export const GUIDES: Guide[] = [
   {
+    slug: "how-to-start-3d-printing",
+    title: "How to Start 3D Printing and Finish Your First Useful Print",
+    shortTitle: "Your first useful print",
+    description: "Learn how to start 3D printing, choose a first model, prepare it in a slicer, check costs and avoid the mistakes that can spoil a first print.",
+    publishedAt: "2026-11-06", updatedAt: "2026-11-06", readMinutes: 8,
+    relatedToolSlugs: ["filament-cost-calculator", "remaining-spool-calculator"],
+  },
+  {
+    slug: "3d-printing-beginner-equipment",
+    title: "What You Need for 3D Printing and How to Choose a First Printer",
+    shortTitle: "Choose a beginner setup",
+    description: "Build a sensible beginner 3D printing setup. Compare printer features, choose your first filament and separate essential tools from upgrades that can wait.",
+    publishedAt: "2026-11-06", updatedAt: "2026-11-06", readMinutes: 8,
+    relatedToolSlugs: ["material-comparison", "electricity-cost-calculator"],
+  },
+  {
+    slug: "useful-3d-prints-save-money",
+    title: "Useful Things to 3D Print and When They Actually Save Money",
+    shortTitle: "Useful prints and real costs",
+    description: "Find practical 3D printing projects for your home and hobbies, then compare real costs with buying. Includes clear examples and sensible safety limits.",
+    publishedAt: "2026-11-06", updatedAt: "2026-11-06", readMinutes: 8,
+    relatedToolSlugs: ["filament-cost-calculator", "electricity-cost-calculator"],
+  },
+  {
+    slug: "start-3d-printing-business",
+    title: "Starting a 3D Printing Business With Products People Need",
+    shortTitle: "Test a printing business idea",
+    description: "Explore practical 3D printing business ideas, test demand before expanding and price work properly. Includes licensing, marketplace rules and a founder example.",
+    publishedAt: "2026-11-06", updatedAt: "2026-11-06", readMinutes: 10,
+    relatedToolSlugs: ["print-pricing-calculator", "failure-rate-calculator"],
+  },
+  {
     "slug": "3d-print-cosplay-helmet-size-cost",
     "title": "3D Printing a Cosplay Helmet: Size, Splits and Real Cost",
     "shortTitle": "Cosplay helmet fit and cost",
@@ -153,3 +185,8 @@ export const GUIDES: Guide[] = [
 export function getGuide(slug: string): Guide | undefined {
   return GUIDES.find((g) => g.slug === slug);
 }
+
+export const BEGINNER_GUIDE_SLUGS = [
+  "how-to-start-3d-printing", "3d-printing-beginner-equipment",
+  "useful-3d-prints-save-money", "start-3d-printing-business",
+] as const;

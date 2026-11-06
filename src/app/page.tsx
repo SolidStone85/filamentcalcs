@@ -4,7 +4,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
 import { ORGANIZATION_JSONLD } from "@/lib/author";
-import { GUIDES } from "@/lib/guides";
+import { GUIDES, BEGINNER_GUIDE_SLUGS } from "@/lib/guides";
 import { SITE, TOOLS } from "@/lib/tools";
 
 export const metadata: Metadata = {
@@ -107,6 +107,21 @@ export default function HomePage() {
         <Link href="/methodology" className="mt-3 inline-flex min-h-11 shrink-0 items-center gap-2 text-sm font-medium text-primary underline underline-offset-4 sm:mt-0">
           How the calculators work <ArrowRight className="size-4" aria-hidden="true" />
         </Link>
+      </section>
+
+      <section className="mt-14" aria-labelledby="beginner-guidance">
+        <h2 id="beginner-guidance" className="text-xl font-semibold tracking-tight">From your first print to a useful project</h2>
+        <p className="mt-2 max-w-3xl text-sm leading-7 text-muted-foreground">Start with a small job, choose equipment for what you need, and work out the real costs before buying more.</p>
+        <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {BEGINNER_GUIDE_SLUGS.map((slug, index) => {
+            const guide = GUIDES.find((item) => item.slug === slug)!;
+            return <article key={slug} className="border-t border-border pt-4">
+              <p className="mb-2 text-xs text-muted-foreground">{index + 1} · {guide.readMinutes} min read</p>
+              <h3 className="font-medium leading-6"><Link href={`/guides/${slug}`} className="text-primary underline underline-offset-4">{guide.shortTitle}</Link></h3>
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">{guide.description}</p>
+            </article>;
+          })}
+        </div>
       </section>
 
       <section className="mt-14">

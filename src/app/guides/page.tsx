@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { GUIDES } from "@/lib/guides";
+import { GUIDES, BEGINNER_GUIDE_SLUGS } from "@/lib/guides";
 import { SITE } from "@/lib/tools";
 
 export const metadata: Metadata = {
@@ -20,12 +20,19 @@ export default function GuidesIndexPage() {
           Guides
         </h1>
         <p className="mt-3 text-sm leading-7 text-muted-foreground">
-          Practical write-ups on filament choice, printer cost, reliability,
-          and the other questions hobbyists actually ask. Every guide links
+          Start with the four beginner guides, then explore filament choice,
+          printer cost, reliability and practical business questions. Every guide links
           to the calculators on this site that apply, with product links only
           where they are useful to the topic.
         </p>
       </header>
+
+      <nav aria-label="Beginner guide sequence" className="mb-10 rounded-xl border border-border bg-card p-5">
+        <h2 className="font-semibold">Start here</h2>
+        <ol className="mt-3 grid list-decimal gap-x-8 gap-y-3 pl-5 text-sm sm:grid-cols-2">
+          {BEGINNER_GUIDE_SLUGS.map((slug) => <li key={slug}><Link href={`/guides/${slug}`} className="text-primary underline underline-offset-4">{GUIDES.find((guide) => guide.slug === slug)!.shortTitle}</Link></li>)}
+        </ol>
+      </nav>
 
       <div className="grid gap-4 sm:grid-cols-2">
         {GUIDES.map((guide) => (

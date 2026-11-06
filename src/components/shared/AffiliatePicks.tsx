@@ -1,7 +1,7 @@
 import { ExternalLink } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { AMAZON_DISCLOSURE, getAffiliatePicks } from "@/lib/commerce";
+import { AMAZON_DISCLOSURE, getAffiliatePicks, getAmazonLinkLabel } from "@/lib/commerce";
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -33,9 +33,10 @@ export function AffiliatePicks({ pagePath, className }: Props) {
     >
       <div className="mb-4 space-y-1">
         <p className="text-xs font-medium uppercase text-muted-foreground">
-          Amazon picks
+          Amazon.com links
         </p>
         <p className="text-xs text-muted-foreground">{AMAZON_DISCLOSURE}</p>
+        <p className="text-xs leading-5 text-muted-foreground">These links start on Amazon.com, the US marketplace. Check local delivery, electrical compatibility, listing details and the final checkout currency.</p>
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2">
@@ -44,7 +45,7 @@ export function AffiliatePicks({ pagePath, className }: Props) {
             key={product.id}
             href={buildAmazonUrl(product.url, tag)}
             target="_blank"
-            rel="sponsored nofollow"
+            rel="sponsored nofollow noopener noreferrer"
             className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           >
             <Card className="glass-card h-full transition-colors duration-150 hover:border-primary/45">
@@ -64,6 +65,7 @@ export function AffiliatePicks({ pagePath, className }: Props) {
                 <p className="text-xs leading-5 text-muted-foreground">
                   {product.reason}
                 </p>
+                <span className="mt-3 inline-block text-xs font-medium text-primary underline underline-offset-4">{getAmazonLinkLabel(product.url)}</span>
               </CardContent>
             </Card>
           </a>

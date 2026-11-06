@@ -17,6 +17,7 @@ def main():
     parser.add_argument("--output", default="../evidence/browser")
     parser.add_argument("--baseline", action="store_true")
     parser.add_argument("--engine", choices=["chromium", "webkit"], default="chromium")
+    parser.add_argument("--channel", default=None, help="Optional installed Chromium browser channel, e.g. chrome or msedge.")
     parser.add_argument("--local-production", action="store_true",
                         help="Record the unavailable local Vercel-hosted analytics script separately.")
     args = parser.parse_args()
@@ -36,10 +37,14 @@ def main():
         assert condition, message
 
     with sync_playwright() as p:
-        browser = getattr(p, args.engine).launch(headless=True)
+        launch_options = {"headless": True}
+        if args.channel:
+            launch_options["channel"] = args.channel
+        browser = getattr(p, args.engine).launch(**launch_options)
         context = browser.new_context(viewport={"width": 390, "height": 844}, device_scale_factor=1)
         page = context.new_page()
         page.set_default_timeout(5000)
+        page.set_default_navigation_timeout(90000)
         page_errors = []
         console_errors = []
         page.on("pageerror", lambda error: page_errors.append(str(error)))
@@ -186,10 +191,9 @@ def main():
 
             page.set_viewport_size({"width": 390, "height": 844})
             page.goto(args.base_url + "/tools/failure-rate-calculator?s=9&f=1&g=5&p=20", wait_until="networkidle")
-            for theme in ["dark", "light"]:
-                button = page.get_by_role("button", name="Switch to " + theme + " theme", exact=True)
-                if button.count():
-                    button.click()
+            for theme in ["dark", "light", "workshop"]:
+                page.get_by_role("button", name="Choose color theme", exact=True).click()
+                page.get_by_role("menuitemradio", name=theme.capitalize(), exact=True).click()
                 page.wait_for_function("theme => document.documentElement.classList.contains(theme)", arg=theme)
                 check(f"{theme} theme retains accessible failed-attempt input", lambda: require(
                     page.get_by_label("Average filament consumed per failed attempt", exact=True).count() == 1,
@@ -202,7 +206,7 @@ def main():
 
         browser.close()
 
-    result = {"mode": "baseline" if args.baseline else "repair", "engine": args.engine, "checks": checks,
+    result = {"mode": "baseline" if args.baseline else "repair", "engine": args.engine, "channel": args.channel, "checks": checks,
               "passed": sum(c["passed"] for c in checks), "failed": sum(not c["passed"] for c in checks),
               "local_integration_errors": local_integration_errors}
     (output / "results.json").write_text(json.dumps(result, indent=2), encoding="utf-8")

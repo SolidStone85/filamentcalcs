@@ -120,6 +120,42 @@
   --sidebar-ring: oklch(0.75 0.14 205);
 }
 
+.workshop {
+  /* Middle-tone slate palette. The cyan stays dark enough for links and focus rings. */
+  color-scheme: light;
+  --background: #92a0ae;
+  --foreground: #14202b;
+  --card: #b0bbc5;
+  --card-foreground: #14202b;
+  --popover: #b0bbc5;
+  --popover-foreground: #14202b;
+  --primary: #00394b;
+  --primary-foreground: #ffffff;
+  --secondary: #8493a0;
+  --secondary-foreground: #14202b;
+  --muted: #9daab5;
+  --muted-foreground: #24313c;
+  --accent: #d0d8de;
+  --accent-foreground: #14202b;
+  --destructive: #64171e;
+  --border: #394a58;
+  --input: #394a58;
+  --ring: #00394b;
+  --chart-1: #00394b;
+  --chart-2: #455b68;
+  --chart-3: #5d6d78;
+  --chart-4: #7b8a95;
+  --chart-5: #2c3b47;
+  --sidebar: #8797a4;
+  --sidebar-foreground: #14202b;
+  --sidebar-primary: #00394b;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #b9c3cb;
+  --sidebar-accent-foreground: #14202b;
+  --sidebar-border: #394a58;
+  --sidebar-ring: #00394b;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -168,6 +204,16 @@
       radial-gradient(ellipse 900px 500px at 50% -10%,
         oklch(0.22 0.06 205 / 0.7), transparent 70%),
       url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100' viewBox='0 0 56 100'%3E%3Cg fill='none' stroke='%2322d3ee' stroke-opacity='0.12' stroke-width='1'%3E%3Cpath d='M28 66L0 50L0 16L28 0L56 16L56 50L28 66L28 100'/%3E%3Cpath d='M28 0L28 34L0 50L0 84L28 100L56 84L56 50L28 34'/%3E%3C/g%3E%3C/svg%3E");
+    background-attachment: fixed, fixed;
+    background-position: center top, 0 0;
+    background-repeat: no-repeat, repeat;
+  }
+
+  /* The Workshop option keeps the familiar quiet cube pattern over slate. */
+  .workshop body {
+    background-image:
+      radial-gradient(ellipse 900px 500px at 50% -10%, rgb(255 255 255 / 22%), transparent 70%),
+      url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100' viewBox='0 0 56 100'%3E%3Cg fill='none' stroke='%2300394b' stroke-opacity='0.12' stroke-width='1'%3E%3Cpath d='M28 66L0 50L0 16L28 0L56 16L56 50L28 66L28 100'/%3E%3Cpath d='M28 0L28 34L0 50L0 84L28 100L56 84L56 50L28 34'/%3E%3C/g%3E%3C/svg%3E");
     background-attachment: fixed, fixed;
     background-position: center top, 0 0;
     background-repeat: no-repeat, repeat;
@@ -273,6 +319,13 @@ a.text-primary:hover {
   background-color: oklch(0.78 0.16 205 / 0.18);
   color: oklch(0.95 0.02 205);
 }
+.workshop .fc-glow-soft:hover:not(:disabled),
+.workshop .fc-card-lift:hover {
+  border-color: var(--primary);
+}
+.workshop a.text-primary:hover {
+  color: #002f3e;
+}
 
 .fc-card-lift {
   transition: transform 180ms ease, box-shadow 180ms ease,
@@ -285,13 +338,34 @@ a.text-primary:hover {
     0 4px 12px -4px oklch(0 0 0 / 0.2);
 }
 
+.printer-process__layer {
+  opacity: 1;
+}
+
+.printer-process.is-playing .printer-process__layer {
+  animation: printer-layer-highlight 760ms ease-out both;
+}
+
+.printer-process.is-playing .printer-process__layer--bottom { animation-delay: 0ms; }
+.printer-process.is-playing .printer-process__layer--lower { animation-delay: 680ms; }
+.printer-process.is-playing .printer-process__layer--upper { animation-delay: 1360ms; }
+.printer-process.is-playing .printer-process__layer--top { animation-delay: 2040ms; }
+
+@keyframes printer-layer-highlight {
+  from { opacity: 0.2; }
+  to { opacity: 1; }
+}
+
 /* Motion is feedback, not decoration: honor the OS-level preference. */
 @media (prefers-reduced-motion: reduce) {
   .fc-glow-strong,
   .fc-glow-soft,
   .fc-ghost-hover,
-  .fc-card-lift {
+  .fc-card-lift,
+  .printer-process__layer {
     transition: none;
+    animation: none !important;
+    opacity: 1;
   }
   .fc-glow-strong:hover:not(:disabled),
   .fc-glow-strong:active:not(:disabled),

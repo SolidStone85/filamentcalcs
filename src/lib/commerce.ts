@@ -62,15 +62,15 @@ const AFFILIATE_PRODUCTS: Record<string, AffiliateProduct> = {
     id: "sunlu-s4",
     title: "SUNLU S4 filament dryer",
     eyebrow: "Drying",
-    reason: "A four-spool dryer for PLA, PETG, TPU, ABS, and AMS-heavy workflows.",
+    reason: "Four-spool dryer with a 70°C maximum. Check your exact filament and spool limits; it cannot meet an 80°C drying setting such as Bambu ABS or ASA.",
     url: "https://www.amazon.com/SUNLU-Filament-Dryer-S4-Temperature/dp/B0FFGXJXQ5",
   },
   "filament-storage-bags": {
     id: "filament-storage-bags",
-    title: "Filament vacuum storage bag kit",
+    title: "Filament storage bags",
     eyebrow: "Storage",
-    reason: "A practical way to keep opened spools dry between prints.",
-    url: "https://www.amazon.com/Filament-Storage-Printer-Desiccant-Perfect/dp/B0CNRQ3CPB",
+    reason: "Compare bag dimensions and whether a pump or desiccant is included. Sealed storage limits moisture exposure; it does not dry an already wet spool.",
+    url: "https://www.amazon.com/s?k=filament+vacuum+storage+bags+1kg",
   },
   desiccant: {
     id: "desiccant",
@@ -88,10 +88,10 @@ const AFFILIATE_PRODUCTS: Record<string, AffiliateProduct> = {
   },
   "overture-pla": {
     id: "overture-pla",
-    title: "OVERTURE PLA filament",
+    title: "Ordinary PLA filament, 1.75 mm",
     eyebrow: "Baseline PLA",
-    reason: "A common, widely available PLA baseline for cost and material comparisons.",
-    url: "https://www.amazon.com/OVERTURE-Filament-Printer-Dimensional-Accuracy/dp/B08L14B9FJ",
+    reason: "Search for ordinary, unfilled PLA. Confirm your printer's filament diameter, net quantity and a complete spool rather than a refill before buying.",
+    url: "https://www.amazon.com/s?k=PLA+filament+1.75mm+1kg",
   },
   "petg-filament": {
     id: "petg-filament",
@@ -111,7 +111,7 @@ const AFFILIATE_PRODUCTS: Record<string, AffiliateProduct> = {
     id: "digital-scale",
     title: "Digital scale for filament",
     eyebrow: "Spool weighing",
-    reason: "Weigh filament or a loaded spool, subtracting the empty spool for remaining-filament calculations. Check capacity and resolution before buying.",
+    reason: "Choose capacity above the loaded spool's combined filament and empty-spool weight. Check platform size and accuracy as well as displayed resolution.",
     url: "https://www.amazon.com/filament-scale/s?k=filament+scale",
   },
   "digital-calipers": {
@@ -139,19 +139,23 @@ const AFFILIATE_PRODUCTS: Record<string, AffiliateProduct> = {
     id: "nozzle-cleaning-kit",
     title: "3D printer nozzle cleaning kit",
     eyebrow: "Failure fixes",
-    reason: "A small kit for clogs, stuck filament, and routine hotend cleanup.",
+    reason: "This listing includes 0.4 mm cleaning needles. Match your nozzle bore and follow the hotend maker's cleaning procedure; it is not universal.",
     url: "https://www.amazon.com/Printer-Nozzle-Cleaning-Kit-Alternative/dp/B0797XV8ZK",
   },
   "pei-build-plate": {
     id: "pei-build-plate",
     title: "Textured PEI build plate",
     eyebrow: "Bed adhesion",
-    reason: "A common first fix for adhesion problems and worn stock plates.",
+    reason: "Match the printer, plate dimensions and material/surface pairing. Follow the maker's instructions; a plate does not fix every adhesion problem.",
     url: "https://www.amazon.com/s?k=textured+PEI+build+plate+3D+printer",
   },
 };
 
 export const AFFILIATE_PICKS: Record<string, string[]> = {
+  "/guides/how-to-start-3d-printing": ["overture-pla"],
+  "/guides/3d-printing-beginner-equipment": ["overture-pla", "digital-scale", "filament-storage-bags"],
+  "/guides/useful-3d-prints-save-money": ["digital-calipers", "digital-scale"],
+  "/guides/start-3d-printing-business": ["digital-scale", "kill-a-watt"],
   "/guides/best-3d-printer-under-300": ["bambu-a1-mini", "bambu-a1"],
   "/guides/multi-color-printing-ams-worth-it": [
     "bambu-ams-lite",
@@ -235,6 +239,38 @@ export const AFFILIATE_PICKS: Record<string, string[]> = {
 };
 
 export const RELATED_CONTENT: { path: string; links: RelatedLink[] }[] = [
+  {
+    path: "/guides/how-to-start-3d-printing",
+    links: [
+      related("/guides/3d-printing-beginner-equipment", "Plan a beginner setup", "Separate essential equipment from upgrades."),
+      related("/tools/filament-cost-calculator", "Cost your first attempt", "Use the whole-job grams from your slicer."),
+      related("/tools/remaining-spool-calculator", "Check the remaining spool", "Subtract the matching empty-spool weight."),
+    ],
+  },
+  {
+    path: "/guides/3d-printing-beginner-equipment",
+    links: [
+      related("/guides/how-to-start-3d-printing", "Make a first useful print", "Follow the model-to-slicer-to-printer workflow."),
+      related("/guides/best-3d-printer-under-300", "Compare a dated budget shortlist", "Check current regional prices and full checkout costs."),
+      related("/tools/material-comparison", "Check material limits", "Read named-product data rather than family promises."),
+    ],
+  },
+  {
+    path: "/guides/useful-3d-prints-save-money",
+    links: [
+      related("/tools/filament-cost-calculator", "Price the material", "Include supports and purge only once."),
+      related("/tools/electricity-cost-calculator", "Add measured energy", "Use your tariff and a whole-job measurement."),
+      related("/guides/3d-printing-cost-breakdown", "Review the complete cost", "Keep equipment, failed attempts and labor visible."),
+    ],
+  },
+  {
+    path: "/guides/start-3d-printing-business",
+    links: [
+      related("/tools/print-pricing-calculator", "Build a production estimate", "Then add packaging, fees and excluded overhead."),
+      related("/tools/failure-rate-calculator", "Track rejected attempts", "Record actual consumed grams and comparable jobs."),
+      related("/guides/useful-3d-prints-save-money", "Evaluate a useful product", "Start with the customer's actual alternative."),
+    ],
+  },
   {
     path: "/guides/3d-print-cosplay-helmet-size-cost",
     links: [
@@ -399,6 +435,10 @@ export const RELATED_CONTENT: { path: string; links: RelatedLink[] }[] = [
 
 export function getAffiliatePicks(pagePath: string): AffiliateProduct[] {
   return (AFFILIATE_PICKS[pagePath] ?? []).map((id) => AFFILIATE_PRODUCTS[id]);
+}
+
+export function getAmazonLinkLabel(rawUrl: string): string {
+  return new URL(rawUrl).searchParams.has("k") ? "Search Amazon.com" : "View on Amazon.com";
 }
 
 export function getRelatedLinks(pagePath: string): RelatedLink[] {
