@@ -16,7 +16,7 @@ import { SITE } from "@/lib/tools";
 
 const SLUG = "3d-print-time-expectations";
 const guide = getGuide(SLUG)!;
-const UPDATED_AT = "2026-11-06";
+const UPDATED_AT = "2026-11-17";
 
 export const metadata: Metadata = {
   title: guide.title,
@@ -47,6 +47,15 @@ const EXAMPLES = [
   { grams: 150, throughput: 20 },
 ];
 
+const NOZZLE_ROWS = [
+  ["Layer height / wall and fill width", "0.20 / 0.45 mm", "0.20 / 0.45 mm", "0.20 / 0.65 mm"],
+  ["Inner / outer wall speed", "45 / 25 mm/s", "60 / 35 mm/s", "45 / 35 mm/s"],
+  ["Requested fill speed", "80 mm/s", "200 mm/s", "70 mm/s"],
+  ["Infill pattern, all at 15%", "Gyroid", "Grid", "Gyroid"],
+  ["Predicted time, normal mode", "55m 19s", "37m 21s", "38m 17s"],
+  ["Predicted filament", "11.91 g", "12.04 g", "13.49 g"],
+];
+
 export default function GuidePage() {
   const jsonLd = {
     "@context": "https://schema.org",
@@ -66,7 +75,7 @@ export default function GuidePage() {
       <header className="space-y-3">
         <p className="text-xs uppercase tracking-wide text-muted-foreground">Guide · {guide.readMinutes} min read</p>
         <h1 className="text-3xl font-semibold tracking-tight lg:text-4xl"><Highlight3D>{guide.title}</Highlight3D></h1>
-        <AuthorByline updatedLabel="Reviewed November 6, 2026 (UTC)" />
+        <AuthorByline updatedLabel="Reviewed November 17, 2026 (UTC)" />
       </header>
 
       <figure className="my-8">
@@ -156,6 +165,101 @@ export default function GuidePage() {
           <li><strong>Infill and supports:</strong> these change both consumed material and toolpaths. Use final sliced grams when they are already included.</li>
           <li><strong>Material changes:</strong> unloading, loading, flushing and travel add time. Use the actual multi-color slice rather than a fixed seconds-per-swap rule.</li>
         </ul>
+
+        <section id="nozzle-comparison" aria-labelledby="nozzle-heading" className="space-y-5">
+          <h2 id="nozzle-heading" className="text-xl font-semibold tracking-tight pt-4">Why a 0.6 mm nozzle is not automatically faster than a 0.4 mm nozzle</h2>
+          <p>
+            A bigger nozzle can put down wider lines and use fewer passes to fill an area.
+            That can save time, but the nozzle does not set the finishing time on its own.
+            The layer height, chosen speeds, acceleration, cooling and the amount of
+            plastic the hotend can melt still matter. Compare the sliced jobs before
+            changing hardware for a time saving.
+          </p>
+          <p>
+            Wider lines and taller layers need more melted plastic at the same movement
+            speed. PrusaSlicer has flow limits in both print and filament settings.
+            It uses the lower enabled limit; zero switches that particular limit off.
+            A profile&apos;s limit is a configured assumption, not a measurement of every
+            hotend and material. Taller layers can reduce the layer count, but also
+            change finish and detail. Prusa&apos;s nozzle guidance sets a layer-height
+            ceiling of 80% of nozzle diameter, not a target for every part.
+          </p>
+          <h3 className="text-base font-semibold">Same block, three profiles</h3>
+          <p>
+            This software-only comparison uses <strong>PrusaSlicer 2.9.4 for Windows</strong>,
+            its bundled Prusa Research profiles <strong>2.4.0</strong>, and one
+            <strong> 40 × 40 × 20 mm block</strong>{" "}resting on its flat base. All three
+            use Original Prusa i3 MK3S &amp; MK3S+ printer profiles, Generic PLA,
+            0.20 mm layers, two walls, five top/four bottom layers and 15% infill.
+            No physical print was timed. The table reports actual generated
+            predictions checked November 17, 2026.
+          </p>
+          <div className="overflow-x-auto rounded-lg border border-border" tabIndex={0} role="region" aria-label="Nozzle profile comparison, scroll horizontally">
+            <table className="w-full min-w-[620px] text-xs leading-5">
+              <caption className="px-3 py-2 text-left">One model, three saved profiles. Times and grams are slicer predictions.</caption>
+              <thead className="bg-muted/50 text-left"><tr>
+                <th className="px-3 py-2" scope="col">Setting or prediction</th>
+                <th className="px-3 py-2" scope="col">0.4 mm QUALITY</th>
+                <th className="px-3 py-2" scope="col">0.4 mm SPEED</th>
+                <th className="px-3 py-2" scope="col">0.6 mm DETAIL</th>
+              </tr></thead>
+              <tbody>{NOZZLE_ROWS.map(([label, ...values]) => (
+                <tr key={label} className="border-t">
+                  <th className="px-3 py-2 text-left font-medium" scope="row">{label}</th>
+                  {values.map((value, index) => <td key={index} className="px-3 py-2">{value}</td>)}
+                </tr>
+              ))}</tbody>
+            </table>
+          </div>
+          <p>
+            The exact print presets are <strong>0.20mm QUALITY @MK3</strong>,
+            <strong> 0.20mm SPEED @MK3</strong> and
+            <strong> 0.20mm DETAIL @0.6 nozzle MK3</strong>.
+            All share a 15 mm³/s filament flow cap; their print flow cap is disabled.
+            Default, wall and fill accelerations are 1000, 800 and 1000 mm/s².
+            Temperatures are 215°C for the first layer, then 210°C, with a 60°C bed.
+            Cooling slowdown is enabled below a 12-second layer, with a 15 mm/s
+            minimum print speed. Other settings and their differences are in the download.
+          </p>
+          <p>
+            Switching the 0.4 mm profile from QUALITY to SPEED changes its prediction
+            from 55m 19s to 37m 21s, slightly shorter than the 0.6 mm DETAIL result.
+            SPEED also changes wall speeds and uses grid rather than gyroid infill.
+            It requests 200 mm/s fill, while its generated internal-fill commands
+            peak at about 177 mm/s. That is a planned feedrate, not measured motion
+            under acceleration. Profile choice changed this result; nozzle size alone
+            does not explain it.
+          </p>
+          <p>
+            This is one test object, not a comparison controlled for strength or finish.
+            Wider lines with the same wall count change shell thickness and material use.
+            Each profile was sliced twice with matching time and filament predictions;
+            that checks repeatability, not real printing performance. Slice your own
+            model with appropriate nozzle, printer and material settings before choosing.
+          </p>
+          <p>
+            <a href="/downloads/nozzle-comparison-2026-11-17.zip" className="underline underline-offset-4" download>
+              Download the model, exact settings, predictions and reproduction steps (ZIP)
+            </a>.
+            Named presets can change with application or profile-bundle updates; use
+            the included saved settings to reproduce these records.
+          </p>
+          <h3 className="text-base font-semibold">Reproduce the saved comparison</h3>
+          <p>
+            The download includes the exact model, three configurations, predictions,
+            checksums and a Python script with no extra Python dependencies. Follow
+            its Windows command-line instructions with PrusaSlicer 2.9.4. That workflow
+            was verified on Windows with these inputs, with all three predictions
+            matching. The script checks the version and input files, uses an isolated
+            settings directory and compares its output with the saved records.
+            No account or printer connection is needed.
+          </p>
+          <p className="text-xs leading-6">
+            Nozzle sources checked November 17, 2026: <a className="underline" href="https://help.prusa3d.com/article/max-volumetric-speed_127176" rel="noreferrer">Prusa maximum volumetric speed</a>,{" "}
+            <a className="underline" href="https://blog.prusa3d.com/everything-about-nozzles-with-a-different-diameter_8344/" rel="noreferrer">Prusa nozzle-diameter guidance</a>,{" "}
+            <a className="underline" href="https://github.com/prusa3d/PrusaSlicer/releases/tag/version_2.9.4" rel="noreferrer">the official 2.9.4 release</a>.
+          </p>
+        </section>
 
         <h2 className="text-xl font-semibold tracking-tight pt-4">Check the slicer profile before adding a timing allowance</h2>
         <p>

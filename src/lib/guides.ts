@@ -118,8 +118,8 @@ export const GUIDES: Guide[] = [
     description:
       "Estimate print time from grams and an explicit average rate, compare with your slicer, and plan long jobs. Worked examples are assumptions, not printer benchmarks.",
     publishedAt: "2026-04-23",
-    updatedAt: "2026-11-06",
-    readMinutes: 6,
+    updatedAt: "2026-11-17",
+    readMinutes: 10,
     relatedToolSlugs: ["print-time-estimator", "filament-cost-calculator"],
   },
   {
