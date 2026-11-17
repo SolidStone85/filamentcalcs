@@ -1,6 +1,8 @@
 "use client";
 
-type Props = { label: string; value: string; detail?: string };
+import type { ReactNode } from "react";
+
+type Props = { label: string; value: string; detail?: ReactNode };
 
 /** Stays above the inputs on phones, never over the keyboard at the bottom. */
 export function CalculatorSummary({ label, value, detail }: Props) {
