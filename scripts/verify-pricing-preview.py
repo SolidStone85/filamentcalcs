@@ -616,8 +616,8 @@ def main():
                 text = results(page)
                 require("$10.50" in text and "Cost per gram (with waste)" in text and "Filament price alone: $0.0200/g" in text, f"filament cost: {text[:200]}")
                 bar = page.locator("div.sticky").first.inner_text()
-                require("Includes 5% extra waste" not in bar and page.get_by_role("link", name="Edit extra waste allowance").count() == 0, "excluded PR #1 must not be released")
-            check("Other calculators still work; PR #1 excluded; per-gram tile relabelled", untouched)
+                require("Includes 5% extra waste" in bar and page.get_by_role("link", name="Edit extra waste allowance").count() == 1, "approved mobile waste summary and Edit action must be present")
+            check("Other calculators still work; mobile waste summary included; per-gram tile relabelled", untouched)
 
         # ---------------- Screenshots for side-by-side review ----------------
         if not args.no_screenshots and not args.reproduce_old:

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
 import Link from "next/link";
 import { CalculatorSettings } from "@/components/shared/CalculatorSettings";
 import { CalculatorSummary } from "@/components/shared/CalculatorSummary";
@@ -114,6 +114,7 @@ const CURRENCY_ITEMS = CURRENCIES.map((c) => ({
 }));
 
 export function Calculator() {
+  const wasteInputRef = useRef<HTMLInputElement>(null);
   const { state, setState, settings } = useCalculatorState(parseStateFromParams, encodeState, {
     c: "currency", p: "filamentPricePerKg", pm: "priceMode", sp: "spoolPrice", sw: "pricedSpoolWeight",
   }, [["c", "p", "pm", "sp", "sw"]]);
@@ -150,10 +151,33 @@ export function Calculator() {
     : state.pricePerKg === DEFAULT_STATE.pricePerKg;
   const currencySymbol =
     CURRENCIES.find((c) => c.code === state.currency)?.symbol ?? "$";
+  const wasteSummary = state.wasteFactor < 0 || state.wasteFactor > 0.25
+    ? "Check extra waste"
+    : state.wasteFactor === 0
+      ? "No extra waste added"
+      : `Includes ${new Intl.NumberFormat("en", { maximumSignificantDigits: 15 }).format(state.wasteFactor * 100)}% extra waste`;
 
   return (
     <div className="grid gap-6 lg:grid-cols-[1.2fr_1fr]">
-      <CalculatorSummary label="Material cost" value={hasInput ? formatCurrency(result.cost, state.currency) : "Enter print weight"} />
+      <CalculatorSummary
+        label="Material cost"
+        value={hasInput ? formatCurrency(result.cost, state.currency) : "Enter print weight"}
+        detail={<>
+          {wasteSummary} {"\u00b7"} <a
+            href="#extra-waste"
+            aria-label="Edit extra waste allowance"
+            className="inline-flex min-h-8 items-center rounded px-1 font-medium text-primary underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+            onClick={(event) => {
+              const input = wasteInputRef.current;
+              if (input) {
+                event.preventDefault();
+                input.focus({ preventScroll: true });
+                document.getElementById("extra-waste")?.scrollIntoView({ block: "center" });
+              }
+            }}
+          >Edit</a>
+        </>}
+      />
       {/* ----- Inputs ----- */}
       <Card className="glass-card">
         <CardHeader>
@@ -172,7 +196,7 @@ export function Calculator() {
             hint="Copy the weight from your slicer."
           />
 
-          <div className="space-y-2">
+          <div id="extra-waste" className="space-y-2">
             <div className="flex items-center justify-between">
               <Label>Extra waste allowance</Label>
               <span className="font-mono text-sm tabular-nums text-muted-foreground">
@@ -181,6 +205,11 @@ export function Calculator() {
             </div>
             <Slider
               aria-label="Extra waste allowance"
+              thumbProps={{
+                "aria-label": "Extra waste allowance",
+                inputRef: wasteInputRef,
+                className: "focus-within:ring-3",
+              }}
               value={[state.wasteFactor * 100]}
               min={0}
               max={25}
