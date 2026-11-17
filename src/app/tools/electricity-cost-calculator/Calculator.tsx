@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import { CalculatorSettings } from "@/components/shared/CalculatorSettings";
 import { CalculatorSummary } from "@/components/shared/CalculatorSummary";
 import { useCalculatorState } from "@/lib/useCalculatorState";
+import { savedAmountNotice } from "@/lib/savedAmountNotice";
 
 import { FormulaBreakdown } from "@/components/shared/FormulaBreakdown";
 import { InputWithUnit } from "@/components/shared/InputWithUnit";
@@ -251,7 +252,7 @@ export function Calculator() {
             <InputWithUnit
               id="custom-rate"
               label="Custom rate"
-              value={state.customRate}
+              value={state.customRate} notice={savedAmountNotice(settings.withheld, "rt")}
               onValueChange={(v) =>
                 setState((s) => ({ ...s, customRate: v }))
               }

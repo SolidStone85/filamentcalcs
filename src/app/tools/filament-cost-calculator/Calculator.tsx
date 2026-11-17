@@ -5,6 +5,7 @@ import Link from "next/link";
 import { CalculatorSettings } from "@/components/shared/CalculatorSettings";
 import { CalculatorSummary } from "@/components/shared/CalculatorSummary";
 import { useCalculatorState } from "@/lib/useCalculatorState";
+import { savedAmountNotice } from "@/lib/savedAmountNotice";
 
 import { FormulaBreakdown } from "@/components/shared/FormulaBreakdown";
 import { InputWithUnit } from "@/components/shared/InputWithUnit";
@@ -144,6 +145,9 @@ export function Calculator() {
   );
   const hasInput = validInputs && Object.values(result).every((value) => typeof value !== "number" || Number.isFinite(value));
 
+  const priceIsExample = state.priceMode === "spool"
+    ? state.spoolPrice === DEFAULT_STATE.spoolPrice && state.spoolWeight === DEFAULT_STATE.spoolWeight
+    : state.pricePerKg === DEFAULT_STATE.pricePerKg;
   const currencySymbol =
     CURRENCIES.find((c) => c.code === state.currency)?.symbol ?? "$";
 
@@ -165,8 +169,36 @@ export function Calculator() {
             min={0}
             step={1}
             placeholder="100"
-            hint="Use model weight, or the whole slicer total. If the total already includes supports and purge, set extra waste to 0%."
+            hint="Copy the weight from your slicer."
           />
+
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <Label>Extra waste allowance</Label>
+              <span className="font-mono text-sm tabular-nums text-muted-foreground">
+                {Math.round(state.wasteFactor * 100)}%
+              </span>
+            </div>
+            <Slider
+              aria-label="Extra waste allowance"
+              value={[state.wasteFactor * 100]}
+              min={0}
+              max={25}
+              step={1}
+              onValueChange={(vals) => {
+                const next = Array.isArray(vals) ? vals[0] : vals;
+                setState((s) => ({
+                  ...s,
+                  wasteFactor: next / 100,
+                  materialId: "custom",
+                }));
+              }}
+            />
+            <p className="text-xs text-muted-foreground">
+              Add this only if your weight leaves out supports, purge or the prime tower. If you copied the slicer's total, set 0%.
+            </p>
+            {(state.wasteFactor < 0 || state.wasteFactor > 0.25) && <p className="text-xs text-destructive">Choose an extra waste allowance from 0% to 25%.</p>}
+          </div>
 
           <fieldset className="space-y-3">
             <legend className="mb-2 text-sm font-medium">Filament price</legend>
@@ -176,14 +208,15 @@ export function Calculator() {
             </div>
             {state.priceMode === "spool" ? <>
               <div className="grid gap-4 sm:grid-cols-2">
-                <InputWithUnit id="spool-price" label={`Price paid (${currencySymbol})`} value={state.spoolPrice} onValueChange={(v) => setState((s) => ({ ...s, spoolPrice: v, materialId: "custom" }))} min={0} step={0.01} />
+                <InputWithUnit id="spool-price" label={`Price paid (${currencySymbol})`} value={state.spoolPrice} notice={savedAmountNotice(settings.withheld, "sp")} onValueChange={(v) => setState((s) => ({ ...s, spoolPrice: v, materialId: "custom" }))} min={0} step={0.01} />
                 <InputWithUnit id="spool-weight" label="Filament in new spool" value={state.spoolWeight} onValueChange={(v) => setState((s) => ({ ...s, spoolWeight: v, materialId: "custom" }))} unit="g" min={1} step={1} hint="Net filament weight, without the spool." />
               </div>
               <div className="flex flex-wrap gap-2" aria-label="Common spool weights">
                 {[250, 500, 750, 1000].map((weight) => <button key={weight} type="button" aria-pressed={state.spoolWeight === weight} onClick={() => setState((s) => ({ ...s, spoolWeight: weight }))} className="rounded-md border px-3 py-2 text-xs hover:bg-accent aria-pressed:border-primary aria-pressed:bg-accent">{weight.toLocaleString()} g</button>)}
               </div>
               {validPrice && <p className="text-xs text-muted-foreground">Equivalent to {formatCurrency(priceNum, state.currency, { maximumFractionDigits: 4 })}/kg. Calculations use the unrounded value.</p>}
-            </> : <InputWithUnit id="price" label={`Price per kg (${currencySymbol})`} value={state.pricePerKg} onValueChange={(v) => setState((s) => ({ ...s, pricePerKg: v, materialId: "custom" }))} min={0} step={0.01} placeholder="20" />}
+            </> : <InputWithUnit id="price" label={`Price per kg (${currencySymbol})`} value={state.pricePerKg} notice={savedAmountNotice(settings.withheld, "p")} onValueChange={(v) => setState((s) => ({ ...s, pricePerKg: v, materialId: "custom" }))} min={0} step={0.01} placeholder="20" />}
+            {state.currency !== "USD" && priceIsExample && <p className="text-xs text-muted-foreground">The example price is a US-dollar figure. Replace it with yours.</p>}
           </fieldset>
 
           <details className="space-y-3 rounded-lg border p-3">
@@ -218,34 +251,6 @@ export function Calculator() {
             </p>
           </div>
           </details>
-
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <Label>Extra waste allowance</Label>
-              <span className="font-mono text-sm tabular-nums text-muted-foreground">
-                {Math.round(state.wasteFactor * 100)}%
-              </span>
-            </div>
-            <Slider
-              aria-label="Extra waste allowance"
-              value={[state.wasteFactor * 100]}
-              min={0}
-              max={25}
-              step={1}
-              onValueChange={(vals) => {
-                const next = Array.isArray(vals) ? vals[0] : vals;
-                setState((s) => ({
-                  ...s,
-                  wasteFactor: next / 100,
-                  materialId: "custom",
-                }));
-              }}
-            />
-            <p className="text-xs text-muted-foreground">
-              An editable allowance above the weight entered. Set to 0% if everything is already in your slicer total; do not count supports or purge twice.
-            </p>
-            {(state.wasteFactor < 0 || state.wasteFactor > 0.25) && <p className="text-xs text-destructive">Choose an extra waste allowance from 0% to 25%.</p>}
-          </div>
 
           <div className="space-y-2">
             <Label htmlFor="currency">Currency</Label>
@@ -300,11 +305,14 @@ export function Calculator() {
           <>
             <div className="grid grid-cols-2 gap-3">
               <ResultDisplay
-                label="Cost per gram"
+                label={state.wasteFactor > 0 ? "Cost per gram (with waste)" : "Cost per gram"}
                 value={formatCurrency(result.costPerGram, state.currency, {
                   minimumFractionDigits: 4,
                   maximumFractionDigits: 4,
                 })}
+                sublabel={state.wasteFactor > 0
+                  ? `Filament price alone: ${formatCurrency(priceNum / 1000, state.currency, { minimumFractionDigits: 4, maximumFractionDigits: 4 })}/g`
+                  : undefined}
               />
               <ResultDisplay
                 label="Filament used (incl. waste)"

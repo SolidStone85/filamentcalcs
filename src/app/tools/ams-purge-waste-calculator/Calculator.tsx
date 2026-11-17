@@ -14,6 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { CURRENCIES, formatCurrency, type CurrencyCode } from "@/lib/currency";
 import { calculateSlicerMaterial, estimateFlushingGrams } from "@/lib/formulas/amsPurgeWaste";
 import { useCalculatorState } from "@/lib/useCalculatorState";
+import { savedAmountNotice } from "@/lib/savedAmountNotice";
 import { encodeAmsState, getAmsInputStatus, parseAmsState, type AmsState } from "./state";
 
 const CURRENCY_ITEMS = CURRENCIES.map((c) => ({ value: c.code, label: `${c.symbol} ${c.code}` }));
@@ -73,7 +74,7 @@ export function Calculator() {
               <InputWithUnit id="ams-extra" label="Other discarded material" value={state.extraGrams} onValueChange={(v) => setAmount("extraGrams", v)} unit="g" min={0} step={0.01} hint="Startup purges, calibration lines, brims or other waste only if not included above. Zero means excluded." />
             </div>
           </details>
-          <InputWithUnit id="ams-price" label="Filament price per kg" value={state.pricePerKg} onValueChange={(v) => setAmount("pricePerKg", v)} min={0} step={0.01} hint="For multiple prices use the average weighted by consumed grams. A simple average is only approximate." />
+          <InputWithUnit id="ams-price" label="Filament price per kg" value={state.pricePerKg} notice={savedAmountNotice(settings.withheld, "pp")} onValueChange={(v) => setAmount("pricePerKg", v)} min={0} step={0.01} hint="For multiple prices use the average weighted by consumed grams. A simple average is only approximate." />
           <div className="space-y-2">
             <Label htmlFor="ams-currency">Currency</Label>
             <Select value={state.currency} items={CURRENCY_ITEMS} onValueChange={(v) => { if (v) setState((s) => ({ ...s, currency: v as CurrencyCode })); }}>

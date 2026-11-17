@@ -5,6 +5,7 @@ import Link from "next/link";
 import { CalculatorSettings } from "@/components/shared/CalculatorSettings";
 import { CalculatorSummary } from "@/components/shared/CalculatorSummary";
 import { useCalculatorState } from "@/lib/useCalculatorState";
+import { savedAmountNotice } from "@/lib/savedAmountNotice";
 
 import { FormulaBreakdown } from "@/components/shared/FormulaBreakdown";
 import { InputWithUnit } from "@/components/shared/InputWithUnit";
@@ -282,7 +283,7 @@ export function Calculator({ initialSpoolPresetId }: CalculatorProps = {}) {
           <InputWithUnit
             id="price"
             label="Spool price per kg (optional)"
-            value={state.pricePerKg}
+            value={state.pricePerKg} notice={savedAmountNotice(settings.withheld, "p")}
             onValueChange={(v) => setState((s) => ({ ...s, pricePerKg: v }))}
             min={0}
             step={0.5}

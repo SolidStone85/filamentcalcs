@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -28,6 +30,12 @@ type Props = {
   hint?: string;
   className?: string;
   integer?: boolean;
+  /** Extra line under the field, for example why a saved amount was not used. */
+  notice?: string;
+  /** Show the value rounded to this many decimals while the field is not being edited.
+   *  The stored value keeps its full precision. */
+  blurDecimals?: number;
+  inputMode?: "decimal" | "numeric";
 };
 
 export function InputWithUnit({
@@ -45,7 +53,14 @@ export function InputWithUnit({
   hint,
   className,
   integer,
+  notice,
+  blurDecimals,
+  inputMode = "decimal",
 }: Props) {
+  const [focused, setFocused] = useState(false);
+  const shown = value === "" || blurDecimals === undefined || !Number.isFinite(value)
+    ? value
+    : Number(value.toFixed(focused ? Math.max(blurDecimals, 6) : blurDecimals));
   const hasUnitSelector = unitOptions && unitOptions.length > 1 && onUnitChange;
   const error = value === "" ? "" : !Number.isFinite(value) ? "Enter a finite number." :
     min !== undefined && value < min ? `Enter ${min} or more.` :
@@ -59,14 +74,17 @@ export function InputWithUnit({
         <Input
           id={id}
           type="number"
-          inputMode="decimal"
+          inputMode={inputMode}
           min={min}
           max={max}
           step={step}
-          placeholder={placeholder}
+          // A field left empty on purpose must look empty: no sample hint beside the notice.
+          placeholder={notice ? undefined : placeholder}
           aria-invalid={Boolean(error)}
           aria-describedby={error ? `${id}-error` : hint ? `${id}-hint` : undefined}
-          value={value === "" ? "" : value}
+          value={shown === "" ? "" : shown}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
           onChange={(e) => {
             const raw = e.target.value;
             if (raw === "") return onValueChange("");
@@ -107,6 +125,7 @@ export function InputWithUnit({
         <p id={`${id}-hint`} className="text-xs leading-5 text-muted-foreground">{hint}</p>
       )}
       {error && <p id={`${id}-error`} className="text-xs text-destructive">{error}</p>}
+      {notice && <p role="status" className="rounded-md bg-accent px-3 py-2 text-xs leading-5 text-accent-foreground">{notice}</p>}
     </div>
   );
 }
