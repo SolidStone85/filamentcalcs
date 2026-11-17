@@ -392,6 +392,13 @@ export const RELATED_CONTENT: { path: string; links: RelatedLink[] }[] = [
     ],
   },
   {
+    path: "/guides/fit-and-clearance-3d-printed-parts",
+    links: [
+      related("/tools/material-comparison", "Compare materials", "Review material properties before choosing filament for a fit test or final part."),
+      related("/tools/filament-cost-calculator", "Estimate filament cost", "Compare the material cost for test pieces and a final part."),
+    ],
+  },
+  {
     path: "/guides/3d-printer-electricity-usage",
     links: [
       related("/tools/electricity-cost-calculator", "Electricity calculator", "Convert watts and hours into dollars."),

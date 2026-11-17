@@ -55,8 +55,8 @@ const affiliateRegistry = commerce.split("export const RELATED_CONTENT")[0];
 // The October 10 converter has no product picks; wait for search/usage evidence.
 // New tools still require an explicit decision instead of silently skipping checks.
 const nonAffiliateTools = new Set(["filament-length-converter"]);
-// The existing helmet article intentionally has no product recommendations.
-const nonAffiliateGuides = new Set(["3d-print-cosplay-helmet-size-cost"]);
+// Helmet and fit guidance intentionally have no affiliate product recommendations.
+const nonAffiliateGuides = new Set(["3d-print-cosplay-helmet-size-cost", "fit-and-clearance-3d-printed-parts"]);
 const affiliateComponent = read("src", "components", "shared", "AffiliatePicks.tsx");
 const relatedComponent = read("src", "components", "shared", "RelatedContent.tsx");
 const footer = read("src", "components", "layout", "Footer.tsx");

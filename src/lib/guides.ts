@@ -123,6 +123,16 @@ export const GUIDES: Guide[] = [
     relatedToolSlugs: ["print-time-estimator", "filament-cost-calculator"],
   },
   {
+    slug: "fit-and-clearance-3d-printed-parts",
+    title: "Fit and Clearance for 3D-Printed Parts",
+    shortTitle: "Fit and clearance",
+    description: "Learn what clearance, accuracy, press fits and snap fits mean, compare sourced starting points, and plan a small test print for your own printer.",
+    publishedAt: "2026-11-17",
+    updatedAt: "2026-11-17",
+    readMinutes: 7,
+    relatedToolSlugs: ["filament-cost-calculator", "material-comparison"],
+  },
+  {
     slug: "best-3d-printer-under-300",
     title: "3D Printers Under $300: A1 mini vs A1",
     shortTitle: "Printers on a $300 budget",
